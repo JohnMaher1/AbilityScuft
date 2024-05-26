@@ -4,13 +4,14 @@
   </styles>
   <scripts>
     <include src="file://{resources}/scripts/custom_game/AbilityIcon.js" />
+    <include src="file://{resources}/scripts/custom_game/SelectScreen.js" />
   </scripts>
 
   <snippets>
     <snippet name="AbilityIcon">
       <Panel class="AbilityIcon" hittest="false">
         <DOTAAbilityImage id="AbilityImage" abilityname="ability_name" hittest="false" />
-        <Label id="AbilityTooltip" text="Ability Tooltip" />
+        <Label id="AbilityTooltip" />
       </Panel>
     </snippet>
   </snippets>

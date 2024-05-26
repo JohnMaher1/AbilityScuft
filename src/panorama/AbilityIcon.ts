@@ -16,14 +16,16 @@ class AbilityIcon {
       //this.abilityImage.SetImage("s2r://panorama/images/spellicons/" + abilityName + "_png.vtex");
       $.Msg("Att string", abilityName)
       //this.abilityImage.SetAttributeString("ability_name", abilityName);
-
-      this.abilityImage.SetPanelEvent("onmouseover", () => {
-          this.abilityTooltip.text = abilityName;
+      this.abilityTooltip.text = abilityName;
+      $.Msg("TEXT IS ", this.abilityTooltip.text)
           this.abilityTooltip.visible = true;
-      });
+      // this.abilityImage.SetPanelEvent("onmouseover", () => {
+      //     this.abilityTooltip.text = abilityName;
+      //     this.abilityTooltip.visible = true;
+      // });
 
-      this.abilityImage.SetPanelEvent("onmouseout", () => {
-          this.abilityTooltip.visible = false;
-      });
+      // this.abilityImage.SetPanelEvent("onmouseout", () => {
+      //     this.abilityTooltip.visible = false;
+      // });
   }
 }

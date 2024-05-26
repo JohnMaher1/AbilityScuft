@@ -1,5 +1,17 @@
+#AbilityIcons {
+    width: 300px;
+    height: 650px;
+    margin-top: 150px;
+    flow-children: down;
+}
 .AbilityIcon {
-    width: 500px;
-    height: 500px;
-    background-color: blue;
+    background-color: purple;
+    height: 80px;
+    width: 300px;
+    margin-bottom: 10px;
+}
+#AbilityImage {
+    width: 80px;
+    height: 80px;
+    background-color: black;
 }
