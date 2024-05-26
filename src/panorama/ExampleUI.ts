@@ -17,12 +17,12 @@ class ExampleUI {
 
       // Get all players and make a playerPortrait for each
       const players = Game.GetAllPlayerIDs();
-      players.forEach((playerID) => {
-        const heroName = Players.GetPlayerSelectedHero(playerID);
-        $.Msg("Hero name is", heroName);
-        const playerPortrait = new PlayerPortrait(container, heroName, `Player${playerID}`);
-        this.playerPanels[playerID] = playerPortrait;
-      });
+      // players.forEach((playerID) => {
+      //   const heroName = Players.GetPlayerSelectedHero(playerID);
+      //   $.Msg("Hero name is", heroName);
+      //   const playerPortrait = new PlayerPortrait(container, heroName, `Player${playerID}`);
+      //   this.playerPanels[playerID] = playerPortrait;
+      // });
 
       $.Msg("Player panels are", this.playerPanels);
 

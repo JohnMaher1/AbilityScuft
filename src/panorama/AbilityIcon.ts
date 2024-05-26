@@ -17,15 +17,21 @@ class AbilityIcon {
       $.Msg("Att string", abilityName)
       //this.abilityImage.SetAttributeString("ability_name", abilityName);
       this.abilityTooltip.text = abilityName;
+
+      this.panel.SetPanelEvent("onmouseover", () => {
+        $.Msg("Mouseover", abilityName)
+        this.abilityTooltip.text = abilityName;
+        this.abilityTooltip.visible = true;
+        $.DispatchEvent("DOTAShowAbilityTooltip", this.abilityImage, abilityName);
+    });
+
+
+
       $.Msg("TEXT IS ", this.abilityTooltip.text)
           this.abilityTooltip.visible = true;
-      // this.abilityImage.SetPanelEvent("onmouseover", () => {
-      //     this.abilityTooltip.text = abilityName;
-      //     this.abilityTooltip.visible = true;
-      // });
-
-      // this.abilityImage.SetPanelEvent("onmouseout", () => {
-      //     this.abilityTooltip.visible = false;
-      // });
+          
+      this.abilityImage.SetPanelEvent("onmouseout", () => {
+          this.abilityTooltip.visible = false;
+      });
   }
 }
