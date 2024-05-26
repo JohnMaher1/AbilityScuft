@@ -6,5 +6,7 @@
         <CustomUIElement type="Hud" layoutfile="file://{resources}/layout/custom_game/hud.xml" />
         <CustomUIElement type="Hud"
             layoutfile="file://{resources}/layout/custom_game/player_health.xml" />
+        <CustomUIElement type="Hud"
+            layoutfile="file://{resources}/layout/custom_game/ability_icon.xml" />
     </Panel>
 </root>

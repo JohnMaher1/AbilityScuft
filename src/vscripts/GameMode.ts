@@ -1,11 +1,6 @@
-import { registerAbility } from "./lib/dota_ts_adapter";
+import { BaseAbility, registerAbility } from "./lib/dota_ts_adapter";
 import { reloadable } from "./lib/tstl-utils";
 import { modifier_panic } from "./modifiers/modifier_panic";
-// Read the contents of the text file
-
-// Process the file contents
-// ...
-
 
 const heroSelectionTime = 20;
 
@@ -61,10 +56,6 @@ export class GameMode {
             return 0.25; // Return the amount (in seconds) OnThink triggers
         }, undefined, undefined, 0);
         GameRules.SetGoldPerTick(1000)
-        // Get list of all dota 2 abilities
-        
-        //const abilities = LoadKeyValues("../assets/npc_ability_ids.txt");
-        //print(abilities)
 
     }
 
@@ -73,7 +64,7 @@ export class GameMode {
         // Add 4 bots to lobby in tools
         if (IsInToolsMode() && state == GameState.CUSTOM_GAME_SETUP) {
             for (let i = 0; i < 4; i++) {
-                Tutorial.AddBot("npc_dota_hero_lina", "", "", false);
+                //Tutorial.AddBot("npc_dota_hero_lina", "", "", false);
             }
         }
 
@@ -99,11 +90,68 @@ export class GameMode {
 
     // Called on script_reload
     public Reload() {
-        print("SCRIPT RELOADED");
+        print("Script reloaded!");
+        // Read list of hero names and assign it to a hero array object
+        const heroList: CDOTA_BaseNPC_Hero[] = []
+        const t = LoadKeyValues("scripts/npc/npc_ability_ids.txt")
+        const abilityNames: string[] = []
+            Object.entries(t).forEach(([key, value]) => {
+                if (key === "UnitAbilities") {
+                    const unitAbilities = value as any
+                    Object.entries(unitAbilities).forEach(([key, value]) => {
+                        if (key === "Locked") {
+                            const abilities = value as any
+                            Object.entries(abilities).forEach(([key, value]) => {
+                                abilityNames.push(key as string)
+                            })
+                        }
+                        return
+                    })
+                }
+            })
+
+            CustomGameEventManager.Send_ServerToAllClients("on_abilities_load", abilityNames);
+            //print("NAMESS", abilityNames)
+            abilityNames.forEach((abilityName) => {
+                //print(abilityName)
+            })
+
+            const abilityWithTextureNames = abilityNames.filter((abilityName) => {
+                const ability = GetAbilityKeyValuesByName(abilityName) as any
+                if (ability?.AbilityTextureName) {
+                    //print(ability.AbilityTextureName)
+                    return true
+                }
+            })
+
+            // What is the event that is fired when the player hovers over one of the abilities?
+            // How do we get the ability name and ability description to show up in the UI?
+            // How do we get the ability icon to show up in the UI?
+            // How do we emit an event with the player and name when clicking this element
+            // How do we get the ability name and ability description to show up in the UI?
+
+            // HeroList.GetHero(0)?.AddAbility(abilityNames[0])
+            // HeroList.GetHero(0)?.AddAbility(abilityNames[1])
+            // HeroList.GetHero(0)?.AddAbility(abilityNames[2])
+            // HeroList.GetHero(0)?.AddAbility(abilityNames[3])
+            // HeroList.GetHero(0)?.AddAbility(abilityNames[4])
+
+            const ab = HeroList.GetHero(0)?.GetAbilityByIndex(0)
+
+        // HeroList.GetAllHeroes().forEach((hero) => {
+        //     //print(hero.GetUnitName())
+        //     for (let i = 0; i < hero.GetAbilityCount(); i++) {
+        //         const ability = hero.GetAbilityByIndex(i);
+        //         if (ability) {
+        //             if (ability.GetAbilityType() !== AbilityTypes.ATTRIBUTES) {
+        //             //print(ability.GetName())
+        //         }
+        //     }}
+        // })
+
     }
 
     public OnThink(entity: CBaseEntity): void {
-        //print("Game Think", entity);
         CustomGameEventManager.Send_ServerToAllClients("on_think", {} as never);
 
     }
@@ -122,3 +170,4 @@ export class GameMode {
     }
 
 }
+
