@@ -1,5 +1,11 @@
+import { registerAbility } from "./lib/dota_ts_adapter";
 import { reloadable } from "./lib/tstl-utils";
 import { modifier_panic } from "./modifiers/modifier_panic";
+// Read the contents of the text file
+
+// Process the file contents
+// ...
+
 
 const heroSelectionTime = 20;
 
@@ -23,11 +29,9 @@ export class GameMode {
 
     constructor() {
         this.configure();
-
         // Register event listeners for dota engine events
         ListenToGameEvent("game_rules_state_change", () => this.OnStateChange(), undefined);
         ListenToGameEvent("npc_spawned", event => this.OnNpcSpawned(event), undefined);
-
         // Register event listeners for events from the UI
         CustomGameEventManager.RegisterListener("ui_panel_closed", (_, data) => {
             print(`Player ${data.PlayerID} has closed their UI panel.`);
@@ -50,14 +54,22 @@ export class GameMode {
     private configure(): void {
         GameRules.SetCustomGameTeamMaxPlayers(DotaTeam.GOODGUYS, 3);
         GameRules.SetCustomGameTeamMaxPlayers(DotaTeam.BADGUYS, 3);
-
         GameRules.SetShowcaseTime(0);
         GameRules.SetHeroSelectionTime(heroSelectionTime);
+        GameRules.GetGameModeEntity().SetThink((entity: CBaseEntity) => {
+            this.OnThink(entity);
+            return 0.25; // Return the amount (in seconds) OnThink triggers
+        }, undefined, undefined, 0);
+        GameRules.SetGoldPerTick(1000)
+        // Get list of all dota 2 abilities
+        
+        //const abilities = LoadKeyValues("../assets/npc_ability_ids.txt");
+        //print(abilities)
+
     }
 
     public OnStateChange(): void {
         const state = GameRules.State_Get();
-
         // Add 4 bots to lobby in tools
         if (IsInToolsMode() && state == GameState.CUSTOM_GAME_SETUP) {
             for (let i = 0; i < 4; i++) {
@@ -82,16 +94,20 @@ export class GameMode {
 
     private StartGame(): void {
         print("Game starting!");
-
         // Do some stuff here
     }
 
     // Called on script_reload
     public Reload() {
-        print("Script reloaded!");
-
-        // Do some stuff here
+        print("SCRIPT RELOADED");
     }
+
+    public OnThink(entity: CBaseEntity): void {
+        //print("Game Think", entity);
+        CustomGameEventManager.Send_ServerToAllClients("on_think", {} as never);
+
+    }
+
 
     private OnNpcSpawned(event: NpcSpawnedEvent) {
         // After a hero unit spawns, apply modifier_panic for 8 seconds
@@ -104,4 +120,5 @@ export class GameMode {
             }
         }
     }
+
 }

@@ -1,5 +1,5 @@
 {
-    "name": "",
+    "name": "floppers_game_one",
     "private": true,
     "scripts": {
         "postinstall": "node scripts/install.js",

@@ -14,7 +14,8 @@
 // To declare an event for use, add it to this table with the type of its data
 interface CustomGameEventDeclarations {
     example_event: ExampleEventData,
-    ui_panel_closed: UIPanelClosedEventData
+    ui_panel_closed: UIPanelClosedEventData,
+    on_think: never;
 }
 
 // Define the type of data sent by the example_event event
