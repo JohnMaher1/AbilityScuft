@@ -25,11 +25,11 @@ class PlayerPortrait {
       this.heroImage.SetImage("s2r://panorama/images/heroes/" + heroName + "_png.vtex");
 
       // Initialise health at 100%
-      this.SetHealthPercent(100);
+      //this.SetHealthPercent(100);
   }
 
   // Set the health bar to a certain percentage (0-100)
-  SetHealthPercent(percentage: number) {
-      this.hpBar.style.width = Math.floor(percentage) + "%"; // wots
-  }
+  // SetHealthPercent(percentage: number) {
+  //     this.hpBar.style.width = Math.floor(percentage) + "%"; // wots
+  // }
 }

@@ -44,7 +44,7 @@ class ExampleUI {
       }
       const hpPercentage = Entities.GetHealthPercent(hero);
       const playerPortrait = this.playerPanels[playerID] as PlayerPortrait;
-      playerPortrait.SetHealthPercent(hpPercentage);
+      //playerPortrait.SetHealthPercent(hpPercentage);
     });
 
 }

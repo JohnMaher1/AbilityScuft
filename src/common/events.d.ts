@@ -16,7 +16,13 @@ interface CustomGameEventDeclarations {
     example_event: ExampleEventData,
     ui_panel_closed: UIPanelClosedEventData,
     on_think: never;
-    on_abilities_load: string[];
+    on_abilities_load: AbilityInformation[];
+}
+
+interface AbilityInformation {
+    abilityName: string;
+    abilityNumber: number;
+
 }
 
 // Define the type of data sent by the example_event event

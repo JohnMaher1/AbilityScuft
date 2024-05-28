@@ -10,7 +10,7 @@
   <snippets>
     <snippet name="AbilityIcon">
       <Panel class="AbilityIcon" hittest="false">
-        <DOTAAbilityImage id="AbilityImage" abilityname="ability_name" hittest="false" />
+        <Image id="AbilityImage" hittest="false" />
         <Label id="AbilityTooltip" />
       </Panel>
     </snippet>
