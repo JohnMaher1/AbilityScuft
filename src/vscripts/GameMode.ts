@@ -80,6 +80,19 @@ export class GameMode {
     private configure(): void {
         GameRules.SetCustomGameTeamMaxPlayers(DotaTeam.GOODGUYS, 3);
         GameRules.SetCustomGameTeamMaxPlayers(DotaTeam.BADGUYS, 3);
+        // GameRules.SetCustomGameSetupTimeout(3);
+
+        // Timers.CreateTimer(3, () => {
+        //     GameRules.FinishCustomGameSetup();
+        // });
+
+        // // Make all setup including hero selection in this setup phase
+        // // Custom Game Phase 1: Settings, stuff like team selection, gold gain etc
+        // // Custom Game Phase 2: Hero Selection (pre straight forward)
+        // // Custom Game Phase 3: Ability Selection (oh yeah)
+        // // End Custom Game Setup and go for it
+
+        GameRules.SetPreGameTime(500);
         GameRules.SetShowcaseTime(0);
         GameRules.SetHeroSelectionTime(heroSelectionTime);
         GameRules.GetGameModeEntity().SetThink(
@@ -98,8 +111,8 @@ export class GameMode {
         const state = GameRules.State_Get();
         // Add 4 bots to lobby in tools
         if (IsInToolsMode() && state == GameState.CUSTOM_GAME_SETUP) {
-            for (let i = 0; i < 4; i++) {
-                //Tutorial.AddBot("npc_dota_hero_lina", "", "", false);
+            for (let i = 0; i < 5; i++) {
+                Tutorial.AddBot("npc_dota_hero_lina", "", "", false);
             }
         }
 
@@ -114,37 +127,41 @@ export class GameMode {
 
         // Start game once pregame hits
         if (state === GameState.PRE_GAME) {
-            Timers.CreateTimer(0.2, () => this.StartGame());
+            Timers.CreateTimer(1, () => this.StartGame());
         }
     }
 
     private StartGame(): void {
         print("Game starting!");
+        this.ReadAllHeroFiles();
         // Do some stuff here
     }
 
     private ReadAllHeroFiles() {
         const heroList = LoadKeyValues("scripts/npc/hero_list.txt");
-        const maxLength = 10;
         let index = 1;
         const abilities: AbilityInformation[] = [];
 
         // Randomize Object.entries(heroList) to get a random hero
 
-        const abilityTotalCount = 10;
+        const abilityTotalCount = 90;
+        print(abilityTotalCount, "ABILITY COUNT");
+        const heroEntries = Object.entries(heroList);
 
         for (let i = 0; i < abilityTotalCount; i++) {
             const random = Math.floor(
                 Math.random() * Object.keys(heroList).length
             );
-            const heroEntries = Object.entries(heroList);
+            print(random);
             const [key, value] = heroEntries[random];
 
             const file = LoadKeyValues("scripts/npc/heroes/" + key + ".txt");
-
+            let hasAddedHeroAbility: boolean = false;
             Object.entries(file).forEach(([abilityName, abilityValues]) => {
                 let canAddAbility: boolean = true;
-                print("abilityName", abilityName);
+                if (hasAddedHeroAbility) {
+                    return;
+                }
                 if (
                     typeof abilityValues !== "number" &&
                     !isSpecialAbility(abilityName)
@@ -172,6 +189,7 @@ export class GameMode {
                             abilityName: abilityName,
                             abilityNumber: 1,
                         });
+                        hasAddedHeroAbility = true;
                     }
                 }
             });
@@ -182,7 +200,7 @@ export class GameMode {
             abilities
         );
         abilities.forEach((abilityName) => {
-            print(abilityName);
+            //print(abilityName);
         });
     }
 

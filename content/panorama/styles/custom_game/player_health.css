@@ -1,18 +1,40 @@
-#HeroPortraits {
-    width: 300px;
+#HeroPortraitsLeft {
+    width: 240px;
     height: 650px;
     margin-top: 150px;
     flow-children: down;
+    horizontal-align: left;
 }
+
+#HeroPortraitsRight {
+    width: 240px;
+    height: 650px;
+    margin-top: 150px;
+    margin-right: 0px;
+    padding-right: 0px;
+    flow-children: down;
+    horizontal-align: right;
+}
+
 .PlayerPortrait {
-    background-color: purple;
-    height: 80px;
-    width: 300px;
+    background-color: rgba(220, 246, 247, 0.1);
+    height: 70px;
+    width: 240px;
     margin-bottom: 10px;
 }
+
+.PlayerPortrait .IsPickTurn {
+    background-color: rgba(0, 255, 0, 0.5);
+}
+
+.AbilityBackgroundImage {
+    height: 100%;
+    width: 100%;
+}
+
 #HeroImage {
-    width: 80px;
-    height: 80px;
+    width: 70px;
+    height: 70px;
     background-color: black;
 }
 #PlayerName {
