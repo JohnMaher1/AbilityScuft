@@ -12,7 +12,6 @@ class SelectScreen {
         const abilities: AbilityInformation[] = [];
         for (const key in event) {
             const ability = event[key];
-            $.Msg("ability", ability);
             abilities.push({
                 abilityName: ability.abilityName,
                 abilityNumber: ability.abilityNumber,
@@ -26,6 +25,7 @@ class SelectScreen {
         const container = this.panel.FindChild("AbilityIcons")!;
         $.Msg("SelectScreen constructor", container);
         GameEvents.Subscribe("on_abilities_load", (event) => {
+            container.RemoveAndDeleteChildren();
             //$.Msg("on_abilities_load")
             //$.Msg(event)
             const AbilityInformation = this.convertToAbilityInformation(event);
@@ -36,13 +36,6 @@ class SelectScreen {
             this.abilityIcons = {};
             abilities.forEach((ability, index) => {
                 // Check ability has an image
-                $.Msg("tt", ability.abilityName);
-                $.Msg("tt", ability.abilityNumber);
-                //this.abilityImage.SetImage("s2r://panorama/images/spellicons/" + ability.abilityName + "_png.vtex");
-
-                // Check if file exists
-
-                $.Msg("abilityName", ability.abilityName);
                 // Get hero ability is associated with
 
                 const abilityIcon = new AbilityIcon(

@@ -19,8 +19,8 @@ class AbilityIcon {
         );
         this.abilityTooltip.style.width = "200px";
         this.abilityTooltip.style.height = "200px";
+
         this.panel.SetPanelEvent("onmouseover", () => {
-            $.Msg("Mouseover", abilityName);
             this.abilityTooltip.visible = true;
             $.DispatchEvent(
                 "DOTAShowAbilityTooltip",
@@ -28,12 +28,19 @@ class AbilityIcon {
                 abilityName
             );
         });
+
+        // Listen to ability image onClick
+
         this.panel.SetPanelEvent("onmouseout", () => {
             $.DispatchEvent("DOTAHideAbilityTooltip");
         });
 
-        this.abilityImage.SetPanelEvent("onmouseout", () => {
-            this.abilityTooltip.visible = false;
+        this.abilityTooltip.SetPanelEvent("onactivate", () => {
+            const playerId = Players.GetLocalPlayer();
+            GameEvents.SendCustomGameEventToServer("on_ability_clicked", {
+                player: playerId,
+                abilityName: abilityName,
+            });
         });
     }
 }

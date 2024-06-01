@@ -7,8 +7,11 @@ import {
 import { BaseAbility, registerAbility } from "./lib/dota_ts_adapter";
 import { reloadable } from "./lib/tstl-utils";
 import { modifier_panic } from "./modifiers/modifier_panic";
+import { AbilitySelection } from "./lib/ability_selection";
 
 const heroSelectionTime = 20;
+
+let abilitySelection: AbilitySelection;
 
 declare global {
     interface CDOTAGameRules {
@@ -49,6 +52,7 @@ export class GameMode {
             (event) => this.OnNpcSpawned(event),
             undefined
         );
+
         // Register event listeners for events from the UI
         CustomGameEventManager.RegisterListener(
             "ui_panel_closed",
@@ -80,6 +84,9 @@ export class GameMode {
     private configure(): void {
         GameRules.SetCustomGameTeamMaxPlayers(DotaTeam.GOODGUYS, 3);
         GameRules.SetCustomGameTeamMaxPlayers(DotaTeam.BADGUYS, 3);
+        GameRules.SetHeroSelectionTime(3);
+        GameRules.SetStrategyTime(3);
+        // Setup Ability Selection
         // GameRules.SetCustomGameSetupTimeout(3);
 
         // Timers.CreateTimer(3, () => {
@@ -111,8 +118,11 @@ export class GameMode {
         const state = GameRules.State_Get();
         // Add 4 bots to lobby in tools
         if (IsInToolsMode() && state == GameState.CUSTOM_GAME_SETUP) {
-            for (let i = 0; i < 5; i++) {
+            // Force pick a hero for dev
+            PlayerResource.GetPlayer(0)!.MakeRandomHeroSelection();
+            for (let i = 0; i < 4; i++) {
                 Tutorial.AddBot("npc_dota_hero_lina", "", "", false);
+                //Tutorial.AddBot("npc_dota_hero_lina", "", "", true);
             }
         }
 
@@ -133,8 +143,15 @@ export class GameMode {
 
     private StartGame(): void {
         print("Game starting!");
-        this.ReadAllHeroFiles();
+        this.ReloadAndStartGame();
+        print("HMMM");
         // Do some stuff here
+    }
+
+    private ReloadAndStartGame(): void {
+        this.ReadAllHeroFiles();
+        abilitySelection = new AbilitySelection();
+        abilitySelection.init();
     }
 
     private ReadAllHeroFiles() {
@@ -145,14 +162,12 @@ export class GameMode {
         // Randomize Object.entries(heroList) to get a random hero
 
         const abilityTotalCount = 90;
-        print(abilityTotalCount, "ABILITY COUNT");
         const heroEntries = Object.entries(heroList);
 
         for (let i = 0; i < abilityTotalCount; i++) {
             const random = Math.floor(
                 Math.random() * Object.keys(heroList).length
             );
-            print(random);
             const [key, value] = heroEntries[random];
 
             const file = LoadKeyValues("scripts/npc/heroes/" + key + ".txt");
@@ -207,7 +222,8 @@ export class GameMode {
     // Called on script_reload
     public Reload() {
         print("Script reloaded!");
-        this.ReadAllHeroFiles();
+        this.ReloadAndStartGame();
+        //this.ReadAllHeroFiles();
     }
 
     public OnThink(entity: CBaseEntity): void {

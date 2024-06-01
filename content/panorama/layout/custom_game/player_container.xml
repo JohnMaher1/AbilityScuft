@@ -1,11 +1,11 @@
 <root>
   <styles>
-    <include src="file://{resources}/styles/custom_game/player_health.css" />
+    <include src="file://{resources}/styles/custom_game/player_container.css" />
   </styles>
 
   <scripts>
     <include src="file://{resources}/scripts/custom_game/PlayerPortrait.js" />
-    <include src="file://{resources}/scripts/custom_game/ExampleUI.js" />
+    <include src="file://{resources}/scripts/custom_game/PlayersContainer.js" />
   </scripts>
 
   <snippets>

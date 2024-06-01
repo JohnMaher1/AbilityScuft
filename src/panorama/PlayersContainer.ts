@@ -3,16 +3,18 @@ interface HPChangedEvent {
     hpPercentage: number;
 }
 
-class ExampleUI {
-    // Instance variables
+class PlayersContainer {
     panel: Panel;
     playerPanels: Partial<Record<PlayerID, PlayerPortrait>> = {};
-    // ExampleUI constructor
+    playerTurn: PlayerID = 0;
+    playerTurnOrder: PlayerID[] = [];
+    playerTurnReversed: boolean = false;
     constructor(panel: Panel) {
         this.panel = panel;
-
         // Find container element
-        const container = this.panel.FindChild("HeroPortraitsRight")!;
+        let container = this.panel.FindChild("HeroPortraitsRight")!;
+        container.RemoveAndDeleteChildren();
+        container = this.panel.FindChild("HeroPortraitsLeft")!;
         container.RemoveAndDeleteChildren();
 
         // Get all players and make a playerPortrait for each
@@ -35,31 +37,18 @@ class ExampleUI {
             this.playerPanels[playerID] = playerPortrait;
         });
 
-        $.Msg("Player panels are", this.playerPanels);
-
-        GameEvents.Subscribe("on_think", () => {
-            this.HandleHPBars();
-        });
-    }
-
-    // Event handler for HP Changed event
-    HandleHPBars() {
-        // Get portrait for this player
-
-        // Get all players and their current health
-        const players = Game.GetAllPlayerIDs();
-        players.forEach((playerID) => {
-            let hero = Players.GetPlayerHeroEntityIndex(playerID);
-            if (hero === -1) {
-                return;
-            }
-            const hpPercentage = Entities.GetHealthPercent(hero);
-            const playerPortrait = this.playerPanels[
-                playerID
-            ] as PlayerPortrait;
-            //playerPortrait.SetHealthPercent(hpPercentage);
+        GameEvents.Subscribe("on_turn_change", (event) => {
+            const players = Game.GetAllPlayerIDs();
+            const playerTurnID = event.playerTurnID;
+            players.forEach((playerID) => {
+                const playerPanel = this.playerPanels[playerID];
+                playerPanel.panel.style.border =
+                    playerID === playerTurnID
+                        ? "3px solid lime"
+                        : "0px solid blue";
+            });
         });
     }
 }
 
-let ui = new ExampleUI($.GetContextPanel());
+let ui = new PlayersContainer($.GetContextPanel());
