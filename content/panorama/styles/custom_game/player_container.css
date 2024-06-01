@@ -1,7 +1,7 @@
 #HeroPortraitsLeft {
     width: 240px;
     height: 650px;
-    margin-top: 275px;
+    margin-top: 160px;
     flow-children: down;
     horizontal-align: left;
 }
@@ -9,16 +9,63 @@
 #HeroPortraitsRight {
     width: 240px;
     height: 650px;
-    margin-top: 275px;
+    margin-top: 160px;
     margin-right: 0px;
     padding-right: 0px;
     flow-children: down;
     horizontal-align: right;
 }
 
+#HeroPortraitContainer {
+    width: 100%;
+    height: 100%;
+}
+
+#Ability1 {
+    margin-top: 60px;
+    width: 40px;
+    height: 40px;
+    /* border: 50px solid red; */
+}
+
+.AbilityBackgroundImage {
+    height: 100%;
+    width: 100%;
+    z-index: -100;
+}
+
+#Ability2 {
+    margin-top: 60px;
+    margin-left: 50px;
+    width: 40px;
+    height: 40px;
+}
+
+#Ability3 {
+    margin-top: 60px;
+    margin-left: 100px;
+    width: 40px;
+    height: 40px;
+}
+
+#Ability4 {
+    margin-top: 60px;
+    margin-left: 150px;
+    width: 40px;
+    height: 40px;
+}
+
+#PlayerSelectedAbilities {
+    margin-top: 70px;
+    width: 100%;
+    height: 100%;
+    background-color: red;
+    opacity: 0.3;
+}
+
 .PlayerPortrait {
     background-color: rgba(220, 246, 247, 0.1);
-    height: 70px;
+    height: 100px;
     width: 240px;
     margin-bottom: 10px;
 }
@@ -31,17 +78,20 @@
     height: 100%;
     width: 100%;
 }
+.AbilityBackgroundImage .IsPicked {
+    opacity: 0.3;
+}
 
 #HeroImage {
-    width: 70px;
-    height: 70px;
+    width: 50px;
+    height: 50px;
     background-color: black;
 }
 #PlayerName {
     color: white;
     font-size: 25px;
     margin-top: 10px;
-    margin-left: 90px;
+    margin-left: 70px;
 }
 .HealthContainer {
     width: 200px;

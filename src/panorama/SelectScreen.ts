@@ -2,6 +2,7 @@ class SelectScreen {
     panel: Panel;
     abilityIcons: Partial<AbilityIcon> = {};
     abilityImage: ImagePanel;
+    hudBackground: Panel;
 
     convertToAbilityInformation(event: {
         [key: number]: {
@@ -45,6 +46,10 @@ class SelectScreen {
                 this.abilityIcons[index] = abilityIcon;
             });
         };
+
+        GameEvents.Subscribe("on_ability_pick_phase_completed", () => {
+            container.RemoveAndDeleteChildren();
+        });
     }
 }
 

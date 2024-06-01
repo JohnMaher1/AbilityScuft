@@ -14,6 +14,11 @@ import { AbilitySelection } from "./lib/ability_selection";
 const heroSelectionTime = 20;
 
 let abilitySelection: AbilitySelection;
+let mockPickDebug = false;
+
+interface DebugParameters {
+    abilityNames: string[];
+}
 
 declare global {
     interface CDOTAGameRules {
@@ -84,10 +89,14 @@ export class GameMode {
     }
 
     private configure(): void {
-        GameRules.SetCustomGameTeamMaxPlayers(DotaTeam.GOODGUYS, 3);
-        GameRules.SetCustomGameTeamMaxPlayers(DotaTeam.BADGUYS, 3);
-        GameRules.SetHeroSelectionTime(3);
-        GameRules.SetStrategyTime(3);
+        GameRules.SetCustomGameTeamMaxPlayers(DotaTeam.GOODGUYS, 5);
+        GameRules.SetCustomGameTeamMaxPlayers(DotaTeam.BADGUYS, 5);
+        GameRules.SetHeroSelectionTime(10);
+        GameRules.SetStrategyTime(10);
+
+        const gameModeEntity = GameRules.GetGameModeEntity();
+        gameModeEntity.SetAnnouncerDisabled(true);
+        // Ignore pregame sounds
         // Setup Ability Selection
         // GameRules.SetCustomGameSetupTimeout(3);
 
@@ -101,18 +110,20 @@ export class GameMode {
         // // Custom Game Phase 3: Ability Selection (oh yeah)
         // // End Custom Game Setup and go for it
 
-        GameRules.SetPreGameTime(500);
         GameRules.SetShowcaseTime(0);
         GameRules.SetHeroSelectionTime(heroSelectionTime);
         GameRules.GetGameModeEntity().SetThink(
             (entity: CBaseEntity) => {
                 this.OnThink(entity);
-                return 0.25; // Return the amount (in seconds) OnThink triggers
+                return 0.1; // Return the amount (in seconds) OnThink triggers
             },
             undefined,
             undefined,
             0
         );
+
+        // Write logic to disable announcers
+
         GameRules.SetGoldPerTick(1000);
     }
 
@@ -121,10 +132,11 @@ export class GameMode {
         // Add 4 bots to lobby in tools
         if (IsInToolsMode() && state == GameState.CUSTOM_GAME_SETUP) {
             // Force pick a hero for dev
-            PlayerResource.GetPlayer(0)!.MakeRandomHeroSelection();
-            for (let i = 0; i < 4; i++) {
+            for (let i = 0; i < 5; i++) {
                 Tutorial.AddBot("npc_dota_hero_lina", "", "", false);
-                //Tutorial.AddBot("npc_dota_hero_lina", "", "", true);
+            }
+            for (let i = 1; i < 5; i++) {
+                Tutorial.AddBot("npc_dota_hero_lina", "", "", true);
             }
         }
 
@@ -151,12 +163,12 @@ export class GameMode {
     }
 
     private ReloadAndStartGame(): void {
-        this.ReadAllHeroFiles();
-        abilitySelection = new AbilitySelection();
+        const debugParameters = this.ReadAllHeroFiles();
+        abilitySelection = new AbilitySelection(debugParameters.abilityNames);
         abilitySelection.init();
     }
 
-    private ReadAllHeroFiles() {
+    private ReadAllHeroFiles(): DebugParameters {
         const heroList = LoadKeyValues("scripts/npc/hero_list.txt");
         let index = 1;
         const abilities: AbilityInformation[] = [];
@@ -229,6 +241,7 @@ export class GameMode {
             "on_abilities_load",
             abilities
         );
+        return { abilityNames: abilityNames };
     }
 
     // Called on script_reload
@@ -239,6 +252,9 @@ export class GameMode {
     }
 
     public OnThink(entity: CBaseEntity): void {
+        if (abilitySelection && mockPickDebug) {
+            abilitySelection.mockPick();
+        }
         CustomGameEventManager.Send_ServerToAllClients("on_think", {} as never);
     }
 

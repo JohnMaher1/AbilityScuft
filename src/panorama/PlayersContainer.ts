@@ -10,12 +10,14 @@ class PlayersContainer {
     playerTurnOrder: PlayerID[] = [];
     playerTurnReversed: boolean = false;
     constructor(panel: Panel) {
+        $.Msg("PlayersContainer constructor");
         this.panel = panel;
         // Find container element
+
         let container = this.panel.FindChild("HeroPortraitsRight")!;
-        container.RemoveAndDeleteChildren();
+        container?.RemoveAndDeleteChildren();
         container = this.panel.FindChild("HeroPortraitsLeft")!;
-        container.RemoveAndDeleteChildren();
+        container?.RemoveAndDeleteChildren();
 
         // Get all players and make a playerPortrait for each
         const players = Game.GetAllPlayerIDs();
@@ -48,6 +50,26 @@ class PlayersContainer {
                         : "0px solid blue";
             });
         });
+
+        GameEvents.Subscribe("on_player_ability_select", (event) => {
+            this.setImage(
+                event.playerID,
+                event.abilityPosition,
+                event.abilityName
+            );
+        });
+
+        GameEvents.Subscribe("on_ability_pick_phase_completed", () => {
+            const wholeContainer = this.panel.FindChild(
+                "HeroPortraitContainer"
+            )!;
+            wholeContainer.RemoveAndDeleteChildren(); // TEST
+        });
+    }
+
+    setImage(playerID: PlayerID, abilityPosition: number, abilityName: string) {
+        const playerPanel = this.playerPanels[playerID];
+        playerPanel.setAbilityImage(abilityPosition, abilityName);
     }
 }
 

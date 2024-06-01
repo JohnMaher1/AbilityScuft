@@ -1,12 +1,22 @@
 import { reloadable } from "./tstl-utils";
 
+interface PlayerAbilityCounts {
+    playerID: PlayerID;
+    abilityCount: number;
+}
 @reloadable
 export class AbilitySelection {
     playerTurn: PlayerID = 0;
     playerTurnOrder: PlayerID[] = [];
     playerTurnReversed: boolean = false;
     canPickAgain: boolean = false;
-    constructor() {}
+    abilityNames: string[] = [];
+    maxMockTurns = 40;
+    currentMockTurn = 0;
+    playerAbilityCounts: PlayerAbilityCounts[] = [];
+    constructor(abilityNames: string[]) {
+        this.abilityNames = abilityNames;
+    }
 
     init() {
         print("Ability Selection initialized");
@@ -16,7 +26,6 @@ export class AbilitySelection {
         this.createPlayerTurnOrder();
         this.registerAbilityClick();
         this.removeAllAbilitiesFromPlayers();
-        //this.mockPick(); // For testing
     }
     removeAllAbilitiesFromPlayers() {
         for (let i = 0; i < DOTA_MAX_TEAM_PLAYERS; i++) {
@@ -52,11 +61,44 @@ export class AbilitySelection {
         );
     };
 
+    handlePlayerAbilityCount(playerID: PlayerID) {
+        const playerAbilityCount = this.playerAbilityCounts.find(
+            (playerAbilityCount) => playerAbilityCount.playerID === playerID
+        );
+        if (playerAbilityCount) {
+            playerAbilityCount.abilityCount++;
+        } else {
+            this.playerAbilityCounts.push({
+                playerID: playerID,
+                abilityCount: 1,
+            });
+        }
+    }
+
     handlePlayerAbilityClicked(playerID: PlayerID, abilityName: string) {
         if (playerID === this.playerTurn) {
             // Assign ability to player
             const player = PlayerResource.GetPlayer(playerID)!;
-            player.GetAssignedHero().AddAbility(abilityName);
+            const playerHero = player.GetAssignedHero();
+            playerHero.AddAbility(abilityName);
+            this.handlePlayerAbilityCount(playerID);
+            // Get position of ability
+            let abilityPosition = 1;
+            for (let i = 0; i < 4; i++) {
+                if (!playerHero.GetAbilityByIndex(i)) {
+                    abilityPosition = i + 1;
+                    break;
+                }
+            }
+
+            CustomGameEventManager.Send_ServerToAllClients(
+                "on_player_ability_select",
+                {
+                    playerID: playerID,
+                    abilityName: abilityName,
+                    abilityPosition: abilityPosition as 1 | 2 | 3 | 4,
+                }
+            );
 
             switch (true) {
                 // Last player is normal order
@@ -107,34 +149,41 @@ export class AbilitySelection {
                 (this.playerTurnOrder.indexOf(this.playerTurn) + 1) %
                     this.playerTurnOrder.length
             ];
+
         // Check if all players have selected 4 abilities
-        let allPlayersHaveSelectedAbilities = true;
-        for (let i = 0; i < DOTA_MAX_TEAM_PLAYERS; i++) {
-            const playerID = i;
-            if (PlayerResource.IsValidPlayerID(playerID)) {
-                const hero =
-                    PlayerResource.GetPlayer(playerID)?.GetAssignedHero();
-                if (hero && hero.GetAbilityCount() < 4) {
-                    allPlayersHaveSelectedAbilities = false;
-                    break;
-                }
+        let allPlayersHaveSelectedAbilities = false;
+
+        const playerAbilityCountLength = this.playerAbilityCounts.length;
+        if (playerAbilityCountLength === PlayerResource.GetPlayerCount()) {
+            if (
+                this.playerAbilityCounts.every(
+                    (playerAbilityCount) => playerAbilityCount.abilityCount >= 4
+                )
+            ) {
+                allPlayersHaveSelectedAbilities = true;
             }
         }
+
         if (allPlayersHaveSelectedAbilities) {
-            //print("All players have selected abilities");
-            // TODO - Dispatch an event to the UI to remove Ability Selection HUD
+            print("All players have selected abilities");
+            CustomGameEventManager.Send_ServerToAllClients(
+                "on_ability_pick_phase_completed",
+                {} as never
+            );
         }
     }
 
     mockPick() {
-        let playerCount = 5;
-        let abilityCountTotal = playerCount * 4;
-        for (let i = 0; i < abilityCountTotal; i++) {
-            this.handlePlayerAbilityClicked(
-                this.playerTurn,
-                "earthshaker_aftershock"
-            );
+        if (this.currentMockTurn > this.maxMockTurns) {
+            return;
         }
+
+        const randomAbility =
+            this.abilityNames[
+                Math.floor(Math.random() * this.abilityNames.length)
+            ];
+        this.handlePlayerAbilityClicked(this.playerTurn, randomAbility);
+        this.currentMockTurn++;
     }
 
     createPlayerTurnOrder() {

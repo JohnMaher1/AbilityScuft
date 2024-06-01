@@ -1,12 +1,9 @@
 <root>
-    <scripts>
-        <include src="file://{resources}/scripts/custom_game/manifest.js" />
-    </scripts>
     <Panel>
-        <CustomUIElement type="Hud" layoutfile="file://{resources}/layout/custom_game/hud.xml" />
-        <CustomUIElement type="Hud"
-            layoutfile="file://{resources}/layout/custom_game/player_container.xml" />
         <CustomUIElement type="Hud"
             layoutfile="file://{resources}/layout/custom_game/ability_icon.xml" />
+        <CustomUIElement type="Hud"
+            layoutfile="file://{resources}/layout/custom_game/players_container.xml" />
+        <!-- <Panel></Panel> -->
     </Panel>
 </root>

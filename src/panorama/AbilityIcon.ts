@@ -2,11 +2,11 @@ class AbilityIcon {
     panel: Panel;
     abilityImage: ImagePanel;
     abilityTooltip: LabelPanel;
+    canBePicked: boolean = true;
 
     constructor(parent: Panel, abilityName: string) {
         const panel = $.CreatePanel("Panel", parent, "");
         this.panel = panel;
-
         panel.BLoadLayoutSnippet("AbilityIcon");
 
         this.abilityImage = panel.FindChildInLayoutFile("AbilityImage") as any;
@@ -36,11 +36,21 @@ class AbilityIcon {
         });
 
         this.abilityTooltip.SetPanelEvent("onactivate", () => {
+            if (!this.canBePicked) {
+                return;
+            }
             const playerId = Players.GetLocalPlayer();
             GameEvents.SendCustomGameEventToServer("on_ability_clicked", {
                 player: playerId,
                 abilityName: abilityName,
             });
+        });
+
+        GameEvents.Subscribe("on_player_ability_select", (event) => {
+            if (event.abilityName === abilityName) {
+                this.canBePicked = false;
+                this.panel.style.opacity = "0.5";
+            }
         });
     }
 }

@@ -20,6 +20,14 @@ interface CustomGameEventDeclarations {
     on_ability_clicked: AbilityClickedEventData;
     on_ability_handled: AbilityClickedEventData;
     on_turn_change: PlayerTurnChangedEvent;
+    on_player_ability_select: PlayerAbilitySelectEvent;
+    on_ability_pick_phase_completed: never;
+}
+
+interface PlayerAbilitySelectEvent {
+    playerID: PlayerID;
+    abilityName: string;
+    abilityPosition: 1 | 2 | 3 | 4;
 }
 
 interface PlayerTurnChangedEvent {
