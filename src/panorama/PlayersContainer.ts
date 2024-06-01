@@ -14,6 +14,13 @@ class PlayersContainer {
         this.panel = panel;
         // Find container element
 
+        let abilityImage = this.panel.FindChild(
+            "AbilityBackgroundImage"
+        )! as ImagePanel;
+        abilityImage.SetImage(
+            "file://{images}/custom_game/ability_background.jpg"
+        );
+
         let container = this.panel.FindChild("HeroPortraitsRight")!;
         container?.RemoveAndDeleteChildren();
         container = this.panel.FindChild("HeroPortraitsLeft")!;
@@ -60,10 +67,14 @@ class PlayersContainer {
         });
 
         GameEvents.Subscribe("on_ability_pick_phase_completed", () => {
-            const wholeContainer = this.panel.FindChild(
-                "HeroPortraitContainer"
-            )!;
-            wholeContainer.RemoveAndDeleteChildren(); // TEST
+            const tempContainer = this.panel.FindChild("HeroPortraitsRight")!;
+            tempContainer?.RemoveAndDeleteChildren();
+            const tempContainer2 = this.panel.FindChild("HeroPortraitsLeft")!;
+            tempContainer2?.RemoveAndDeleteChildren();
+            const tempContainer3 = this.panel.FindChild(
+                "AbilityBackgroundImage"
+            )! as ImagePanel;
+            tempContainer3?.SetImage("");
         });
     }
 

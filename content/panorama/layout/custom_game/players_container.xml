@@ -9,15 +9,20 @@
   </scripts>
 
   <snippets>
-    <snippet name="PlayerPortrait">
+    <snippet name="PlayerPortrait" hittest="false">
       <Panel class="PlayerPortrait" hittest="false">
         <Image id="HeroImage" hittest="false" />
-        <Label id="PlayerName" />
+        <Label id="PlayerName" hittest="false" />
+        <Image id="Ability1" />
+        <Image id="Ability2" />
+        <Image id="Ability3" />
+        <Image id="Ability4" />
       </Panel>
     </snippet>
   </snippets>
 
   <Panel hittest="false" style="width: 100%; height: 100%;">
+    <Image id="AbilityBackgroundImage" hittest="false" />
     <Panel id="HeroPortraitsLeft" />
     <Panel id="HeroPortraitsRight" />
   </Panel>

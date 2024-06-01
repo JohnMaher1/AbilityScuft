@@ -14,7 +14,7 @@ import { AbilitySelection } from "./lib/ability_selection";
 const heroSelectionTime = 20;
 
 let abilitySelection: AbilitySelection;
-let mockPickDebug = false;
+let mockPickDebug = true;
 
 interface DebugParameters {
     abilityNames: string[];

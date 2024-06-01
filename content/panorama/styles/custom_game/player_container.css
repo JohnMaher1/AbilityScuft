@@ -28,7 +28,7 @@
     /* border: 50px solid red; */
 }
 
-.AbilityBackgroundImage {
+#AbilityBackgroundImage {
     height: 100%;
     width: 100%;
     z-index: -100;
