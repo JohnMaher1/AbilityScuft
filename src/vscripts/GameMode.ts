@@ -6,7 +6,6 @@ import {
     IsNotLearnableAbility,
     isSpecialAbility,
 } from "./lib/util";
-import { BaseAbility, registerAbility } from "./lib/dota_ts_adapter";
 import { reloadable } from "./lib/tstl-utils";
 import { modifier_panic } from "./modifiers/modifier_panic";
 import { AbilitySelection } from "./lib/ability_selection";
@@ -90,10 +89,10 @@ export class GameMode {
     }
 
     private onAbilityPickPhaseCompleted(): void {
-        GameRules.SetPreGameTime(30);
-        Timers.CreateTimer(30, () => {
-            GameRules.ForceGameStart();
-        });
+        // GameRules.SetPreGameTime(30);
+        // Timers.CreateTimer(30, () => {
+        //     GameRules.ForceGameStart();
+        // });
         const gameModeEntity = GameRules.GetGameModeEntity();
         gameModeEntity.SetAnnouncerDisabled(false);
     }
@@ -103,7 +102,7 @@ export class GameMode {
         GameRules.SetCustomGameTeamMaxPlayers(DotaTeam.BADGUYS, 5);
         GameRules.SetHeroSelectionTime(10);
         GameRules.SetStrategyTime(10);
-        GameRules.SetPreGameTime(500);
+        GameRules.SetPreGameTime(10);
 
         const gameModeEntity = GameRules.GetGameModeEntity();
         gameModeEntity.SetAnnouncerDisabled(true);
@@ -164,6 +163,13 @@ export class GameMode {
         abilitySelection.init();
     }
 
+    private ModifyExperienceFilter(
+        event: ModifyExperienceFilterEvent
+    ): boolean {
+        event.experience = event.experience * 3;
+        return true; // Return true to update new values
+    }
+
     private ReadAllHeroFiles(): DebugParameters {
         const heroList = LoadKeyValues("scripts/npc/hero_list.txt");
         const abilities: AbilityInformation[] = [];
@@ -173,6 +179,11 @@ export class GameMode {
         const abilityTotalCount = 105;
         const heroEntries = Object.entries(heroList);
         const heroListLength = heroEntries.length;
+
+        GameRules.GetGameModeEntity().SetModifyExperienceFilter(
+            (event) => this.ModifyExperienceFilter(event),
+            this
+        );
 
         for (let i = 0; i < heroListLength; i++) {
             const random = Math.floor(Math.random() * heroListLength);
@@ -277,6 +288,13 @@ export class GameMode {
     private OnNpcSpawned(event: NpcSpawnedEvent) {
         // After a hero unit spawns, apply modifier_panic for 8 seconds
         const unit = EntIndexToHScript(event.entindex) as CDOTA_BaseNPC; // Cast to npc since this is the 'npc_spawned' event
+
+        // Loop through unit modifies
+        for (let i = 0; i < unit.GetModifierCount(); i++) {
+            const modifier = unit.GetModifierNameByIndex(i);
+            print(modifier);
+        }
+
         // Give all real heroes (not illusions) the meepo_earthbind_ts_example spell
         if (unit.IsRealHero()) {
             if (!unit.HasAbility("meepo_earthbind_ts_example")) {
