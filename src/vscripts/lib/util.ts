@@ -19,3 +19,15 @@ export function HasInateTag(abilityTags: AnyNotNil[]): boolean {
     });
     return hasInnateFlag;
 }
+
+export function IsNotLearnableAbility(abilityBehaviourString: string): boolean {
+    return abilityBehaviourString.includes(
+        "DOTA_ABILITY_BEHAVIOR_NOT_LEARNABLE"
+    );
+}
+
+export function IsAttributeTypeAbility(
+    abilityBehaviourString: string
+): boolean {
+    return abilityBehaviourString.includes("DOTA_ABILITY_TYPE_ATTRIBUTES");
+}

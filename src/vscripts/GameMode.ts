@@ -2,6 +2,8 @@ import {
     HasHiddenAbility,
     HasInateAbility,
     HasInateTag,
+    IsAttributeTypeAbility,
+    IsNotLearnableAbility,
     isSpecialAbility,
 } from "./lib/util";
 import { BaseAbility, registerAbility } from "./lib/dota_ts_adapter";
@@ -161,32 +163,30 @@ export class GameMode {
 
         // Randomize Object.entries(heroList) to get a random hero
 
-        const abilityTotalCount = 90;
+        const abilityTotalCount = 105;
         const heroEntries = Object.entries(heroList);
+        const heroListLength = heroEntries.length;
 
-        for (let i = 0; i < abilityTotalCount; i++) {
-            const random = Math.floor(
-                Math.random() * Object.keys(heroList).length
-            );
+        for (let i = 0; i < heroListLength; i++) {
+            const random = Math.floor(Math.random() * heroListLength);
             const [key, value] = heroEntries[random];
 
             const file = LoadKeyValues("scripts/npc/heroes/" + key + ".txt");
-            let hasAddedHeroAbility: boolean = false;
             Object.entries(file).forEach(([abilityName, abilityValues]) => {
                 let canAddAbility: boolean = true;
-                if (hasAddedHeroAbility) {
-                    return;
-                }
                 if (
                     typeof abilityValues !== "number" &&
                     !isSpecialAbility(abilityName)
                 ) {
                     Object.entries(abilityValues as any).forEach(
                         ([abilityKey, abilityValue]) => {
+                            let abilityValueString = abilityValue as string;
                             if (
                                 abilityKey === "AbilityBehavior" &&
-                                (HasHiddenAbility(abilityValue as string) ||
-                                    HasInateAbility(abilityValue as string))
+                                (HasHiddenAbility(abilityValueString) ||
+                                    HasInateAbility(abilityValueString) ||
+                                    IsNotLearnableAbility(abilityValueString) ||
+                                    IsAttributeTypeAbility(abilityValueString))
                             ) {
                                 canAddAbility = false;
                             }
@@ -204,19 +204,31 @@ export class GameMode {
                             abilityName: abilityName,
                             abilityNumber: 1,
                         });
-                        hasAddedHeroAbility = true;
                     }
                 }
             });
         }
 
+        // Shuffle items in the abilities array
+        const abilityNames = abilities.map((ability) => ability.abilityName);
+        for (let i = abilityNames.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [abilityNames[i], abilityNames[j]] = [
+                abilityNames[j],
+                abilityNames[i],
+            ];
+        }
+        abilities.forEach((ability, index) => {
+            ability.abilityName = abilityNames[index];
+        });
+
+        // Make a copy of the array that includes the first 90 elements
+        abilities.splice(abilityTotalCount);
+
         CustomGameEventManager.Send_ServerToAllClients(
             "on_abilities_load",
             abilities
         );
-        abilities.forEach((abilityName) => {
-            //print(abilityName);
-        });
     }
 
     // Called on script_reload
