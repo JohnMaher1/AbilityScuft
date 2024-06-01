@@ -14,8 +14,13 @@ export class AbilitySelection {
     maxMockTurns = 40;
     currentMockTurn = 0;
     playerAbilityCounts: PlayerAbilityCounts[] = [];
-    constructor(abilityNames: string[]) {
+    onAbilitySelectionComplete: () => void;
+    constructor(
+        abilityNames: string[],
+        onAbilitySelectionComplete: () => void
+    ) {
         this.abilityNames = abilityNames;
+        this.onAbilitySelectionComplete = onAbilitySelectionComplete;
     }
 
     init() {
@@ -165,11 +170,11 @@ export class AbilitySelection {
         }
 
         if (allPlayersHaveSelectedAbilities) {
-            print("All players have selected abilities");
             CustomGameEventManager.Send_ServerToAllClients(
                 "on_ability_pick_phase_completed",
                 {} as never
             );
+            this.onAbilitySelectionComplete();
         }
     }
 

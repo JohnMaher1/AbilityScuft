@@ -16,7 +16,7 @@ interface CustomGameEventDeclarations {
     example_event: ExampleEventData;
     ui_panel_closed: UIPanelClosedEventData;
     on_think: never;
-    on_abilities_load: AbilityInformation[];
+    on_abilities_load: string[];
     on_ability_clicked: AbilityClickedEventData;
     on_ability_handled: AbilityClickedEventData;
     on_turn_change: PlayerTurnChangedEvent;

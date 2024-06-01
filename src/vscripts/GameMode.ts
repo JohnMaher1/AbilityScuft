@@ -12,6 +12,7 @@ import { modifier_panic } from "./modifiers/modifier_panic";
 import { AbilitySelection } from "./lib/ability_selection";
 
 const heroSelectionTime = 20;
+const onThinkTime = IsInToolsMode() ? 0.05 : 1;
 
 let abilitySelection: AbilitySelection;
 let mockPickDebug = true;
@@ -88,43 +89,35 @@ export class GameMode {
         );
     }
 
+    private onAbilityPickPhaseCompleted(): void {
+        GameRules.SetPreGameTime(30);
+        Timers.CreateTimer(30, () => {
+            GameRules.ForceGameStart();
+        });
+        const gameModeEntity = GameRules.GetGameModeEntity();
+        gameModeEntity.SetAnnouncerDisabled(false);
+    }
+
     private configure(): void {
         GameRules.SetCustomGameTeamMaxPlayers(DotaTeam.GOODGUYS, 5);
         GameRules.SetCustomGameTeamMaxPlayers(DotaTeam.BADGUYS, 5);
         GameRules.SetHeroSelectionTime(10);
         GameRules.SetStrategyTime(10);
+        GameRules.SetPreGameTime(500);
 
         const gameModeEntity = GameRules.GetGameModeEntity();
         gameModeEntity.SetAnnouncerDisabled(true);
-        // Ignore pregame sounds
-        // Setup Ability Selection
-        // GameRules.SetCustomGameSetupTimeout(3);
-
-        // Timers.CreateTimer(3, () => {
-        //     GameRules.FinishCustomGameSetup();
-        // });
-
-        // // Make all setup including hero selection in this setup phase
-        // // Custom Game Phase 1: Settings, stuff like team selection, gold gain etc
-        // // Custom Game Phase 2: Hero Selection (pre straight forward)
-        // // Custom Game Phase 3: Ability Selection (oh yeah)
-        // // End Custom Game Setup and go for it
-
-        GameRules.SetShowcaseTime(0);
+        GameRules.SetShowcaseTime(IsInToolsMode() ? 0 : 10);
         GameRules.SetHeroSelectionTime(heroSelectionTime);
         GameRules.GetGameModeEntity().SetThink(
             (entity: CBaseEntity) => {
                 this.OnThink(entity);
-                return 0.1; // Return the amount (in seconds) OnThink triggers
+                return onThinkTime; // Return the amount (in seconds) OnThink triggers
             },
             undefined,
             undefined,
             0
         );
-
-        // Write logic to disable announcers
-
-        GameRules.SetGoldPerTick(1000);
     }
 
     public OnStateChange(): void {
@@ -164,13 +157,15 @@ export class GameMode {
 
     private ReloadAndStartGame(): void {
         const debugParameters = this.ReadAllHeroFiles();
-        abilitySelection = new AbilitySelection(debugParameters.abilityNames);
+        abilitySelection = new AbilitySelection(
+            debugParameters.abilityNames,
+            this.onAbilityPickPhaseCompleted
+        );
         abilitySelection.init();
     }
 
     private ReadAllHeroFiles(): DebugParameters {
         const heroList = LoadKeyValues("scripts/npc/hero_list.txt");
-        let index = 1;
         const abilities: AbilityInformation[] = [];
 
         // Randomize Object.entries(heroList) to get a random hero
@@ -222,26 +217,26 @@ export class GameMode {
         }
 
         // Shuffle items in the abilities array
-        const abilityNames = abilities.map((ability) => ability.abilityName);
-        for (let i = abilityNames.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [abilityNames[i], abilityNames[j]] = [
-                abilityNames[j],
-                abilityNames[i],
-            ];
+        let abilitiesAdded = 0;
+        let shuffledAbilities: string[] = [];
+        while (abilitiesAdded < abilityTotalCount + 1) {
+            const random = Math.floor(Math.random() * abilities.length);
+            print(abilities[random].abilityName);
+            if (shuffledAbilities.includes(abilities[random].abilityName)) {
+                continue;
+            }
+            shuffledAbilities.push(abilities[random].abilityName);
+            abilitiesAdded++;
         }
-        abilities.forEach((ability, index) => {
-            ability.abilityName = abilityNames[index];
-        });
 
         // Make a copy of the array that includes the first 90 elements
-        abilities.splice(abilityTotalCount);
+        shuffledAbilities.splice(abilityTotalCount);
 
         CustomGameEventManager.Send_ServerToAllClients(
             "on_abilities_load",
-            abilities
+            shuffledAbilities
         );
-        return { abilityNames: abilityNames };
+        return { abilityNames: shuffledAbilities };
     }
 
     // Called on script_reload
@@ -256,6 +251,27 @@ export class GameMode {
             abilitySelection.mockPick();
         }
         CustomGameEventManager.Send_ServerToAllClients("on_think", {} as never);
+        this.HandleGoldGain();
+    }
+
+    private HandleGoldGain(): void {
+        // Check game state is in progress
+        if (GameRules.State_Get() !== GameState.GAME_IN_PROGRESS) {
+            return;
+        }
+        const playerIDs = PlayerResource.GetPlayerCount();
+        for (let i = 0; i < playerIDs; i++) {
+            const player = PlayerResource.GetPlayer(i as PlayerID);
+            const hero = player?.GetAssignedHero();
+            if (hero) {
+                PlayerResource.ModifyGold(
+                    i as PlayerID,
+                    5,
+                    true,
+                    ModifyGoldReason.UNSPECIFIED
+                );
+            }
+        }
     }
 
     private OnNpcSpawned(event: NpcSpawnedEvent) {
