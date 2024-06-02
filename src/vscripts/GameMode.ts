@@ -103,7 +103,11 @@ export class GameMode {
         GameRules.SetCustomGameTeamMaxPlayers(DotaTeam.GOODGUYS, 5);
         GameRules.SetCustomGameTeamMaxPlayers(DotaTeam.BADGUYS, 5);
         GameRules.SetHeroSelectionTime(10);
-        GameRules.SetCustomGameSetupTimeout(60);
+        GameRules.SetCustomGameSetupTimeout(10);
+
+        Timers.CreateTimer(10, () => {
+            //GameRules.FinishCustomGameSetup();
+        });
 
         GameRules.SetStrategyTime(10);
         GameRules.SetPreGameTime(100);
