@@ -11,7 +11,7 @@ import { modifier_panic } from "./modifiers/modifier_panic";
 import { AbilitySelection } from "./lib/ability_selection";
 
 const heroSelectionTime = 20;
-const onThinkTime = IsInToolsMode() ? 0.05 : 1;
+const onThinkTime = IsInToolsMode() ? 0.25 : 1;
 
 let abilitySelection: AbilitySelection;
 let mockPickDebug = true;
@@ -89,21 +89,26 @@ export class GameMode {
     }
 
     private onAbilityPickPhaseCompleted(): void {
-        // GameRules.SetPreGameTime(30);
-        // Timers.CreateTimer(30, () => {
-        //     GameRules.ForceGameStart();
-        // });
+        GameRules.SetPreGameTime(30);
+        Timers.CreateTimer(30, () => {
+            GameRules.ForceGameStart();
+        });
         const gameModeEntity = GameRules.GetGameModeEntity();
         gameModeEntity.SetAnnouncerDisabled(false);
     }
+
+    // Next goal. Set option to autopick abilities for players
 
     private configure(): void {
         GameRules.SetCustomGameTeamMaxPlayers(DotaTeam.GOODGUYS, 5);
         GameRules.SetCustomGameTeamMaxPlayers(DotaTeam.BADGUYS, 5);
         GameRules.SetHeroSelectionTime(10);
+        GameRules.SetCustomGameSetupTimeout(60);
+
         GameRules.SetStrategyTime(10);
-        GameRules.SetPreGameTime(10);
+        GameRules.SetPreGameTime(100);
         GameRules.SetUseUniversalShopMode(true);
+        GameRules.SetGoldPerTick(4);
 
         const gameModeEntity = GameRules.GetGameModeEntity();
         gameModeEntity.SetAnnouncerDisabled(true);
@@ -138,7 +143,7 @@ export class GameMode {
             // Automatically skip setup in tools
             if (IsInToolsMode()) {
                 Timers.CreateTimer(3, () => {
-                    GameRules.FinishCustomGameSetup();
+                    //GameRules.FinishCustomGameSetup();
                 });
             }
         }
@@ -272,14 +277,14 @@ export class GameMode {
         for (let i = 0; i < playerIDs; i++) {
             const player = PlayerResource.GetPlayer(i as PlayerID);
             const hero = player?.GetAssignedHero();
-            if (hero) {
-                PlayerResource.ModifyGold(
-                    i as PlayerID,
-                    5,
-                    true,
-                    ModifyGoldReason.UNSPECIFIED
-                );
-            }
+            // if (hero) {
+            //     PlayerResource.ModifyGold(
+            //         i as PlayerID,
+            //         5,
+            //         true,
+            //         ModifyGoldReason.UNSPECIFIED
+            //     );
+            // }
         }
     }
 

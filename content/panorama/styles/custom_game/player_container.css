@@ -83,15 +83,15 @@
 }
 
 #HeroImage {
-    width: 50px;
-    height: 50px;
+    width: 45px;
+    height: 45px;
     background-color: black;
 }
 #PlayerName {
     color: white;
     font-size: 25px;
     margin-top: 10px;
-    margin-left: 70px;
+    margin-left: 55px;
 }
 .HealthContainer {
     width: 200px;

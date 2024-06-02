@@ -4,7 +4,8 @@
             layoutfile="file://{resources}/layout/custom_game/players_container.xml" />
         <CustomUIElement type="Hud"
             layoutfile="file://{resources}/layout/custom_game/ability_icon.xml" />
-
+        <CustomUIElement type="GameSetup"
+            layoutfile="file://{resources}/layout/custom_game/team_select.xml" />
         <!-- <Panel></Panel> -->
     </Panel>
 </root>

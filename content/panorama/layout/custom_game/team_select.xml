@@ -1,0 +1,27 @@
+<root>
+  <styles>
+    <include src="file://{resources}/styles/custom_game/team_select.css" />
+  </styles>
+  <scripts>
+    <include src="file://{resources}/scripts/custom_game/SelectScreenOption.js" />
+    <include src="file://{resources}/scripts/custom_game/TeamSelect.js" />
+  </scripts>
+
+  <snippets>
+    <snippet name="PreGameOption" hittest="false">
+      <Panel class="PreGameOption" hittest="false">
+        <Label id="OptionLabel" class="OptionLabel" text="" hittest="false" />
+        <ToggleButton id="OptionToggle" class="OptionToggle" />
+      </Panel>
+    </snippet>
+  </snippets>
+
+  <Panel hittest="false" style="width: 100%; height: 100%;">
+    <Image id="TeamSelectBackgroundImage" hittest="false" />
+    <Panel id="OptionPanel">
+      <Label id="OptionsTopLabel" text="Settings" />
+      <Panel id="OptionsList" />
+    </Panel>
+  </Panel>
+
+</root>
