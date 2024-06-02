@@ -18,18 +18,28 @@ class TeamSelect {
         abilityImage.SetImage(
             "file://{images}/custom_game/ability_background.jpg"
         );
-        const forceRandomAbilities = new SelectScreenOption(
+        this.CreateNewToggleOption(
+            "Force Random Abilities",
+            "forceRandomAbilities"
+        );
+        this.CreateNewToggleOption("Does nothing :)", "n/a");
+    }
+
+    private CreateNewToggleOption(
+        name: string,
+        optionName: SettingsToggleEvent["toggleEventName"]
+    ) {
+        const container = this.panel.FindChild("OptionPanel")!;
+        const optionsList = container.FindChild("OptionsList")!;
+        $.Msg("Creating new toggle option", optionsList);
+        const newOption = new SelectScreenOption(
             optionsList,
             OptionType.TOGGLE
         );
-        this.options[0] = forceRandomAbilities;
-        this.options[0].label.text = "Force Random Abilities";
-        const newOption2 = new SelectScreenOption(
-            optionsList,
-            OptionType.TOGGLE
-        );
-        this.options[1] = newOption2;
-        this.options[1].label.text = "Toggle a thing";
+        const optionsIndex = Object.keys(this.options).length;
+        this.options[optionsIndex] = newOption;
+        newOption.label.text = name;
+        newOption.optionName = optionName;
     }
 }
 

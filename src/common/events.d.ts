@@ -22,6 +22,12 @@ interface CustomGameEventDeclarations {
     on_turn_change: PlayerTurnChangedEvent;
     on_player_ability_select: PlayerAbilitySelectEvent;
     on_ability_pick_phase_completed: never;
+    on_settings_toggle: SettingsToggleEvent;
+}
+
+interface SettingsToggleEvent {
+    isActive: boolean;
+    toggleEventName: "forceRandomAbilities" | "n/a";
 }
 
 interface PlayerAbilitySelectEvent {
