@@ -46,7 +46,9 @@ export class AbilitySelection {
                 for (let i = 0; i < abilityCount; i++) {
                     const ability = hero?.GetAbilityByIndex(i);
                     if (ability?.GetAbilityName()) {
-                        hero?.RemoveAbility(ability.GetAbilityName());
+                        if (this.isBaseAbility(ability)) {
+                            hero?.RemoveAbility(ability.GetAbilityName());
+                        }
                     }
                 }
             }
@@ -85,7 +87,16 @@ export class AbilitySelection {
             // Assign ability to player
             const player = PlayerResource.GetPlayer(playerID)!;
             const playerHero = player.GetAssignedHero();
-            playerHero.AddAbility(abilityName);
+            const playerAbilityCount = this.playerAbilityCounts.find(
+                (x) => x.playerID === playerID
+            );
+            if (!playerAbilityCount) {
+                playerHero.AddAbility(abilityName);
+            }
+            if (playerAbilityCount && playerAbilityCount.abilityCount < 4) {
+                playerHero.AddAbility(abilityName);
+            }
+
             this.handlePlayerAbilityCount(playerID);
             // Get position of ability
             let abilityPosition = 1;
@@ -234,5 +245,25 @@ export class AbilitySelection {
         CustomGameEventManager.Send_ServerToAllClients("on_turn_change", {
             playerTurnID: this.playerTurn,
         });
+    }
+
+    private isBaseAbility(ability: CDOTABaseAbility) {
+        const abilityBehavior = ability.GetBehavior();
+        return (
+            this.IsBaseAbilityBehavior(abilityBehavior) &&
+            this.IsBaseAbilityType(ability.GetAbilityType())
+        );
+    }
+
+    private IsBaseAbilityBehavior(abilityBehavior: AbilityBehavior | Uint64) {
+        return !(
+            abilityBehavior === AbilityBehavior.HIDDEN ||
+            abilityBehavior === AbilityBehavior.NOT_LEARNABLE ||
+            abilityBehavior === AbilityBehavior.INNATE_UI
+        );
+    }
+
+    private IsBaseAbilityType(abilityType: AbilityTypes) {
+        return !(abilityType === AbilityTypes.ATTRIBUTES);
     }
 }

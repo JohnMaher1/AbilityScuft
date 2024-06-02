@@ -103,9 +103,11 @@ export class GameMode {
         GameRules.SetHeroSelectionTime(10);
         GameRules.SetStrategyTime(10);
         GameRules.SetPreGameTime(10);
+        GameRules.SetUseUniversalShopMode(true);
 
         const gameModeEntity = GameRules.GetGameModeEntity();
         gameModeEntity.SetAnnouncerDisabled(true);
+        gameModeEntity.SetFreeCourierModeEnabled(true);
         GameRules.SetShowcaseTime(IsInToolsMode() ? 0 : 10);
         GameRules.SetHeroSelectionTime(heroSelectionTime);
         GameRules.GetGameModeEntity().SetThink(
@@ -148,9 +150,7 @@ export class GameMode {
     }
 
     private StartGame(): void {
-        print("Game starting!");
         this.ReloadAndStartGame();
-        print("HMMM");
         // Do some stuff here
     }
 
@@ -167,14 +167,12 @@ export class GameMode {
         event: ModifyExperienceFilterEvent
     ): boolean {
         event.experience = event.experience * 3;
-        return true; // Return true to update new values
+        return true; // Return true to update new values, false does not modify
     }
 
     private ReadAllHeroFiles(): DebugParameters {
         const heroList = LoadKeyValues("scripts/npc/hero_list.txt");
         const abilities: AbilityInformation[] = [];
-
-        // Randomize Object.entries(heroList) to get a random hero
 
         const abilityTotalCount = 105;
         const heroEntries = Object.entries(heroList);
@@ -288,12 +286,6 @@ export class GameMode {
     private OnNpcSpawned(event: NpcSpawnedEvent) {
         // After a hero unit spawns, apply modifier_panic for 8 seconds
         const unit = EntIndexToHScript(event.entindex) as CDOTA_BaseNPC; // Cast to npc since this is the 'npc_spawned' event
-
-        // Loop through unit modifies
-        for (let i = 0; i < unit.GetModifierCount(); i++) {
-            const modifier = unit.GetModifierNameByIndex(i);
-            print(modifier);
-        }
 
         // Give all real heroes (not illusions) the meepo_earthbind_ts_example spell
         if (unit.IsRealHero()) {
