@@ -23,6 +23,7 @@ interface CustomGameEventDeclarations {
     on_player_ability_select: PlayerAbilitySelectEvent;
     on_ability_pick_phase_completed: never;
     on_settings_toggle: SettingsToggleEvent;
+    on_start_button_clicked: never;
 }
 
 interface SettingsToggleEvent {

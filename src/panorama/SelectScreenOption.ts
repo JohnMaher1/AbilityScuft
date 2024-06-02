@@ -29,19 +29,20 @@ class SelectScreenOption {
                 if (playerId !== 0) {
                     return;
                 }
-
-                $.Msg("Toggle clicked by host");
                 switch (this.toggle.checked) {
-                    case true:
-                        this.toggle.style.backgroundColor = "red";
-                        break;
                     case false:
+                        this.toggle.style.backgroundColor = "red";
+                        this.toggle.checked = false;
+                        break;
+                    case true:
                         this.toggle.style.backgroundColor = "green";
+                        this.toggle.checked = true;
                         break;
                 }
+                $.Msg("Toggle clicked", this.toggle.checked, this.optionName);
                 GameEvents.SendCustomGameEventToServer("on_settings_toggle", {
-                    isActive: this.toggle.checked,
-                    toggleEventName: "forceRandomAbilities",
+                    isActive: this.toggle.checked === true,
+                    toggleEventName: this.optionName,
                 });
             });
         }

@@ -23,6 +23,20 @@ class TeamSelect {
             "forceRandomAbilities"
         );
         this.CreateNewToggleOption("Does nothing :)", "n/a");
+
+        const startButtonPanel = this.panel.FindChild("StartButtonPanel")!;
+        const startButton = startButtonPanel.FindChild("StartButton")!;
+        startButton.SetPanelEvent("onactivate", () => {
+            const playerId = Players.GetLocalPlayer();
+            if (playerId !== 0) {
+                return;
+            }
+            $.Msg("Start button clicked");
+            GameEvents.SendCustomGameEventToServer(
+                "on_start_button_clicked",
+                {} as never
+            );
+        });
     }
 
     private CreateNewToggleOption(

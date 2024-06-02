@@ -10,11 +10,16 @@ import { reloadable } from "./lib/tstl-utils";
 import { modifier_panic } from "./modifiers/modifier_panic";
 import { AbilitySelection } from "./lib/ability_selection";
 
+class SettingsState {
+    forceRandomAbilities: boolean = false;
+}
+
 const heroSelectionTime = 20;
-const onThinkTime = IsInToolsMode() ? 0.25 : 1;
+const onThinkTime = IsInToolsMode() ? 0.1 : 1;
+let abilityPickPhaseEnded: boolean = false;
 
 let abilitySelection: AbilitySelection;
-let mockPickDebug = true;
+const settingsState = new SettingsState();
 
 interface DebugParameters {
     abilityNames: string[];
@@ -86,6 +91,32 @@ export class GameMode {
                 });
             }
         );
+
+        CustomGameEventManager.RegisterListener(
+            "on_start_button_clicked",
+            (_, data) => {
+                print("Start button clicked event recieved by server");
+                GameRules.FinishCustomGameSetup();
+            }
+        );
+
+        CustomGameEventManager.RegisterListener(
+            "on_settings_toggle",
+            (_, data) => {
+                print(
+                    data.toggleEventName,
+                    " is now",
+                    data.isActive === 1 ? "Active" : "Inactive"
+                );
+                if (data.toggleEventName === "forceRandomAbilities") {
+                    settingsState.forceRandomAbilities = data.isActive === 1;
+                    print(
+                        "Force random abilities state: ",
+                        settingsState.forceRandomAbilities
+                    );
+                }
+            }
+        );
     }
 
     private onAbilityPickPhaseCompleted(): void {
@@ -95,9 +126,8 @@ export class GameMode {
         });
         const gameModeEntity = GameRules.GetGameModeEntity();
         gameModeEntity.SetAnnouncerDisabled(false);
+        abilityPickPhaseEnded = true;
     }
-
-    // Next goal. Set option to autopick abilities for players
 
     private configure(): void {
         GameRules.SetCustomGameTeamMaxPlayers(DotaTeam.GOODGUYS, 5);
@@ -115,7 +145,7 @@ export class GameMode {
         GameRules.SetGoldPerTick(4);
 
         const gameModeEntity = GameRules.GetGameModeEntity();
-        gameModeEntity.SetAnnouncerDisabled(true);
+        // gameModeEntity.SetAnnouncerDisabled(true);
         gameModeEntity.SetFreeCourierModeEnabled(true);
         GameRules.SetShowcaseTime(IsInToolsMode() ? 0 : 10);
         GameRules.SetHeroSelectionTime(heroSelectionTime);
@@ -165,9 +195,14 @@ export class GameMode {
 
     private ReloadAndStartGame(): void {
         const debugParameters = this.ReadAllHeroFiles();
+        print(
+            "Starting the game with force abilities set to: ",
+            settingsState.forceRandomAbilities
+        );
         abilitySelection = new AbilitySelection(
             debugParameters.abilityNames,
-            this.onAbilityPickPhaseCompleted
+            this.onAbilityPickPhaseCompleted,
+            settingsState.forceRandomAbilities
         );
         abilitySelection.init();
     }
@@ -265,11 +300,11 @@ export class GameMode {
     }
 
     public OnThink(entity: CBaseEntity): void {
-        if (abilitySelection && mockPickDebug) {
-            abilitySelection.mockPick();
-        }
         CustomGameEventManager.Send_ServerToAllClients("on_think", {} as never);
         this.HandleGoldGain();
+        if (settingsState.forceRandomAbilities && !abilityPickPhaseEnded) {
+            abilitySelection?.mockPick();
+        }
     }
 
     private HandleGoldGain(): void {

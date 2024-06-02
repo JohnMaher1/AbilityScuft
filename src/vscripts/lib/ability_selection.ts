@@ -14,13 +14,17 @@ export class AbilitySelection {
     maxMockTurns = 40;
     currentMockTurn = 0;
     playerAbilityCounts: PlayerAbilityCounts[] = [];
+    forceRandomAbilities: boolean = false;
+    allPlayersHaveSelectedAbilities: boolean = false;
     onAbilitySelectionComplete: () => void;
     constructor(
         abilityNames: string[],
-        onAbilitySelectionComplete: () => void
+        onAbilitySelectionComplete: () => void,
+        forceRandomAbilities: boolean
     ) {
         this.abilityNames = abilityNames;
         this.onAbilitySelectionComplete = onAbilitySelectionComplete;
+        this.forceRandomAbilities = forceRandomAbilities;
     }
 
     init() {
@@ -60,6 +64,10 @@ export class AbilitySelection {
     }
 
     registerAbilityClick = () => {
+        if (this.forceRandomAbilities) {
+            return;
+        }
+
         CustomGameEventManager.RegisterListener(
             "on_ability_clicked",
             (_, data) => {
@@ -160,6 +168,9 @@ export class AbilitySelection {
     }
 
     setPlayerTurn() {
+        if (this.allPlayersHaveSelectedAbilities) {
+            return;
+        }
         this.playerTurn =
             this.playerTurnOrder[
                 (this.playerTurnOrder.indexOf(this.playerTurn) + 1) %
@@ -167,7 +178,6 @@ export class AbilitySelection {
             ];
 
         // Check if all players have selected 4 abilities
-        let allPlayersHaveSelectedAbilities = false;
 
         const playerAbilityCountLength = this.playerAbilityCounts.length;
         if (playerAbilityCountLength === PlayerResource.GetPlayerCount()) {
@@ -176,20 +186,23 @@ export class AbilitySelection {
                     (playerAbilityCount) => playerAbilityCount.abilityCount >= 4
                 )
             ) {
-                allPlayersHaveSelectedAbilities = true;
+                this.allPlayersHaveSelectedAbilities = true;
             }
         }
 
-        if (allPlayersHaveSelectedAbilities) {
-            CustomGameEventManager.Send_ServerToAllClients(
-                "on_ability_pick_phase_completed",
-                {} as never
-            );
-            this.onAbilitySelectionComplete();
+        if (this.allPlayersHaveSelectedAbilities) {
+            Timers.CreateTimer(IsInToolsMode() ? 0.1 : 10, () => {
+                CustomGameEventManager.Send_ServerToAllClients(
+                    "on_ability_pick_phase_completed",
+                    {} as never
+                );
+                this.onAbilitySelectionComplete();
+            });
         }
     }
 
     mockPick() {
+        print("Mock Pick");
         if (this.currentMockTurn > this.maxMockTurns) {
             return;
         }
