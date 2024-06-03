@@ -4,6 +4,7 @@ import {
     HasInateTag,
     IsAttributeTypeAbility,
     IsNotLearnableAbility,
+    abilityNamesToIgnore,
     isSpecialAbility,
 } from "./lib/util";
 import { reloadable } from "./lib/tstl-utils";
@@ -178,8 +179,10 @@ export class GameMode {
         const timeTillForceStart = IsInToolsMode() ? 1 : 30;
         Timers.CreateTimer(timeTillForceStart, () => {
             GameRules.ForceGameStart();
-            GameRules.SetCreepSpawningEnabled(true);
-            GameRules.SpawnAndReleaseCreeps();
+            Timers.CreateTimer(20, () => {
+                GameRules.SetCreepSpawningEnabled(true);
+                GameRules.SpawnAndReleaseCreeps();
+            });
         });
         // Send a message to all players indicating time till game start without using CustomGameEventManager
         const message = `Game starting in ${timeTillForceStart} seconds! Please ignore the Pre Game Clock!`;
@@ -299,11 +302,22 @@ export class GameMode {
 
             const file = LoadKeyValues("scripts/npc/heroes/" + key + ".txt");
             Object.entries(file).forEach(([abilityName, abilityValues]) => {
-                let canAddAbility: boolean = true;
                 if (
                     typeof abilityValues !== "number" &&
                     !isSpecialAbility(abilityName)
                 ) {
+                    let canAddAbility: boolean = true;
+
+                    abilityNamesToIgnore.forEach((abilityNameToIgnore) => {
+                        if (abilityName.includes(abilityNameToIgnore)) {
+                            canAddAbility = false;
+                        }
+                    });
+
+                    if (abilityName.includes("attribute_bonus")) {
+                        canAddAbility = false;
+                    }
+
                     Object.entries(abilityValues as any).forEach(
                         ([abilityKey, abilityValue]) => {
                             let abilityValueString = abilityValue as string;
@@ -315,6 +329,11 @@ export class GameMode {
                                     IsAttributeTypeAbility(abilityValueString))
                             ) {
                                 canAddAbility = false;
+                            }
+                            if (abilityKey === "MaxLevel") {
+                                if (abilityValueString === "1") {
+                                    canAddAbility = false;
+                                }
                             }
                         }
                     );
@@ -336,17 +355,9 @@ export class GameMode {
         }
 
         // Shuffle items in the abilities array
-        let abilitiesAdded = 0;
-        let shuffledAbilities: string[] = [];
-        while (abilitiesAdded < abilityTotalCount + 1) {
-            const random = Math.floor(Math.random() * abilities.length);
-            print(abilities[random].abilityName);
-            if (shuffledAbilities.includes(abilities[random].abilityName)) {
-                continue;
-            }
-            shuffledAbilities.push(abilities[random].abilityName);
-            abilitiesAdded++;
-        }
+        let shuffledAbilities: string[] = this.shuffle(
+            abilities.flatMap((x) => x.abilityName)
+        );
 
         // Make a copy of the array that includes the first 90 elements
         shuffledAbilities.splice(abilityTotalCount);
@@ -356,6 +367,28 @@ export class GameMode {
             shuffledAbilities
         );
         return { abilityNames: shuffledAbilities };
+    }
+
+    shuffle(array: string[]): string[] {
+        let currentIndex = array.length;
+
+        // While there remain elements to shuffle...
+        while (currentIndex != 0) {
+            // Pick a remaining element...
+            let randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex--;
+
+            // And swap it with the current element.
+            [array[currentIndex], array[randomIndex]] = [
+                array[randomIndex],
+                array[currentIndex],
+            ];
+        }
+
+        // Remove duplicates
+        const uniqueArray = Array.from(new Set(array));
+
+        return uniqueArray;
     }
 
     // Called on script_reload
@@ -395,14 +428,13 @@ export class GameMode {
 
     private OnNpcSpawned(event: NpcSpawnedEvent) {
         // After a hero unit spawns, apply modifier_panic for 8 seconds
-        const unit = EntIndexToHScript(event.entindex) as CDOTA_BaseNPC; // Cast to npc since this is the 'npc_spawned' event
-
-        // Give all real heroes (not illusions) the meepo_earthbind_ts_example spell
-        if (unit.IsRealHero()) {
-            if (!unit.HasAbility("meepo_earthbind_ts_example")) {
-                // Add lua ability to the unit
-                unit.AddAbility("meepo_earthbind_ts_example");
-            }
-        }
+        // const unit = EntIndexToHScript(event.entindex) as CDOTA_BaseNPC; // Cast to npc since this is the 'npc_spawned' event
+        // // Give all real heroes (not illusions) the meepo_earthbind_ts_example spell
+        // if (unit.IsRealHero()) {
+        //     if (!unit.HasAbility("meepo_earthbind_ts_example")) {
+        //         // Add lua ability to the unit
+        //         unit.AddAbility("meepo_earthbind_ts_example");
+        //     }
+        // }
     }
 }

@@ -1,0 +1,3 @@
+- Only one ultimate should be able to be selected at a time (make configurable)
+- Another option for choosing 5 abilities
+- 

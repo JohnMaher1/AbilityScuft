@@ -21,6 +21,7 @@ class AbilityIcon {
         this.abilityTooltip.style.height = "200px";
 
         this.panel.SetPanelEvent("onmouseover", () => {
+            $.Msg("AbilityIcon onmouseover: ", abilityName);
             this.abilityTooltip.visible = true;
             $.DispatchEvent(
                 "DOTAShowAbilityTooltip",

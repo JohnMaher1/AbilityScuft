@@ -1,4 +1,4 @@
-#base "heroes/meepo.kv"
+// #base "heroes/meepo.kv"
 
 "DOTAAbilities"
 {
