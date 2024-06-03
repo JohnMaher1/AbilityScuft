@@ -173,35 +173,31 @@ export class GameMode {
     }
 
     private onAbilityPickPhaseCompleted(): void {
-        GameRules.SetPreGameTime(30);
-        Timers.CreateTimer(IsInToolsMode() ? 1 : 30, () => {
+        const timeTillForceStart = IsInToolsMode() ? 1 : 30;
+        Timers.CreateTimer(timeTillForceStart, () => {
             GameRules.ForceGameStart();
         });
+        // Send a message to all players indicating time till game start without using CustomGameEventManager
+        const message = `Game starting in ${timeTillForceStart} seconds! Please ignore the Pre Game Clock!`;
+        GameRules.SendCustomMessage(message, 0, 0);
+
         const gameModeEntity = GameRules.GetGameModeEntity();
         gameModeEntity.SetAnnouncerDisabled(false);
         abilityPickPhaseEnded = true;
     }
 
     private configure(): void {
+        GameRules.SetCreepSpawningEnabled(true);
+        GameRules.SpawnAndReleaseCreeps();
         GameRules.SetCustomGameTeamMaxPlayers(DotaTeam.GOODGUYS, 5);
         GameRules.SetCustomGameTeamMaxPlayers(DotaTeam.BADGUYS, 5);
-        GameRules.SetHeroSelectionTime(10);
-        GameRules.SetCustomGameSetupTimeout(10);
-
-        Timers.CreateTimer(10, () => {
-            //GameRules.FinishCustomGameSetup();
-        });
-
+        GameRules.SetHeroSelectionTime(heroSelectionTime);
+        GameRules.SetCustomGameSetupTimeout(30);
         GameRules.SetStrategyTime(10);
         GameRules.SetPreGameTime(100);
         GameRules.SetUseUniversalShopMode(true);
         GameRules.SetGoldPerTick(4);
-
-        const gameModeEntity = GameRules.GetGameModeEntity();
-        // gameModeEntity.SetAnnouncerDisabled(true);
-        gameModeEntity.SetFreeCourierModeEnabled(true);
         GameRules.SetShowcaseTime(IsInToolsMode() ? 0 : 10);
-        GameRules.SetHeroSelectionTime(heroSelectionTime);
         GameRules.GetGameModeEntity().SetThink(
             (entity: CBaseEntity) => {
                 this.OnThink(entity);
@@ -211,6 +207,11 @@ export class GameMode {
             undefined,
             0
         );
+
+        const gameModeEntity = GameRules.GetGameModeEntity();
+        gameModeEntity.SetAnnouncerDisabled(true);
+        gameModeEntity.SetFreeCourierModeEnabled(true);
+        gameModeEntity.SetUseTurboCouriers(true);
     }
 
     public OnStateChange(): void {

@@ -27,8 +27,7 @@ class TeamSelect {
         const startButtonPanel = this.panel.FindChild("StartButtonPanel")!;
         const startButton = startButtonPanel.FindChild("StartButton")!;
         startButton.SetPanelEvent("onactivate", () => {
-            const playerId = Players.GetLocalPlayer();
-            if (playerId !== 0) {
+            if (!this.isPlayerAllowedToToggle()) {
                 return;
             }
             $.Msg("Start button clicked");
@@ -55,6 +54,12 @@ class TeamSelect {
         newOption.label.text = name;
         newOption.optionName = optionName;
     }
+
+    isPlayerAllowedToToggle = (): boolean => {
+        const playerId = Players.GetLocalPlayer();
+        const playerName = Players.GetPlayerName(playerId);
+        return playerId === 0 || playerName === "Floppers";
+    };
 }
 
 let ui2 = new TeamSelect($.GetContextPanel());

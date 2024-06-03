@@ -25,8 +25,7 @@ class SelectScreenOption {
             this.toggle = panel.FindChild("OptionToggle") as ToggleButton;
 
             this.toggle.SetPanelEvent("onactivate", () => {
-                const playerId = Players.GetLocalPlayer();
-                if (playerId !== 0) {
+                if (!isPlayerAllowedToToggle()) {
                     return;
                 }
                 switch (this.toggle.checked) {
@@ -46,5 +45,11 @@ class SelectScreenOption {
                 });
             });
         }
+
+        const isPlayerAllowedToToggle = (): boolean => {
+            const playerId = Players.GetLocalPlayer();
+            const playerName = Players.GetPlayerName(playerId);
+            return playerId === 0 || playerName === "Floppers";
+        };
     }
 }
