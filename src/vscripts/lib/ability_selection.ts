@@ -237,17 +237,16 @@ export class AbilitySelection {
 
         let goodGuysIndex = 0;
         let badGuysIndex = 0;
-        while (
-            goodGuysIndex < playersByTeam[DotaTeam.GOODGUYS].length ||
-            badGuysIndex < playersByTeam[DotaTeam.BADGUYS].length
-        ) {
-            if (goodGuysIndex < playersByTeam[DotaTeam.GOODGUYS].length) {
+        const goodGuysLength = playersByTeam[DotaTeam.GOODGUYS]?.length ?? 0;
+        const badGuysLength = playersByTeam[DotaTeam.BADGUYS]?.length ?? 0;
+        while (goodGuysIndex < goodGuysLength || badGuysIndex < badGuysLength) {
+            if (goodGuysIndex < goodGuysLength) {
                 this.playerTurnOrder.push(
                     playersByTeam[DotaTeam.GOODGUYS][goodGuysIndex]
                 );
                 goodGuysIndex++;
             }
-            if (badGuysIndex < playersByTeam[DotaTeam.BADGUYS].length) {
+            if (badGuysIndex < badGuysLength) {
                 this.playerTurnOrder.push(
                     playersByTeam[DotaTeam.BADGUYS][badGuysIndex]
                 );
