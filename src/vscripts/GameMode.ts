@@ -17,6 +17,8 @@ class SettingsState {
 const heroSelectionTime = 20;
 const onThinkTime = IsInToolsMode() ? 0.1 : 1;
 let abilityPickPhaseEnded: boolean = false;
+const goldMultiplier = 3;
+const experienceMultiplier = 3;
 
 let abilitySelection: AbilitySelection;
 const settingsState = new SettingsState();
@@ -264,7 +266,12 @@ export class GameMode {
     private ModifyExperienceFilter(
         event: ModifyExperienceFilterEvent
     ): boolean {
-        event.experience = event.experience * 3;
+        event.experience = event.experience * experienceMultiplier;
+        return true; // Return true to update new values, false does not modify
+    }
+
+    private ModifyGoldFilter(event: ModifyGoldFilterEvent): boolean {
+        event.gold = event.gold * goldMultiplier;
         return true; // Return true to update new values, false does not modify
     }
 
@@ -280,6 +287,10 @@ export class GameMode {
             (event) => this.ModifyExperienceFilter(event),
             this
         );
+
+        GameRules.GetGameModeEntity().SetModifyGoldFilter((event) => {
+            return this.ModifyGoldFilter(event);
+        }, this);
 
         for (let i = 0; i < heroListLength; i++) {
             const random = Math.floor(Math.random() * heroListLength);
