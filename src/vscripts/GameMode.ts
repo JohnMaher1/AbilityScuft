@@ -178,6 +178,8 @@ export class GameMode {
         const timeTillForceStart = IsInToolsMode() ? 1 : 30;
         Timers.CreateTimer(timeTillForceStart, () => {
             GameRules.ForceGameStart();
+            GameRules.SetCreepSpawningEnabled(true);
+            GameRules.SpawnAndReleaseCreeps();
         });
         // Send a message to all players indicating time till game start without using CustomGameEventManager
         const message = `Game starting in ${timeTillForceStart} seconds! Please ignore the Pre Game Clock!`;
@@ -185,12 +187,11 @@ export class GameMode {
 
         const gameModeEntity = GameRules.GetGameModeEntity();
         gameModeEntity.SetAnnouncerDisabled(false);
+
         abilityPickPhaseEnded = true;
     }
 
     private configure(): void {
-        GameRules.SetCreepSpawningEnabled(true);
-        GameRules.SpawnAndReleaseCreeps();
         GameRules.SetCustomGameTeamMaxPlayers(DotaTeam.GOODGUYS, 5);
         GameRules.SetCustomGameTeamMaxPlayers(DotaTeam.BADGUYS, 5);
         GameRules.SetHeroSelectionTime(heroSelectionTime);

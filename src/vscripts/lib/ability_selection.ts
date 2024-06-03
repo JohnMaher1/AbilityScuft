@@ -191,7 +191,7 @@ export class AbilitySelection {
         }
 
         if (this.allPlayersHaveSelectedAbilities) {
-            Timers.CreateTimer(IsInToolsMode() ? 0.1 : 10, () => {
+            Timers.CreateTimer(IsInToolsMode() ? 1 : 10, () => {
                 CustomGameEventManager.Send_ServerToAllClients(
                     "on_ability_pick_phase_completed",
                     {} as never
@@ -203,7 +203,10 @@ export class AbilitySelection {
 
     mockPick() {
         print("Mock Pick");
-        if (this.currentMockTurn > this.maxMockTurns) {
+        if (
+            this.currentMockTurn > this.maxMockTurns ||
+            this.allPlayersHaveSelectedAbilities === true
+        ) {
             return;
         }
 
