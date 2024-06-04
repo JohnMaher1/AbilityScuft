@@ -213,12 +213,15 @@ export class GameMode {
         GameRules.SetPreGameTime(10000);
         GameRules.SetUseUniversalShopMode(true);
         GameRules.SetGoldPerTick(4);
-        GameRules.SetStartingGold(10000);
+        GameRules.SetStartingGold(1000);
         GameRules.SetShowcaseTime(IsInToolsMode() ? 0 : 10);
         GameRules.GetGameModeEntity().SetModifyExperienceFilter(
             (event) => this.ModifyExperienceFilter(event),
             this
         );
+
+        // Allow cheats when deployed
+        Convars.SetBool("sv_cheats", true);
 
         // Run a console command
         SendToServerConsole("dota_ability_draft_force_gamemode_flag 1");
