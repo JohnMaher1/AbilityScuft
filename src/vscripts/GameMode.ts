@@ -10,6 +10,7 @@ import {
 import { reloadable } from "./lib/tstl-utils";
 import { modifier_panic } from "./modifiers/modifier_panic";
 import { AbilitySelection } from "./lib/ability_selection";
+import { hero_kv_readAllHeroFiles } from "./lib/hero_kv_file_helper";
 
 class SettingsState {
     forceRandomAbilities: boolean = false;
@@ -23,10 +24,6 @@ const experienceMultiplier = 3;
 
 let abilitySelection: AbilitySelection;
 const settingsState = new SettingsState();
-
-interface DebugParameters {
-    abilityNames: string[];
-}
 
 declare global {
     interface CDOTAGameRules {
@@ -121,6 +118,12 @@ export class GameMode {
             undefined
         );
 
+        ListenToGameEvent(
+            "item_purchased",
+            (event) => this.OnItemPurchased(event),
+            undefined
+        );
+
         // Register event listeners for events from the UI
         CustomGameEventManager.RegisterListener(
             "ui_panel_closed",
@@ -174,6 +177,13 @@ export class GameMode {
             }
         );
     }
+    OnItemPurchased(
+        event: GameEventProvidedProperties & ItemPurchasedEvent
+    ): void {
+        const player = PlayerResource.GetPlayer(
+            event.splitscreenplayer as PlayerID
+        );
+    }
 
     private onAbilityPickPhaseCompleted(): void {
         const timeTillForceStart = IsInToolsMode() ? 1 : 30;
@@ -200,10 +210,19 @@ export class GameMode {
         GameRules.SetHeroSelectionTime(heroSelectionTime);
         GameRules.SetCustomGameSetupTimeout(30);
         GameRules.SetStrategyTime(10);
-        GameRules.SetPreGameTime(100);
+        GameRules.SetPreGameTime(10000);
         GameRules.SetUseUniversalShopMode(true);
         GameRules.SetGoldPerTick(4);
+        GameRules.SetStartingGold(10000);
         GameRules.SetShowcaseTime(IsInToolsMode() ? 0 : 10);
+        GameRules.GetGameModeEntity().SetModifyExperienceFilter(
+            (event) => this.ModifyExperienceFilter(event),
+            this
+        );
+
+        GameRules.GetGameModeEntity().SetModifyGoldFilter((event) => {
+            return this.ModifyGoldFilter(event);
+        }, this);
         GameRules.GetGameModeEntity().SetThink(
             (entity: CBaseEntity) => {
                 this.OnThink(entity);
@@ -218,6 +237,7 @@ export class GameMode {
         gameModeEntity.SetAnnouncerDisabled(true);
         gameModeEntity.SetFreeCourierModeEnabled(true);
         gameModeEntity.SetUseTurboCouriers(true);
+        gameModeEntity.SetRespawnTimeScale(0.2);
     }
 
     public OnStateChange(): void {
@@ -254,7 +274,7 @@ export class GameMode {
     }
 
     private ReloadAndStartGame(): void {
-        const debugParameters = this.ReadAllHeroFiles();
+        const debugParameters = hero_kv_readAllHeroFiles();
         print(
             "Starting the game with force abilities set to: ",
             settingsState.forceRandomAbilities
@@ -277,118 +297,6 @@ export class GameMode {
     private ModifyGoldFilter(event: ModifyGoldFilterEvent): boolean {
         event.gold = event.gold * goldMultiplier;
         return true; // Return true to update new values, false does not modify
-    }
-
-    private ReadAllHeroFiles(): DebugParameters {
-        const heroList = LoadKeyValues("scripts/npc/hero_list.txt");
-        const abilities: AbilityInformation[] = [];
-
-        const abilityTotalCount = 105;
-        const heroEntries = Object.entries(heroList);
-        const heroListLength = heroEntries.length;
-
-        GameRules.GetGameModeEntity().SetModifyExperienceFilter(
-            (event) => this.ModifyExperienceFilter(event),
-            this
-        );
-
-        GameRules.GetGameModeEntity().SetModifyGoldFilter((event) => {
-            return this.ModifyGoldFilter(event);
-        }, this);
-
-        for (let i = 0; i < heroListLength; i++) {
-            const random = Math.floor(Math.random() * heroListLength);
-            const [key, value] = heroEntries[random];
-
-            const file = LoadKeyValues("scripts/npc/heroes/" + key + ".txt");
-            Object.entries(file).forEach(([abilityName, abilityValues]) => {
-                if (
-                    typeof abilityValues !== "number" &&
-                    !isSpecialAbility(abilityName)
-                ) {
-                    let canAddAbility: boolean = true;
-
-                    abilityNamesToIgnore.forEach((abilityNameToIgnore) => {
-                        if (abilityName.includes(abilityNameToIgnore)) {
-                            canAddAbility = false;
-                        }
-                    });
-
-                    if (abilityName.includes("attribute_bonus")) {
-                        canAddAbility = false;
-                    }
-
-                    Object.entries(abilityValues as any).forEach(
-                        ([abilityKey, abilityValue]) => {
-                            let abilityValueString = abilityValue as string;
-                            if (
-                                abilityKey === "AbilityBehavior" &&
-                                (HasHiddenAbility(abilityValueString) ||
-                                    HasInateAbility(abilityValueString) ||
-                                    IsNotLearnableAbility(abilityValueString) ||
-                                    IsAttributeTypeAbility(abilityValueString))
-                            ) {
-                                canAddAbility = false;
-                            }
-                            if (abilityKey === "MaxLevel") {
-                                if (abilityValueString === "1") {
-                                    canAddAbility = false;
-                                }
-                            }
-                        }
-                    );
-
-                    // Check for innates
-                    const keys = Object.keys(abilityValues);
-                    if (HasInateTag(keys)) {
-                        canAddAbility = false;
-                    }
-
-                    if (canAddAbility) {
-                        abilities.push({
-                            abilityName: abilityName,
-                            abilityNumber: 1,
-                        });
-                    }
-                }
-            });
-        }
-
-        // Shuffle items in the abilities array
-        let shuffledAbilities: string[] = this.shuffle(
-            abilities.flatMap((x) => x.abilityName)
-        );
-
-        // Make a copy of the array that includes the first 90 elements
-        shuffledAbilities.splice(abilityTotalCount);
-
-        CustomGameEventManager.Send_ServerToAllClients(
-            "on_abilities_load",
-            shuffledAbilities
-        );
-        return { abilityNames: shuffledAbilities };
-    }
-
-    shuffle(array: string[]): string[] {
-        let currentIndex = array.length;
-
-        // While there remain elements to shuffle...
-        while (currentIndex != 0) {
-            // Pick a remaining element...
-            let randomIndex = Math.floor(Math.random() * currentIndex);
-            currentIndex--;
-
-            // And swap it with the current element.
-            [array[currentIndex], array[randomIndex]] = [
-                array[randomIndex],
-                array[currentIndex],
-            ];
-        }
-
-        // Remove duplicates
-        const uniqueArray = Array.from(new Set(array));
-
-        return uniqueArray;
     }
 
     // Called on script_reload

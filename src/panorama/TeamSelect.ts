@@ -36,6 +36,11 @@ class TeamSelect {
                 {} as never
             );
         });
+
+        GameEvents.Subscribe("on_ability_pick_phase_completed", () => {
+            // const startButtonPanel = this.panel.FindChild("StartButtonPanel");
+            // startButtonPanel?.GetParent()?.RemoveAndDeleteChildren();
+        });
     }
 
     private CreateNewToggleOption(

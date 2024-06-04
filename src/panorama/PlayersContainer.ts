@@ -13,7 +13,6 @@ class PlayersContainer {
         $.Msg("PlayersContainer constructor");
         this.panel = panel;
         // Find container element
-
         let abilityImage = this.panel.FindChild(
             "AbilityBackgroundImage"
         )! as ImagePanel;
@@ -74,7 +73,7 @@ class PlayersContainer {
             const tempContainer3 = this.panel.FindChild(
                 "AbilityBackgroundImage"
             )! as ImagePanel;
-            tempContainer3?.SetImage("");
+            tempContainer3?.GetParent()?.RemoveAndDeleteChildren();
         });
     }
 

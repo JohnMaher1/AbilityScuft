@@ -1,3 +1,9 @@
 - Only one ultimate should be able to be selected at a time (make configurable)
 - Another option for choosing 5 abilities
-- 
+// - Decrease respawn cooldown (priority one)
+- Look into why night doesnt work also watches and lotus pool
+// - If ability is an ags scepter upgrade or shard it wont work until the corresponding item is bought (fixed by not including those)
+// - Try get the new map (doesnt do anything )
+- Create an item called blues balls that is literally a pic of a a blue balls. Make it like a nutting joke 
+with an active, while blue balls is active you do less active :)
+- Post nut clarity, disarmed but intelligence is increased by 200

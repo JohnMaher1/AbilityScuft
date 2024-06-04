@@ -44,6 +44,10 @@ export function IsAttributeTypeAbility(
     return abilityBehaviourString.includes("DOTA_ABILITY_TYPE_ATTRIBUTES");
 }
 
+export function IsGrantedByShardOrScepter(key: string) {
+    return key === "IsGrantedByScepter" || key === "IsGrantedByShard";
+}
+
 export const abilityNamesToIgnore: string[] = [
     "undying_zombie_master",
     "lich_variant_ice_rite",

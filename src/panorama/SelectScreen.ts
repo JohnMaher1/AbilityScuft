@@ -37,7 +37,7 @@ class SelectScreen {
         };
 
         GameEvents.Subscribe("on_ability_pick_phase_completed", () => {
-            container.RemoveAndDeleteChildren();
+            container.GetParent().RemoveAndDeleteChildren();
         });
     }
 }

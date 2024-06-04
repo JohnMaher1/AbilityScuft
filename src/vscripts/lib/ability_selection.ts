@@ -1,3 +1,5 @@
+import { hero_ability_kv_HandleScepterShardUpgrade } from "./ability_kv_helper";
+import { hero_kv_getHeroKVFile } from "./hero_kv_file_helper";
 import { reloadable } from "./tstl-utils";
 
 interface PlayerAbilityCounts {
@@ -90,6 +92,11 @@ export class AbilitySelection {
         }
     }
 
+    onAddAbilityToPlayer(playerID: PlayerID, abilityName: string) {
+        // Check if ability has a scepter upgrade
+        hero_ability_kv_HandleScepterShardUpgrade(playerID, abilityName);
+    }
+
     handlePlayerAbilityClicked(playerID: PlayerID, abilityName: string) {
         if (playerID === this.playerTurn) {
             // Assign ability to player
@@ -99,10 +106,11 @@ export class AbilitySelection {
                 (x) => x.playerID === playerID
             );
             if (!playerAbilityCount) {
-                playerHero.AddAbility(abilityName);
+                //playerHero.AddAbility(abilityName);
+                this.onAddAbilityToPlayer(playerID, "shadow_shaman_shackles");
             }
             if (playerAbilityCount && playerAbilityCount.abilityCount < 4) {
-                playerHero.AddAbility(abilityName);
+                this.onAddAbilityToPlayer(playerID, abilityName);
             }
 
             this.handlePlayerAbilityCount(playerID);
