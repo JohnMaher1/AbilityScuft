@@ -220,6 +220,9 @@ export class GameMode {
             this
         );
 
+        // Run a console command
+        SendToServerConsole("dota_ability_draft_force_gamemode_flag 1");
+
         GameRules.GetGameModeEntity().SetModifyGoldFilter((event) => {
             return this.ModifyGoldFilter(event);
         }, this);

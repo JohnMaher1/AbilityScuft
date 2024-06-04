@@ -21,22 +21,7 @@
 		"ItemInitialStockTimeTurbo"		"1.0"
 	}
 
-	"item_blues_balls"
-	{
-        "BaseClass"         "item_lua"
-        "ItemCost"          "5000"
-        "ItemKillable"      "1"
-        "ItemSellable"      "1"
-        "ItemPurchasable"   "1"
-        "ItemDroppable"     "1",
-				"AbilityTextureName": "blues_balls"
-        "AbilityValues"
-        {
-            "int_bonus"                 "-20"
-            "str_bonus"                 "10"
-            "agi_bonus"                 "69"
-        }
-    }
+	
 
 	//=================================================================================================================
 	//=================================================================================================================
