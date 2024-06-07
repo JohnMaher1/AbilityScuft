@@ -11,6 +11,7 @@ import { reloadable } from "./lib/tstl-utils";
 import { modifier_panic } from "./modifiers/modifier_panic";
 import { AbilitySelection } from "./lib/ability_selection";
 import { hero_kv_readAllHeroFiles } from "./lib/hero_kv_file_helper";
+import { blues_balls } from "./models/item_names";
 
 class SettingsState {
     forceRandomAbilities: boolean = false;
@@ -116,7 +117,7 @@ export class GameMode {
         );
 
         ListenToGameEvent(
-            "item_purchased",
+            "dota_item_purchased",
             (event) => this.OnItemPurchased(event),
             undefined
         );
@@ -175,11 +176,16 @@ export class GameMode {
         );
     }
     OnItemPurchased(
-        event: GameEventProvidedProperties & ItemPurchasedEvent
+        event: GameEventProvidedProperties & DotaItemPurchasedEvent
     ): void {
         const player = PlayerResource.GetPlayer(
             event.splitscreenplayer as PlayerID
         );
+        // Get item id from name
+        if (event.itemname === blues_balls) {
+            // Handle later
+        }
+        print("Item purchased: ", event.itemname);
     }
 
     private onAbilityPickPhaseCompleted(): void {
