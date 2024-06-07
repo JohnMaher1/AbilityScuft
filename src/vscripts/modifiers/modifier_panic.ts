@@ -36,8 +36,10 @@ export class modifier_panic extends ModifierSpeed {
 
     // Called when intervalThink is triggered
     OnIntervalThink(): void {
-        const parent = this.GetParent();
-
-        parent.MoveToPosition((parent.GetAbsOrigin() + RandomVector(400)) as Vector);
+        // Commented out for now
+        // const parent = this.GetParent();
+        // parent.MoveToPosition(
+        //     (parent.GetAbsOrigin() + RandomVector(400)) as Vector
+        // );
     }
 }

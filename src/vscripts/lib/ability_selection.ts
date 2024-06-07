@@ -106,8 +106,7 @@ export class AbilitySelection {
                 (x) => x.playerID === playerID
             );
             if (!playerAbilityCount) {
-                //playerHero.AddAbility(abilityName);
-                this.onAddAbilityToPlayer(playerID, "shadow_shaman_shackles");
+                this.onAddAbilityToPlayer(playerID, abilityName);
             }
             if (playerAbilityCount && playerAbilityCount.abilityCount < 4) {
                 this.onAddAbilityToPlayer(playerID, abilityName);
@@ -210,7 +209,7 @@ export class AbilitySelection {
     }
 
     mockPick() {
-        print("Mock Pick");
+        //print(this.allPlayersHaveSelectedAbilities);
         if (
             this.currentMockTurn > this.maxMockTurns ||
             this.allPlayersHaveSelectedAbilities === true

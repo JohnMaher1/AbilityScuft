@@ -7,3 +7,7 @@
 - Create an item called blues balls that is literally a pic of a a blue balls. Make it like a nutting joke 
 with an active, while blue balls is active you do less active :)
 - Post nut clarity, disarmed but intelligence is increased by 200
+// - Stop players from being able to move at the beginning
+- Tp scrolls not cooldown normal (long)
+- Turbo shop not secret shop
+- Make token timings faster

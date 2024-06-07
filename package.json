@@ -1,23 +1,34 @@
 {
-    "name": "floppers_game_three",
-    "private": true,
-    "scripts": {
-        "postinstall": "node scripts/install.js",
-        "launch": "node scripts/launch.js",
-        "build": "run-p build:*",
-        "build:panorama": "tsc --project src/panorama/tsconfig.json",
-        "build:vscripts": "tstl --project src/vscripts/tsconfig.json",
-        "dev": "run-p dev:*",
-        "dev:panorama": "tsc --project src/panorama/tsconfig.json --watch",
-        "dev:vscripts": "tstl --project src/vscripts/tsconfig.json --watch"
-    },
-    "devDependencies": {
-        "@moddota/dota-lua-types": "^4.30.0",
-        "@moddota/find-steam-app": "^1.1.0",
-        "@moddota/panorama-types": "^1.30.0",
-        "fs-extra": "^9.0.0",
-        "npm-run-all": "^4.1.5",
-        "typescript": "^5.2.2",
-        "typescript-to-lua": "^1.20.0"
-    }
+  "name": "floppers_game_three",
+  "private": true,
+  "scripts": {
+    "postinstall": "node scripts/install.js",
+    "launch": "node scripts/launch.js",
+    "build": "run-p build:*",
+    "build:panorama": "tsc --project src/panorama/tsconfig.json",
+    "build:vscripts": "tstl --project src/vscripts/tsconfig.json",
+    "dev": "run-p dev:*",
+    "dev:panorama": "tsc --project src/panorama/tsconfig.json --watch",
+    "dev:vscripts": "tstl --project src/vscripts/tsconfig.json --watch",
+    "dev:localizationCompiler": "tsc --project node_modules/~resource/tsconfig.json",
+    "dev:localizationCompilerWatcher": "tsc --project node_modules/~resource/tsconfig.json --watch",
+    "dev:runlocalizationWatcher": "node node_modules/~generator/fsWatcher.js",
+    "init": "link-module-alias && node node_modules/~generator/init.js"
+  },
+  "devDependencies": {
+    "@moddota/dota-lua-types": "^4.30.0",
+    "@moddota/find-steam-app": "^1.1.0",
+    "@moddota/panorama-types": "^1.30.0",
+    "fs-extra": "^9.0.0",
+    "npm-run-all": "^4.1.5",
+    "typescript": "^5.2.2",
+    "typescript-to-lua": "^1.20.0"
+  },
+  "_moduleAliases": {
+    "~resource": "game/resource",
+    "~generator": "node_modules/@shushishtok/tooltip_generator"
+  },
+  "dependencies": {
+    "@shushishtok/tooltip_generator": "^1.7.0"
+  }
 }

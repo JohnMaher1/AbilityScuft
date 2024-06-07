@@ -19,6 +19,7 @@
       </Panel>
     </snippet>
   </snippets>
+
   <Panel hittest="false" style="width: 100%; height: 100%;">
     <Image id="TeamSelectBackgroundImage" hittest="false" />
     <Panel id="OptionPanel">

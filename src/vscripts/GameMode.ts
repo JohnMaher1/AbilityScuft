@@ -59,44 +59,41 @@ const getHeroToSoundNameMapping = (heroName: string): string => {
 @reloadable
 export class GameMode {
     public static Precache(this: void, context: CScriptPrecacheContext) {
-        PrecacheResource(
-            "particle",
-            "particles/units/heroes/hero_meepo/meepo_earthbind_projectile_fx.vpcf",
-            context
-        );
-        PrecacheResource(
-            "soundfile",
-            "soundevents/game_sounds_heroes/game_sounds_meepo.vsndevts",
-            context
-        );
-
-        const heroList = LoadKeyValues("scripts/npc/hero_list.txt");
-        const heroNames = Object.keys(heroList);
-
-        const particleList = LoadKeyValues(
-            "scripts/particles/hero_particles.txt"
-        );
-        const particleNames = Object.keys(particleList);
-        // Particle Effects
-        for (const key of particleNames) {
-            const keyCopy = key.substring(0, key.length - 2);
-            PrecacheResource(
-                "particle",
-                `particles/units/heroes/${keyCopy}`,
-                context
-            );
-        }
-
-        // Hero Sounds
-        for (const key of heroNames) {
-            const heroName = key.replace("npc_dota_hero_", "");
-            const heroSoundName = getHeroToSoundNameMapping(heroName);
-            PrecacheResource(
-                "soundfile",
-                `soundevents/game_sounds_heroes/game_sounds_${heroSoundName}.vsndevts`,
-                context
-            );
-        }
+        // PrecacheResource(
+        //     "particle",
+        //     "particles/units/heroes/hero_meepo/meepo_earthbind_projectile_fx.vpcf",
+        //     context
+        // );
+        // PrecacheResource(
+        //     "soundfile",
+        //     "soundevents/game_sounds_heroes/game_sounds_meepo.vsndevts",
+        //     context
+        // );
+        // const heroList = LoadKeyValues("scripts/npc/hero_list.txt");
+        // const heroNames = Object.keys(heroList);
+        // const particleList = LoadKeyValues(
+        //     "scripts/particles/hero_particles.txt"
+        // );
+        // const particleNames = Object.keys(particleList);
+        // // Particle Effects
+        // for (const key of particleNames) {
+        //     const keyCopy = key.substring(0, key.length - 2);
+        //     PrecacheResource(
+        //         "particle",
+        //         `particles/units/heroes/${keyCopy}`,
+        //         context
+        //     );
+        // }
+        // // Hero Sounds
+        // for (const key of heroNames) {
+        //     const heroName = key.replace("npc_dota_hero_", "");
+        //     const heroSoundName = getHeroToSoundNameMapping(heroName);
+        //     PrecacheResource(
+        //         "soundfile",
+        //         `soundevents/game_sounds_heroes/game_sounds_${heroSoundName}.vsndevts`,
+        //         context
+        //     );
+        // }
     }
 
     public static Activate(this: void) {
@@ -187,6 +184,15 @@ export class GameMode {
 
     private onAbilityPickPhaseCompleted(): void {
         const timeTillForceStart = IsInToolsMode() ? 1 : 30;
+        // Remove the panic modifier from all heroes
+        for (let i = 0; i < 16; i++) {
+            const player = PlayerResource.GetPlayer(i as PlayerID);
+            if (!player) {
+                continue;
+            }
+            const hero = PlayerResource.GetSelectedHeroEntity(i as PlayerID);
+            hero?.RemoveModifierByName("modifier_panic");
+        }
         Timers.CreateTimer(timeTillForceStart, () => {
             GameRules.ForceGameStart();
             Timers.CreateTimer(20, () => {
@@ -205,6 +211,17 @@ export class GameMode {
     }
 
     private configure(): void {
+        // Allow cheats when deployed
+        Convars.SetBool("sv_cheats", true);
+
+        // Run a console command
+        SendToServerConsole("dota_ability_draft_force_gamemode_flag 1");
+
+        // Disable player movement and pointer events
+        GameRules.SetCustomGameAllowBattleMusic(false);
+        GameRules.SetCustomGameAllowHeroPickMusic(false);
+        GameRules.SetCustomGameAllowMusicAtGameStart(false);
+
         GameRules.SetCustomGameTeamMaxPlayers(DotaTeam.GOODGUYS, 5);
         GameRules.SetCustomGameTeamMaxPlayers(DotaTeam.BADGUYS, 5);
         GameRules.SetHeroSelectionTime(heroSelectionTime);
@@ -214,17 +231,17 @@ export class GameMode {
         GameRules.SetUseUniversalShopMode(true);
         GameRules.SetGoldPerTick(4);
         GameRules.SetStartingGold(1000);
+
+        // Set the shop to be able to be used anywhere
+
+        // Reduce cooldown on TP Scrolls
+        Convars.SetFloat("dota_ability_teleport_cooldown", 25);
+
         GameRules.SetShowcaseTime(IsInToolsMode() ? 0 : 10);
         GameRules.GetGameModeEntity().SetModifyExperienceFilter(
             (event) => this.ModifyExperienceFilter(event),
             this
         );
-
-        // Allow cheats when deployed
-        Convars.SetBool("sv_cheats", true);
-
-        // Run a console command
-        SendToServerConsole("dota_ability_draft_force_gamemode_flag 1");
 
         GameRules.GetGameModeEntity().SetModifyGoldFilter((event) => {
             return this.ModifyGoldFilter(event);
@@ -274,7 +291,21 @@ export class GameMode {
         }
     }
 
+    private AddModifierToHeroToPreventMovement() {
+        for (let i = 0; i < DOTA_MAX_PLAYERS; i++) {
+            const player = PlayerResource.GetPlayer(i as PlayerID);
+            if (!player) {
+                continue;
+            }
+            const hero = PlayerResource.GetSelectedHeroEntity(i as PlayerID);
+            hero?.AddNewModifier(hero, undefined, "modifier_panic", {
+                duration: 50000,
+            });
+        }
+    }
+
     private StartGame(): void {
+        this.AddModifierToHeroToPreventMovement();
         this.ReloadAndStartGame();
         // Do some stuff here
     }
