@@ -24,6 +24,10 @@ function GenerateLocalizationData() {
         classname: "DOTA_Tooltip_Ability_item_blues_balls",
         name: "Blue's Balls",
     });
+    StandardTooltips.push({
+        classname: "DOTA_Tooltip_modifier_post_nut_clarity",
+        name: "Post Nut Clarity",
+    });
     // Return data to compiler
     return localization_info;
 }

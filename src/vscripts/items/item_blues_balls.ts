@@ -8,37 +8,34 @@ LinkLuaModifier(
 );
 
 LinkLuaModifier(
-    "modifier_int_bonus" as ModifierType,
-    "modifiers/modifier_int_bonus.lua" as ModifierLuaType,
+    "modifier_post_nut_clarity" as ModifierType,
+    "modifiers/modifier_post_nut_clarity.lua" as ModifierLuaType,
     LuaModifierMotionType.NONE
 );
 
-@registerAbility()
+@registerAbility("item_blues_balls")
 export class item_blues_balls extends BaseItem {
-    private hasInitialized: boolean = false;
-    private hasNutted: boolean = false;
+    GetIntrinsicModifierName(): string {
+        return "modifier_strength_bonus" as ModifierType;
+    }
 
-    // OnInventoryContentsChanged(): void {
-    //     print("OnInventoryContentsChanged");
-    //     if (this.hasInitialized) return;
-    //     this.hasInitialized = true;
-    //     const caster = this.GetCaster();
-    //     caster.AddNewModifier(
-    //         caster,
-    //         this,
-    //         "modifier_strength_bonus" as ModifierType,
-    //         undefined
-    //     );
-    // }
+    GetAbilityTextureName(): string {
+        if (
+            this.GetCaster().HasModifier(
+                "modifier_post_nut_clarity" as ModifierType
+            )
+        ) {
+            return "post_nut";
+        }
+        return "blues_balls";
+    }
 
     OnSpellStart(): void {
-        this.hasNutted = true;
         const caster = this.GetCaster();
-        caster.RemoveModifierByName("modifier_strength_bonus" as ModifierType);
         caster.AddNewModifier(
             caster,
             this,
-            "modifier_int_bonus" as ModifierType,
+            "modifier_post_nut_clarity" as ModifierType,
             undefined
         );
         caster.AddNewModifier(
@@ -52,22 +49,9 @@ export class item_blues_balls extends BaseItem {
             return;
         });
         Timers.CreateTimer(15, () => {
-            caster.RemoveModifierByName("modifier_int_bonus" as ModifierType);
-            caster.AddNewModifier(
-                caster,
-                this,
-                "modifier_strength_bonus" as ModifierType,
-                undefined
+            caster.RemoveModifierByName(
+                "modifier_post_nut_clarity" as ModifierType
             );
-            this.hasNutted = false;
         });
-    }
-
-    GetAbilityTextureName(): string {
-        if (this.hasNutted) {
-            return "post_nut";
-        } else {
-            return "blues_balls";
-        }
     }
 }

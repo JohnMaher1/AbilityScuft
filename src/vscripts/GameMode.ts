@@ -12,6 +12,7 @@ import { modifier_panic } from "./modifiers/modifier_panic";
 import { AbilitySelection } from "./lib/ability_selection";
 import { hero_kv_readAllHeroFiles } from "./lib/hero_kv_file_helper";
 import { blues_balls } from "./models/item_names";
+import { isItemInMainInventory } from "./helpers/item_helpers";
 
 class SettingsState {
     forceRandomAbilities: boolean = false;
@@ -103,8 +104,10 @@ export class GameMode {
     }
 
     constructor() {
-        this.configure();
-        // Register event listeners for dota engine events
+        this.Init();
+    }
+
+    private AddGameEventListeners(): void {
         ListenToGameEvent(
             "game_rules_state_change",
             () => this.OnStateChange(),
@@ -115,13 +118,9 @@ export class GameMode {
             (event) => this.OnNpcSpawned(event),
             undefined
         );
+    }
 
-        ListenToGameEvent(
-            "dota_item_purchased",
-            (event) => this.OnItemPurchased(event),
-            undefined
-        );
-
+    private AddCustomGameEventListeners(): void {
         // Register event listeners for events from the UI
         CustomGameEventManager.RegisterListener(
             "ui_panel_closed",
@@ -174,18 +173,6 @@ export class GameMode {
                 }
             }
         );
-    }
-    OnItemPurchased(
-        event: GameEventProvidedProperties & DotaItemPurchasedEvent
-    ): void {
-        const player = PlayerResource.GetPlayer(
-            event.splitscreenplayer as PlayerID
-        );
-        // Get item id from name
-        if (event.itemname === blues_balls) {
-            // Handle later
-        }
-        print("Item purchased: ", event.itemname);
     }
 
     private onAbilityPickPhaseCompleted(): void {
@@ -269,6 +256,12 @@ export class GameMode {
         gameModeEntity.SetRespawnTimeScale(0.2);
     }
 
+    private Init() {
+        this.configure();
+        this.AddGameEventListeners();
+        this.AddCustomGameEventListeners();
+    }
+
     public OnStateChange(): void {
         const state = GameRules.State_Get();
         // Add 4 bots to lobby in tools
@@ -345,7 +338,8 @@ export class GameMode {
     // Called on script_reload
     public Reload() {
         print("Script reloaded!");
-        this.ReloadAndStartGame();
+        this.Init();
+        //this.ReloadAndStartGame();
         //this.ReadAllHeroFiles();
     }
 

@@ -1,6 +1,6 @@
 import { BaseModifier, registerModifier } from "../lib/dota_ts_adapter";
 
-class ModifierIntBonus extends BaseModifier {
+class ModifierPostNutClarity extends BaseModifier {
     // Declare functions
     DeclareFunctions(): ModifierFunction[] {
         return [ModifierFunction.STATS_INTELLECT_BONUS];
@@ -17,7 +17,11 @@ class ModifierIntBonus extends BaseModifier {
     GetName(): string {
         return "Intelligence Bonus";
     }
+
+    GetTexture(): string {
+        return "blues_balls";
+    }
 }
 
 @registerModifier()
-export class modifier_int_bonus extends ModifierIntBonus {}
+export class modifier_post_nut_clarity extends ModifierPostNutClarity {}
