@@ -51,7 +51,10 @@ export class AbilitySelection {
                 const abilityCount = hero.GetAbilityCount();
                 for (let i = 0; i < abilityCount; i++) {
                     const ability = hero?.GetAbilityByIndex(i);
-                    if (ability?.GetAbilityName()) {
+                    if (
+                        ability?.GetAbilityName() &&
+                        this.canAbilityBeRemovedFromPlayer(ability)
+                    ) {
                         if (this.isBaseAbility(ability)) {
                             hero?.RemoveAbility(ability.GetAbilityName());
                         }
@@ -267,6 +270,20 @@ export class AbilitySelection {
         CustomGameEventManager.Send_ServerToAllClients("on_turn_change", {
             playerTurnID: this.playerTurn,
         });
+    }
+
+    private canAbilityBeRemovedFromPlayer(ability: CDOTABaseAbility): boolean {
+        const abilityName = ability.GetAbilityName();
+        if (
+            abilityName === "ability_capture" ||
+            abilityName === "twin_gate_portal_warp" ||
+            abilityName === "ability_lamp_use" ||
+            abilityName === "ability_pluck_famango" ||
+            abilityName === "abyssal_underlord_portal_warp"
+        ) {
+            return false;
+        }
+        return true;
     }
 
     private isBaseAbility(ability: CDOTABaseAbility) {

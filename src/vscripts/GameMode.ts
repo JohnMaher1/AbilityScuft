@@ -225,10 +225,13 @@ export class GameMode {
         GameRules.SetGoldPerTick(4);
         GameRules.SetStartingGold(1000);
 
-        // Set the shop to be able to be used anywhere
+        // const shop = SpawnDOTAShopTriggerRadiusApproximate(
+        //     Vector(0, 0, 0),
+        //     40000
+        // );
+        // shop.SetShopType(ShopType.HOME);
 
-        // Reduce cooldown on TP Scrolls
-        Convars.SetFloat("dota_ability_teleport_cooldown", 25);
+        // Set the shop to be able to be used anywhere
 
         GameRules.SetShowcaseTime(IsInToolsMode() ? 0 : 10);
         GameRules.GetGameModeEntity().SetModifyExperienceFilter(
@@ -254,6 +257,7 @@ export class GameMode {
         gameModeEntity.SetFreeCourierModeEnabled(true);
         gameModeEntity.SetUseTurboCouriers(true);
         gameModeEntity.SetRespawnTimeScale(0.2);
+        gameModeEntity.SetAllowNeutralItemDrops(true);
     }
 
     private Init() {
