@@ -61,41 +61,41 @@ const getHeroToSoundNameMapping = (heroName: string): string => {
 @reloadable
 export class GameMode {
     public static Precache(this: void, context: CScriptPrecacheContext) {
-        // PrecacheResource(
-        //     "particle",
-        //     "particles/units/heroes/hero_meepo/meepo_earthbind_projectile_fx.vpcf",
-        //     context
-        // );
-        // PrecacheResource(
-        //     "soundfile",
-        //     "soundevents/game_sounds_heroes/game_sounds_meepo.vsndevts",
-        //     context
-        // );
-        // const heroList = LoadKeyValues("scripts/npc/hero_list.txt");
-        // const heroNames = Object.keys(heroList);
-        // const particleList = LoadKeyValues(
-        //     "scripts/particles/hero_particles.txt"
-        // );
-        // const particleNames = Object.keys(particleList);
-        // // Particle Effects
-        // for (const key of particleNames) {
-        //     const keyCopy = key.substring(0, key.length - 2);
-        //     PrecacheResource(
-        //         "particle",
-        //         `particles/units/heroes/${keyCopy}`,
-        //         context
-        //     );
-        // }
-        // // Hero Sounds
-        // for (const key of heroNames) {
-        //     const heroName = key.replace("npc_dota_hero_", "");
-        //     const heroSoundName = getHeroToSoundNameMapping(heroName);
-        //     PrecacheResource(
-        //         "soundfile",
-        //         `soundevents/game_sounds_heroes/game_sounds_${heroSoundName}.vsndevts`,
-        //         context
-        //     );
-        // }
+        PrecacheResource(
+            "particle",
+            "particles/units/heroes/hero_meepo/meepo_earthbind_projectile_fx.vpcf",
+            context
+        );
+        PrecacheResource(
+            "soundfile",
+            "soundevents/game_sounds_heroes/game_sounds_meepo.vsndevts",
+            context
+        );
+        const heroList = LoadKeyValues("scripts/npc/hero_list.txt");
+        const heroNames = Object.keys(heroList);
+        const particleList = LoadKeyValues(
+            "scripts/particles/hero_particles.txt"
+        );
+        const particleNames = Object.keys(particleList);
+        // Particle Effects
+        for (const key of particleNames) {
+            const keyCopy = key.substring(0, key.length - 2);
+            PrecacheResource(
+                "particle",
+                `particles/units/heroes/${keyCopy}`,
+                context
+            );
+        }
+        // Hero Sounds
+        for (const key of heroNames) {
+            const heroName = key.replace("npc_dota_hero_", "");
+            const heroSoundName = getHeroToSoundNameMapping(heroName);
+            PrecacheResource(
+                "soundfile",
+                `soundevents/game_sounds_heroes/game_sounds_${heroSoundName}.vsndevts`,
+                context
+            );
+        }
     }
 
     public static Activate(this: void) {
