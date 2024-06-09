@@ -15,9 +15,9 @@ LinkLuaModifier(
 
 @registerAbility("item_blues_balls")
 export class item_blues_balls extends BaseItem {
-    GetIntrinsicModifierName(): string {
-        return "modifier_strength_bonus" as ModifierType;
-    }
+    // GetIntrinsicModifierName(): string {
+    //     return "modifier_strength_bonus" as ModifierType;
+    // }
 
     GetAbilityTextureName(): string {
         if (
