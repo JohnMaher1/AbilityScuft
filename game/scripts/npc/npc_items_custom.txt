@@ -11,7 +11,7 @@
 		"ItemSellable"      "1"
 		"ItemPurchasable"   "1"
 		"ItemDroppable"     "1"
-		"AbilityCooldown"   "10"
+		"AbilityCooldown"   "5"
 		"AbilitySpecial"
 		{
 			"01"
@@ -23,6 +23,11 @@
 			{
 				"var_type"				"FIELD_INTEGER"
 				"int_bonus"				"500"
+			}
+			"03"
+			{
+				"var_type"        "FIELD_INTEGER"
+				"mana_regen"      "500"
 			}
 		}
 		

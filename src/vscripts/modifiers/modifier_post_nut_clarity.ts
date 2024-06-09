@@ -19,7 +19,7 @@ class ModifierPostNutClarity extends BaseModifier {
     }
 
     GetTexture(): string {
-        return "blues_balls";
+        return "post_nut";
     }
 }
 

@@ -44,6 +44,7 @@ export class item_blues_balls extends BaseItem {
             "modifier_disarmed" as ModifierType,
             undefined
         );
+
         Timers.CreateTimer(5, () => {
             caster.RemoveModifierByName("modifier_disarmed" as ModifierType);
             return;
@@ -52,6 +53,7 @@ export class item_blues_balls extends BaseItem {
             caster.RemoveModifierByName(
                 "modifier_post_nut_clarity" as ModifierType
             );
+            caster.SetMana(caster.GetMaxMana());
         });
     }
 }
