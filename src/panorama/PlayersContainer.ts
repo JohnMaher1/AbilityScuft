@@ -80,6 +80,32 @@ class PlayersContainer {
     setImage(playerID: PlayerID, abilityPosition: number, abilityName: string) {
         const playerPanel = this.playerPanels[playerID];
         playerPanel.setAbilityImage(abilityPosition, abilityName);
+        const abilityPanel = this.getAbilityPanel(playerPanel, abilityPosition);
+        abilityPanel.SetPanelEvent("onmouseover", () => {
+            $.DispatchEvent(
+                "DOTAShowAbilityTooltip",
+                abilityPanel,
+                abilityName
+            );
+        });
+    }
+
+    getAbilityPanel(
+        playerPortait: PlayerPortrait,
+        abilityPosition: number
+    ): ImagePanel {
+        switch (abilityPosition) {
+            case 1:
+                return playerPortait.ability1.imagePanel;
+            case 2:
+                return playerPortait.ability2.imagePanel;
+            case 3:
+                return playerPortait.ability3.imagePanel;
+            case 4:
+                return playerPortait.ability4.imagePanel;
+            default:
+                return null;
+        }
     }
 }
 

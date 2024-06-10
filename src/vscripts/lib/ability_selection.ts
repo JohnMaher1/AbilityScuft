@@ -104,7 +104,6 @@ export class AbilitySelection {
         if (playerID === this.playerTurn) {
             // Assign ability to player
             const player = PlayerResource.GetPlayer(playerID)!;
-            const playerHero = player.GetAssignedHero();
             const playerAbilityCount = this.playerAbilityCounts.find(
                 (x) => x.playerID === playerID
             );
@@ -117,20 +116,14 @@ export class AbilitySelection {
 
             this.handlePlayerAbilityCount(playerID);
             // Get position of ability
-            let abilityPosition = 1;
-            for (let i = 0; i < 4; i++) {
-                if (!playerHero.GetAbilityByIndex(i)) {
-                    abilityPosition = i + 1;
-                    break;
-                }
-            }
+            let abilityPosition = playerAbilityCount?.abilityCount ?? 1;
 
             CustomGameEventManager.Send_ServerToAllClients(
                 "on_player_ability_select",
                 {
                     playerID: playerID,
                     abilityName: abilityName,
-                    abilityPosition: abilityPosition as 1 | 2 | 3 | 4,
+                    abilityPosition: abilityPosition,
                 }
             );
 

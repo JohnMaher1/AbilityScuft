@@ -23,7 +23,7 @@
 
   <Panel hittest="false" style="width: 100%; height: 100%;">
     <Image id="AbilityBackgroundImage" hittest="false" />
-    <Panel id="HeroPortraitsLeft" />
-    <Panel id="HeroPortraitsRight" />
+    <Panel id="HeroPortraitsLeft" hittest="false" />
+    <Panel id="HeroPortraitsRight" hittest="false" />
   </Panel>
 </root>

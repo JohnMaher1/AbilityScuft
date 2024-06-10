@@ -95,9 +95,4 @@ class PlayerPortrait {
     getImagePath(abilityName: string) {
         return "s2r://panorama/images/spellicons/" + abilityName + "_png.vtex";
     }
-
-    // Set the health bar to a certain percentage (0-100)
-    // SetHealthPercent(percentage: number) {
-    //     this.hpBar.style.width = Math.floor(percentage) + "%"; // wots
-    // }
 }

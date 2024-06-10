@@ -34,7 +34,7 @@ interface SettingsToggleEvent {
 interface PlayerAbilitySelectEvent {
     playerID: PlayerID;
     abilityName: string;
-    abilityPosition: 1 | 2 | 3 | 4;
+    abilityPosition: number;
 }
 
 interface PlayerTurnChangedEvent {
