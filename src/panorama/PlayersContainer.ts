@@ -103,6 +103,8 @@ class PlayersContainer {
                 return playerPortait.ability3.imagePanel;
             case 4:
                 return playerPortait.ability4.imagePanel;
+            case 5:
+                return playerPortait.ability5.imagePanel;
             default:
                 return null;
         }

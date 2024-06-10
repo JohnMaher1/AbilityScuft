@@ -1,17 +1,17 @@
 #HeroPortraitsLeft {
-    width: 240px;
+    width: 14%;
     height: 650px;
-    margin-top: 160px;
+    margin-top: 15%;
     flow-children: down;
     horizontal-align: left;
 }
 
 #HeroPortraitsRight {
-    width: 240px;
+    width: 14%;
     height: 650px;
-    margin-top: 160px;
-    margin-right: 0px;
-    padding-right: 0px;
+    margin-top: 15%;
+    /* margin-right: 0px;
+    padding-right: 0px; */
     flow-children: down;
     horizontal-align: right;
 }
@@ -22,10 +22,11 @@
 }
 
 #Ability1 {
-    margin-top: 60px;
-    width: 40px;
-    height: 40px;
-    /* border: 50px solid red; */
+    margin-top: 60%;
+    margin-left: 2%;
+    width: 16%;
+    height: 36%;
+    border-radius: 20%;
 }
 
 #AbilityBackgroundImage {
@@ -35,43 +36,56 @@
 }
 
 #Ability2 {
-    margin-top: 60px;
-    margin-left: 50px;
-    width: 40px;
-    height: 40px;
+    margin-top: 60%;
+    margin-left: 21%;
+    width: 16%;
+    height: 36%;
+    border-radius: 20%;
 }
 
 #Ability3 {
-    margin-top: 60px;
-    margin-left: 100px;
-    width: 40px;
-    height: 40px;
+    margin-top: 60%;
+    margin-left: 40%;
+    width: 16%;
+    height: 36%;
+    border-radius: 20%;
 }
 
 #Ability4 {
-    margin-top: 60px;
-    margin-left: 150px;
-    width: 40px;
-    height: 40px;
+    margin-top: 60%;
+    margin-left: 59%;
+    width: 16%;
+    height: 36%;
+    border-radius: 20%;
 }
 
-#PlayerSelectedAbilities {
-    margin-top: 70px;
-    width: 100%;
-    height: 100%;
-    background-color: red;
-    opacity: 0.3;
+#Ability5 {
+    margin-top: 60%;
+    margin-left: 78%;
+    width: 16%;
+    height: 36%;
+    border-radius: 20%;
 }
 
 .PlayerPortrait {
-    background-color: rgba(220, 246, 247, 0.1);
-    height: 100px;
-    width: 240px;
-    margin-bottom: 10px;
+    background-color: rgba(0, 2, 6, 0.4);
+    height: 16%;
+    width: 100%;
+    margin-bottom: 3%;
+}
+
+#HeroPortraitsRight > .PlayerPortrait {
+    border-bottom-left-radius: 15px;
+    border-top-left-radius: 15px;
+}
+
+#HeroPortraitsLeft > .PlayerPortrait {
+    border-bottom-right-radius: 15px;
+    border-top-right-radius: 15px;
 }
 
 .PlayerPortrait .IsPickTurn {
-    background-color: rgba(0, 255, 0, 0.5);
+    background-color: rgba(128, 249, 128, 0.5);
 }
 
 .AbilityBackgroundImage {
@@ -83,26 +97,13 @@
 }
 
 #HeroImage {
-    width: 45px;
-    height: 45px;
-    background-color: black;
+    width: 23%;
+    height: 50%;
+    border-bottom-right-radius: 15%;
 }
 #PlayerName {
-    color: white;
-    font-size: 25px;
-    margin-top: 10px;
-    margin-left: 55px;
-}
-.HealthContainer {
-    width: 200px;
-    height: 20px;
-    x: 90px;
-    y: 50px;
-    background-color: black;
-}
-#HealthBar {
-    height: 20px;
-    width: 50%;
-
-    background-color: green;
+    color: rgb(167, 231, 240);
+    font-size: 20px;
+    margin-top: 15%;
+    margin-left: 26%;
 }

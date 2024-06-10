@@ -8,12 +8,13 @@ interface PlayerAbilityCounts {
 }
 @reloadable
 export class AbilitySelection {
+    playerMaxAbilities = 5;
     playerTurn: PlayerID = 0;
     playerTurnOrder: PlayerID[] = [];
     playerTurnReversed: boolean = false;
     canPickAgain: boolean = false;
     abilityNames: string[] = [];
-    maxMockTurns = 40;
+    maxMockTurns = 10 * this.playerMaxAbilities;
     currentMockTurn = 0;
     playerAbilityCounts: PlayerAbilityCounts[] = [];
     forceRandomAbilities: boolean = false;
@@ -31,7 +32,6 @@ export class AbilitySelection {
 
     init() {
         print("Ability Selection initialized");
-        this.playerTurn = 0;
         this.playerTurnOrder = [];
         this.playerTurnReversed = false;
         this.createPlayerTurnOrder();
@@ -110,7 +110,10 @@ export class AbilitySelection {
             if (!playerAbilityCount) {
                 this.onAddAbilityToPlayer(playerID, abilityName);
             }
-            if (playerAbilityCount && playerAbilityCount.abilityCount < 4) {
+            if (
+                playerAbilityCount &&
+                playerAbilityCount.abilityCount < this.playerMaxAbilities
+            ) {
                 this.onAddAbilityToPlayer(playerID, abilityName);
             }
 
@@ -180,13 +183,15 @@ export class AbilitySelection {
                     this.playerTurnOrder.length
             ];
 
-        // Check if all players have selected 4 abilities
+        // Check if all players have selected max abilites
 
         const playerAbilityCountLength = this.playerAbilityCounts.length;
         if (playerAbilityCountLength === PlayerResource.GetPlayerCount()) {
             if (
                 this.playerAbilityCounts.every(
-                    (playerAbilityCount) => playerAbilityCount.abilityCount >= 4
+                    (playerAbilityCount) =>
+                        playerAbilityCount.abilityCount >=
+                        this.playerMaxAbilities
                 )
             ) {
                 this.allPlayersHaveSelectedAbilities = true;
@@ -240,6 +245,8 @@ export class AbilitySelection {
             }
             return acc;
         }, {} as Record<DotaTeam, PlayerID[]>);
+
+        this.playerTurn = playersByTeam[DotaTeam.GOODGUYS]?.[0] ?? 0;
 
         let goodGuysIndex = 0;
         let badGuysIndex = 0;
