@@ -11,3 +11,5 @@
 // - Tp scrolls not cooldown normal (long)
 - Turbo shop not secret shop // TODO cant find anything
 // - Make token timings faster
+- TP with boots are slow (boots of travel)
+// - Fix tp scroll cooldown, maybe in wrong file

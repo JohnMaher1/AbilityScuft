@@ -176,6 +176,7 @@ export class GameMode {
     }
 
     private onAbilityPickPhaseCompleted(): void {
+        SendToServerConsole("dota_ability_draft_force_gamemode_flag 1");
         const timeTillForceStart = IsInToolsMode() ? 1 : 30;
         // Remove the panic modifier from all heroes
         for (let i = 0; i < 16; i++) {
@@ -208,7 +209,7 @@ export class GameMode {
         Convars.SetBool("sv_cheats", true);
 
         // Run a console command
-        SendToServerConsole("dota_ability_draft_force_gamemode_flag 1");
+        SendToServerConsole("dota_ability_draft_force_gamemode_flag 0");
 
         // Disable player movement and pointer events
         GameRules.SetCustomGameAllowBattleMusic(false);
@@ -229,9 +230,7 @@ export class GameMode {
         //     Vector(0, 0, 0),
         //     40000
         // );
-        // shop.SetShopType(ShopType.HOME);
-
-        // Set the shop to be able to be used anywhere
+        // shop.SetShopType(ShopType.SIDE);
 
         GameRules.SetShowcaseTime(IsInToolsMode() ? 0 : 10);
         GameRules.GetGameModeEntity().SetModifyExperienceFilter(

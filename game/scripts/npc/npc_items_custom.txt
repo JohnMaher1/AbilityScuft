@@ -30,21 +30,41 @@
 				"mana_regen"      "500"
 			}
 		}
-
-		//=================================================================================================================
-		// Aghanim's Shard
-		//=================================================================================================================
-		"item_aghanims_shard"
-		{
-			"ItemCost"						"69"
-			"ItemInitialStockTime"			"1.0"
-			"ItemInitialStockTimeTurbo"		"1.0"
-		}
-
-		"item_tpscroll"
-		{
-			"AbilityCooldown"      "20"
-		}
-		
 	}
+
+	//=================================================================================================================
+	// Aghanim's Shard
+	//=================================================================================================================
+	"item_aghanims_shard"
+	{
+		"ItemCost"						"69"
+		"ItemInitialStockTime"			"1.0"
+		"ItemInitialStockTimeTurbo"		"1.0"
+	}
+
+	"item_tpscroll"
+	{
+		"AbilityCooldown"      "20.0"
+	}
+
+	"item_travel_boots"
+	{
+		"ItemCost"						"2500"
+		"AbilityValues"
+		{
+			"tp_cooldown"			"15"
+		}
+	}
+
+	"item_travel_boots_2"
+	{
+		"ItemCost"						"4500"
+		"AbilityValues"
+		{
+			"tp_cooldown"			"10"
+			"tp_channel_time"		"2"
+		}
+	}
+		
+
 }
