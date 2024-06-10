@@ -56,9 +56,7 @@ export class AbilitySelection {
                         ability?.GetAbilityName() &&
                         this.canAbilityBeRemovedFromPlayer(ability)
                     ) {
-                        if (this.isBaseAbility(ability)) {
-                            hero?.RemoveAbility(ability.GetAbilityName());
-                        }
+                        hero?.RemoveAbility(ability.GetAbilityName());
                     }
                 }
             }
@@ -279,6 +277,7 @@ export class AbilitySelection {
     }
 
     private canAbilityBeRemovedFromPlayer(ability: CDOTABaseAbility): boolean {
+        let returnVal = true;
         const abilityName = ability.GetAbilityName();
         if (
             abilityName === "ability_capture" ||
@@ -289,26 +288,30 @@ export class AbilitySelection {
         ) {
             return false;
         }
-        return true;
-    }
 
-    private isBaseAbility(ability: CDOTABaseAbility) {
-        const abilityBehavior = ability.GetBehavior();
-        return (
-            this.IsBaseAbilityBehavior(abilityBehavior) &&
-            this.IsBaseAbilityType(ability.GetAbilityType())
-        );
-    }
+        const kvs = GetAbilityKeyValuesByName(abilityName);
+        Object.entries(kvs).forEach(([key, value]) => {
+            if (key === "AbilityBehavior") {
+                const abilityBehavior = value as string;
+                if (
+                    abilityBehavior.includes("HIDDEN") ||
+                    abilityBehavior.includes("NOT_LEARNABLE") ||
+                    abilityBehavior.includes("INNATE_UI")
+                ) {
+                    returnVal = false;
+                }
+            }
+            if (key === "AbilityType") {
+                const abilityType = value as string;
+                if (abilityType === "DOTA_ABILITY_TYPE_ATTRIBUTES") {
+                    returnVal = false;
+                }
+            }
+            if (key === "Innate") {
+                returnVal = false;
+            }
+        });
 
-    private IsBaseAbilityBehavior(abilityBehavior: AbilityBehavior | Uint64) {
-        return !(
-            abilityBehavior === AbilityBehavior.HIDDEN ||
-            abilityBehavior === AbilityBehavior.NOT_LEARNABLE ||
-            abilityBehavior === AbilityBehavior.INNATE_UI
-        );
-    }
-
-    private IsBaseAbilityType(abilityType: AbilityTypes) {
-        return !(abilityType === AbilityTypes.ATTRIBUTES);
+        return returnVal;
     }
 }
