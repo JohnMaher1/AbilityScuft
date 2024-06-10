@@ -30,7 +30,6 @@ class TeamSelect {
             if (!this.isPlayerAllowedToToggle()) {
                 return;
             }
-            $.Msg("Start button clicked");
             GameEvents.SendCustomGameEventToServer(
                 "on_start_button_clicked",
                 {} as never
@@ -45,11 +44,10 @@ class TeamSelect {
 
     private CreateNewToggleOption(
         name: string,
-        optionName: SettingsToggleEvent["toggleEventName"]
+        optionName: SettingsChangeEvent["settingName"]
     ) {
         const container = this.panel.FindChild("OptionPanel")!;
         const optionsList = container.FindChild("OptionsList")!;
-        $.Msg("Creating new toggle option", optionsList);
         const newOption = new SelectScreenOption(
             optionsList,
             OptionType.TOGGLE

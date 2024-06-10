@@ -22,13 +22,16 @@ interface CustomGameEventDeclarations {
     on_turn_change: PlayerTurnChangedEvent;
     on_player_ability_select: PlayerAbilitySelectEvent;
     on_ability_pick_phase_completed: never;
-    on_settings_toggle: SettingsToggleEvent;
     on_start_button_clicked: never;
+    on_setting_change: SettingsChangeEvent;
 }
 
-interface SettingsToggleEvent {
-    isActive: boolean;
-    toggleEventName: "forceRandomAbilities" | "n/a";
+type SettingsName = "forceRandomAbilities" | "n/a";
+
+interface SettingsChangeEvent {
+    settingName: SettingsName;
+    isActive?: boolean;
+    input?: string;
 }
 
 interface PlayerAbilitySelectEvent {

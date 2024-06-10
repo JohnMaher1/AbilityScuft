@@ -50,10 +50,12 @@ class PlayersContainer {
             const playerTurnID = event.playerTurnID;
             players.forEach((playerID) => {
                 const playerPanel = this.playerPanels[playerID];
-                playerPanel.panel.style.border =
-                    playerID === playerTurnID
-                        ? "3px solid lime"
-                        : "0px solid blue";
+                playerPanel.panel.RemoveClass(
+                    playerID === playerTurnID ? "" : "IsPickTurn"
+                );
+                playerPanel.panel.AddClass(
+                    playerID === playerTurnID ? "IsPickTurn" : ""
+                );
             });
         });
 
@@ -87,6 +89,9 @@ class PlayersContainer {
                 abilityPanel,
                 abilityName
             );
+        });
+        abilityPanel.SetPanelEvent("onmouseout", () => {
+            $.DispatchEvent("DOTAHideAbilityTooltip");
         });
     }
 

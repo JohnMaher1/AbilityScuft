@@ -50,7 +50,7 @@ class AbilityIcon {
         GameEvents.Subscribe("on_player_ability_select", (event) => {
             if (event.abilityName === abilityName) {
                 this.canBePicked = false;
-                this.panel.style.opacity = "0.5";
+                this.panel.AddClass("AbilityIconDisabled");
             }
         });
     }

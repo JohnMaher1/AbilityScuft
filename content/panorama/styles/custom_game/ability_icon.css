@@ -1,9 +1,9 @@
 #AbilityIcons {
     width: 100%;
-    margin-left: 250px;
-    margin-right: 250px;
-    height: 650px;
-    margin-top: 150px;
+    margin-left: 15%;
+    margin-right: 14.2%;
+    height: 60%;
+    margin-top: 16%;
     flow-children: right-wrap;
 }
 .AbilityIcon {
@@ -12,6 +12,10 @@
     padding: 10%;
 
     z-index: 999999 !important;
+}
+
+.AbilityIconDisabled {
+    opacity: 0.4;
 }
 
 .AbilityIcon:hover {

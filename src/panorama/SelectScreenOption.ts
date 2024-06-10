@@ -9,7 +9,7 @@ class SelectScreenOption {
     panel: Panel;
     toggle: ToggleButton;
     label: LabelPanel;
-    optionName: SettingsToggleEvent["toggleEventName"];
+    optionName: SettingsChangeEvent["settingName"];
 
     constructor(parent: Panel, optionType: OptionType) {
         // Create new panel
@@ -17,6 +17,21 @@ class SelectScreenOption {
         this.panel = panel;
         // Load snippet into panel
         panel.BLoadLayoutSnippet("PreGameOption");
+
+        GameEvents.Subscribe("on_setting_change", (event) => {
+            if (event.settingName === this.optionName) {
+                switch (optionType) {
+                    case OptionType.TOGGLE:
+                        if (event.isActive === 0) {
+                            this.toggle.style.backgroundColor = "red";
+                            this.toggle.checked = false;
+                        } else {
+                            this.toggle.style.backgroundColor = "green";
+                            this.toggle.checked = true;
+                        }
+                }
+            }
+        });
 
         // Find components
         this.label = panel.FindChild("OptionLabel") as LabelPanel;
@@ -28,21 +43,17 @@ class SelectScreenOption {
                 if (!isPlayerAllowedToToggle()) {
                     return;
                 }
-                switch (this.toggle.checked) {
-                    case false:
-                        this.toggle.style.backgroundColor = "red";
-                        this.toggle.checked = false;
-                        break;
-                    case true:
-                        this.toggle.style.backgroundColor = "green";
-                        this.toggle.checked = true;
-                        break;
-                }
-                $.Msg("Toggle clicked", this.toggle.checked, this.optionName);
-                GameEvents.SendCustomGameEventToServer("on_settings_toggle", {
+                GameEvents.SendCustomGameEventToServer("on_setting_change", {
+                    settingName: this.optionName,
                     isActive: this.toggle.checked === true,
-                    toggleEventName: this.optionName,
                 });
+                GameEvents.SendCustomGameEventToAllClients(
+                    "on_setting_change",
+                    {
+                        settingName: this.optionName,
+                        isActive: this.toggle.checked === true,
+                    }
+                );
             });
         }
 

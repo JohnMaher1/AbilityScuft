@@ -20,6 +20,7 @@ export class AbilitySelection {
     forceRandomAbilities: boolean = false;
     allPlayersHaveSelectedAbilities: boolean = false;
     onAbilitySelectionComplete: () => void;
+    abilitiesPicked: string[] = [];
     constructor(
         abilityNames: string[],
         onAbilitySelectionComplete: () => void,
@@ -98,12 +99,11 @@ export class AbilitySelection {
     onAddAbilityToPlayer(playerID: PlayerID, abilityName: string) {
         // Check if ability has a scepter upgrade
         hero_ability_kv_HandleScepterShardUpgrade(playerID, abilityName);
+        this.abilitiesPicked.push(abilityName);
     }
 
     handlePlayerAbilityClicked(playerID: PlayerID, abilityName: string) {
         if (playerID === this.playerTurn) {
-            // Assign ability to player
-            const player = PlayerResource.GetPlayer(playerID)!;
             const playerAbilityCount = this.playerAbilityCounts.find(
                 (x) => x.playerID === playerID
             );
@@ -217,11 +217,17 @@ export class AbilitySelection {
         ) {
             return;
         }
-
-        const randomAbility =
+        let randomAbility =
             this.abilityNames[
                 Math.floor(Math.random() * this.abilityNames.length)
             ];
+        while (this.abilitiesPicked.includes(randomAbility)) {
+            randomAbility =
+                this.abilityNames[
+                    Math.floor(Math.random() * this.abilityNames.length)
+                ];
+        }
+
         this.handlePlayerAbilityClicked(this.playerTurn, randomAbility);
         this.currentMockTurn++;
     }

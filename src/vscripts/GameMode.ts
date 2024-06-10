@@ -157,14 +157,14 @@ export class GameMode {
         );
 
         CustomGameEventManager.RegisterListener(
-            "on_settings_toggle",
+            "on_setting_change",
             (_, data) => {
                 print(
-                    data.toggleEventName,
+                    data.settingName,
                     " is now",
-                    data.isActive === 1 ? "Active" : "Inactive"
+                    data.isActive ? "Active" : "Inactive"
                 );
-                if (data.toggleEventName === "forceRandomAbilities") {
+                if (data.settingName === "forceRandomAbilities") {
                     settingsState.forceRandomAbilities = data.isActive === 1;
                     print(
                         "Force random abilities state: ",

@@ -22,7 +22,7 @@ export const hero_kv_readAllHeroFiles = (): DebugParameters => {
     const heroList = LoadKeyValues("scripts/npc/hero_list.txt");
     const abilities: AbilityInformation[] = [];
 
-    const abilityTotalCount = 105;
+    const abilityTotalCount = 18 * 7;
     const heroEntries = Object.entries(heroList);
     const heroListLength = heroEntries.length;
 
