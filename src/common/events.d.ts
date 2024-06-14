@@ -24,14 +24,38 @@ interface CustomGameEventDeclarations {
     on_ability_pick_phase_completed: never;
     on_start_button_clicked: never;
     on_setting_change: SettingsChangeEvent;
+    on_create_ability_swap_ui: TestEvent[];
+    on_keybind_submit: KeybindSubmitEvent;
+    on_ability_swap: AbilitySwapEvent;
 }
 
 type SettingsName = "forceRandomAbilities" | "n/a";
+
+interface AbilitySwapEvent {
+    playerID: PlayerID;
+    abilityName1: string;
+    abilityName2: string;
+}
+interface AbilitySelectionClickEvent {
+    abilityName: string;
+    playerID: PlayerID;
+}
 
 interface SettingsChangeEvent {
     settingName: SettingsName;
     isActive?: boolean;
     input?: string;
+}
+
+interface KeybindSubmitEvent {
+    playerID: PlayerID;
+    key: string;
+    abilityName: string;
+}
+
+interface TestEvent {
+    abilities: string[];
+    playerID: PlayerID;
 }
 
 interface PlayerAbilitySelectEvent {

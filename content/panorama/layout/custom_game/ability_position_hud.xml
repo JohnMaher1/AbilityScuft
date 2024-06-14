@@ -1,0 +1,22 @@
+<root>
+  <styles>
+    <include src="file://{resources}/styles/custom_game/ability_position_hud.css" />
+  </styles>
+  <scripts>
+    <include src="file://{resources}/scripts/custom_game/AbilityPositionChild.js" />
+    <include src="file://{resources}/scripts/custom_game/AbilityPositionHud.js" />
+  </scripts>
+
+  <snippets>
+    <snippet name="AbilityPositionChild">
+      <Panel class="AbilityPositionChild">
+        <Image id="AbilityImage" />
+      </Panel>
+    </snippet>
+  </snippets>
+
+  <Panel hittest="false" style="width: 100%; height: 100%;">
+    <ToggleButton id="AbilitySwapHideButton" text="Show Swap Abilities" />
+    <Panel id="AbilityReorderContainer" hittest="false" />
+  </Panel>
+</root>

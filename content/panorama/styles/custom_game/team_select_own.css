@@ -11,10 +11,10 @@
 }
 
 .PreGameOption {
-    height: 70px;
-    width: 500px;
-    margin-left: 30px;
-    margin-right: 30px;
+    height: 10%;
+    width: 100%;
+    margin-left: 2%;
+    margin-right: 2%;
 }
 
 #OptionsList {

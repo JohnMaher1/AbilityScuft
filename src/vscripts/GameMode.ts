@@ -173,9 +173,66 @@ export class GameMode {
                 }
             }
         );
+
+        CustomGameEventManager.RegisterListener(
+            "on_ability_swap",
+            (_, data) => {
+                this.handleAbilitySwapEvent(data);
+            }
+        );
+    }
+
+    private handleAbilitySwapEvent(event: AbilitySwapEvent): void {
+        const hero = PlayerResource.GetSelectedHeroEntity(event.playerID);
+        hero?.SwapAbilities(event.abilityName1, event.abilityName2, true, true);
     }
 
     private onAbilityPickPhaseCompleted(): void {
+        // Key Mappings Part
+        const playerAbilityMappings: TestEvent[] = [];
+        for (let i = 0; i < 16; i++) {
+            const player = PlayerResource.GetPlayer(i as PlayerID);
+            if (!player) {
+                continue;
+            }
+            const namesToExclude: string[] = [
+                "generic_hidden",
+                "ability_capture",
+                "abyssal_underlord_portal_warp",
+                "twin_gate_portal_warp",
+                "ability_lamp_use",
+                "ability_pluck_famango",
+            ];
+            const playerAbilities: string[] = [];
+            const hero = PlayerResource.GetSelectedHeroEntity(i as PlayerID);
+            // Get all abilities on the hero that are visible
+            const abilities = hero!.GetAbilityCount();
+            for (let j = 0; j < abilities; j++) {
+                const ability = hero!.GetAbilityByIndex(j);
+                if (
+                    ability?.IsAttributeBonus() ||
+                    ability?.IsItem() ||
+                    ability?.IsNull() ||
+                    ability?.GetAbilityName() === undefined ||
+                    namesToExclude.includes(ability.GetAbilityName())
+                ) {
+                    continue;
+                }
+                if (ability?.GetAbilityName() !== undefined) {
+                    playerAbilities.push(ability.GetAbilityName());
+                }
+            }
+            playerAbilityMappings.push({
+                abilities: playerAbilities,
+                playerID: i as PlayerID,
+            });
+        }
+        CustomGameEventManager.Send_ServerToAllClients(
+            "on_create_ability_swap_ui",
+            playerAbilityMappings
+        );
+
+        // Game Setup Part
         SendToServerConsole("dota_ability_draft_force_gamemode_flag 1");
         const timeTillForceStart = IsInToolsMode() ? 1 : 30;
         // Remove the panic modifier from all heroes
@@ -341,7 +398,7 @@ export class GameMode {
     // Called on script_reload
     public Reload() {
         print("Script reloaded!");
-        this.Init();
+        //this.Init();
         //this.ReloadAndStartGame();
         //this.ReadAllHeroFiles();
     }
