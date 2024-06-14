@@ -118,6 +118,40 @@ export class GameMode {
             (event) => this.OnNpcSpawned(event),
             undefined
         );
+        ListenToGameEvent(
+            "dota_player_used_ability",
+            (event) => {
+                this.handleDotaPlayerUsedAbility(event);
+            },
+            undefined
+        );
+    }
+
+    private handleDotaPlayerUsedAbility(
+        event: GameEventProvidedProperties & DotaPlayerUsedAbilityEvent
+    ) {
+        if (event.abilityname === "item_tpscroll") {
+            const caster = PlayerResource.GetSelectedHeroEntity(event.PlayerID);
+            const itemIndex = caster?.FindItemInInventory("item_tpscroll");
+            if (
+                caster?.FindItemInInventory("item_travel_boots_2") !== undefined
+            ) {
+                this.createItemCooldownTimer(itemIndex!, 10);
+                itemIndex?.StartCooldown(10);
+            }
+            if (
+                caster?.FindItemInInventory("item_travel_boots") !== undefined
+            ) {
+                this.createItemCooldownTimer(itemIndex!, 15);
+                itemIndex?.StartCooldown(15);
+            }
+        }
+    }
+
+    private createItemCooldownTimer(itemIndex: CDOTA_Item, cooldown: number) {
+        Timers.CreateTimer(cooldown, () => {
+            itemIndex.EndCooldown();
+        });
     }
 
     private AddCustomGameEventListeners(): void {
@@ -282,12 +316,6 @@ export class GameMode {
         GameRules.SetUseUniversalShopMode(true);
         GameRules.SetGoldPerTick(4);
         GameRules.SetStartingGold(1000);
-
-        // const shop = SpawnDOTAShopTriggerRadiusApproximate(
-        //     Vector(0, 0, 0),
-        //     40000
-        // );
-        // shop.SetShopType(ShopType.SIDE);
 
         GameRules.SetShowcaseTime(IsInToolsMode() ? 0 : 10);
         GameRules.GetGameModeEntity().SetModifyExperienceFilter(
