@@ -3,7 +3,10 @@ import { BaseModifier, registerModifier } from "../lib/dota_ts_adapter";
 class ModifierStrengthBonus extends BaseModifier {
     // Declare functions
     DeclareFunctions(): ModifierFunction[] {
-        return [ModifierFunction.STATS_STRENGTH_BONUS];
+        return [
+            ModifierFunction.STATS_STRENGTH_BONUS,
+            ModifierFunction.STATS_AGILITY_BONUS,
+        ];
     }
 
     IsHidden(): boolean {
@@ -12,6 +15,10 @@ class ModifierStrengthBonus extends BaseModifier {
 
     GetModifierBonusStats_Strength(): number {
         return this.GetAbility()?.GetSpecialValueFor("strength_bonus") || 0;
+    }
+
+    GetModifierBonusStats_Agility(): number {
+        return this.GetAbility()?.GetSpecialValueFor("agility_bonus") || 0;
     }
 
     GetName(): string {

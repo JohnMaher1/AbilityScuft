@@ -27,6 +27,8 @@ interface CustomGameEventDeclarations {
     on_create_ability_swap_ui: TestEvent[];
     on_keybind_submit: KeybindSubmitEvent;
     on_ability_swap: AbilitySwapEvent;
+    on_player_reconnect: PlayerReconnectedEvent;
+    on_ability_time_allowed_expired: never;
 }
 
 type SettingsName = "forceRandomAbilities" | "n/a";

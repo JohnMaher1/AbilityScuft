@@ -6,7 +6,7 @@
 		"ScriptFile"        "items/item_blues_balls"
 		"AbilityBehavior"   "DOTA_ABILITY_BEHAVIOR_NO_TARGET | DOTA_ABILITY_BEHAVIOR_IMMEDIATE | DOTA_ABILITY_BEHAVIOR_DONT_RESUME_ATTACK"
 		"AbilityTextureName" "blues_balls"
-		"ItemCost"          "69"
+		"ItemCost"          "6000"
 		"ItemKillable"      "1"
 		"ItemSellable"      "1"
 		"ItemPurchasable"   "1"
@@ -17,17 +17,17 @@
 			"01"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"strength_bonus"		"20"
+				"strength_bonus"		"30"
 			}
 			"02"
 			{
 				"var_type"				"FIELD_INTEGER"
-				"int_bonus"				"500"
+				"int_bonus"				"120"
 			}
 			"03"
 			{
 				"var_type"        "FIELD_INTEGER"
-				"mana_regen"      "500"
+				"agility_bonus"      "30"
 			}
 		}
 	}

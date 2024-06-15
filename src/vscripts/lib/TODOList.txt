@@ -11,5 +11,11 @@
 // - Tp scrolls not cooldown normal (long)
 - Turbo shop not secret shop // TODO cant find anything
 // - Make token timings faster
-- TP with boots are slow (boots of travel)
+//- TP with boots are slow (boots of travel)
 // - Fix tp scroll cooldown, maybe in wrong file
+
+// - Check if start of game, otherwise when reconnecting, it breaks and defaults on ability selection page
+//- Fix blues balls make it less OP and more expensive
+- Add name above abilities so its clear
+- If losing team is down x gold, give them an OP item or maybe gold.
+//- Timer on ability selection force

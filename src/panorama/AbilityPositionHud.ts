@@ -7,6 +7,10 @@ class AbilityPositionHud {
         this.panel = panel;
         this.subsribeToEvents();
         this.handleSwapAbilitiesButton();
+        const swapAbilitiesButton = this.panel.FindChild(
+            "AbilitySwapHideButton"
+        ) as ToggleButton;
+        swapAbilitiesButton.style.height = "0%";
     }
     handleSwapAbilitiesButton() {
         const container = this.panel.FindChild("AbilityReorderContainer")!;
@@ -103,7 +107,10 @@ class AbilityPositionHud {
                     playerID: PlayerID;
                 };
             }) => {
-                $.Msg("on_create_ability_swap_ui", event);
+                const swapAbilitiesButton = this.panel.FindChild(
+                    "AbilitySwapHideButton"
+                ) as ToggleButton;
+                swapAbilitiesButton.style.height = "32px";
                 const container = this.panel.FindChild(
                     "AbilityReorderContainer"
                 )! as Panel;

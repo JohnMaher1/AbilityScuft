@@ -1,18 +1,7 @@
-import {
-    HasHiddenAbility,
-    HasInateAbility,
-    HasInateTag,
-    IsAttributeTypeAbility,
-    IsNotLearnableAbility,
-    abilityNamesToIgnore,
-    isSpecialAbility,
-} from "./lib/util";
-import { reloadable } from "./lib/tstl-utils";
-import { modifier_panic } from "./modifiers/modifier_panic";
 import { AbilitySelection } from "./lib/ability_selection";
 import { hero_kv_readAllHeroFiles } from "./lib/hero_kv_file_helper";
-import { blues_balls } from "./models/item_names";
-import { isItemInMainInventory } from "./helpers/item_helpers";
+import { reloadable } from "./lib/tstl-utils";
+import { modifier_panic } from "./modifiers/modifier_panic";
 
 class SettingsState {
     forceRandomAbilities: boolean = false;
@@ -20,6 +9,7 @@ class SettingsState {
 
 const heroSelectionTime = 20;
 const onThinkTime = IsInToolsMode() ? 0.1 : 1;
+//const onThinkTime = IsInToolsMode() ? 1 : 1;
 let abilityPickPhaseEnded: boolean = false;
 const goldMultiplier = 3;
 const experienceMultiplier = 3;
@@ -129,6 +119,28 @@ export class GameMode {
             },
             undefined
         );
+        // Could see the players and background, no ability images are shwon
+        ListenToGameEvent(
+            "dota_player_reconnected",
+            (event) => {
+                this.handlePlayerReconnect(event);
+            },
+            undefined
+        );
+    }
+
+    private handlePlayerReconnect(
+        event: GameEventProvidedProperties & DotaPlayerReconnectedEvent
+    ) {
+        // Giving time to initialize the UI
+        Timers.CreateTimer(5, () => {
+            CustomGameEventManager.Send_ServerToAllClients(
+                "on_player_reconnect",
+                {
+                    PlayerID: event.player_id as PlayerID,
+                }
+            );
+        });
     }
 
     private handleDotaPlayerUsedAbility(
@@ -321,7 +333,9 @@ export class GameMode {
         GameRules.SetGoldPerTick(4);
         GameRules.SetStartingGold(1000);
 
-        GameRules.SetShowcaseTime(IsInToolsMode() ? 0 : 10);
+        if (IsInToolsMode()) {
+            GameRules.SetShowcaseTime(10);
+        }
         GameRules.GetGameModeEntity().SetModifyExperienceFilter(
             (event) => this.ModifyExperienceFilter(event),
             this

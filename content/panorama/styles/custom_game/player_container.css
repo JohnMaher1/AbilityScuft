@@ -1,3 +1,11 @@
+#TurnLabel {
+    color: rgb(167, 231, 240);
+    font-size: 20px;
+    margin-top: 8%;
+    margin-right: 1%;
+    horizontal-align: right;
+}
+
 #HeroPortraitsLeft {
     width: 240px;
     height: 650px;
@@ -26,51 +34,51 @@
 }
 
 #Ability1 {
-    margin-top: 60%;
+    margin-top: 50%;
     margin-bottom: 1%;
     margin-left: 4%;
-    width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 40px;
     padding-bottom: 4px;
     border-radius: 8px;
 }
 
 #Ability2 {
-    margin-top: 60%;
+    margin-top: 50%;
     margin-left: 23%;
     margin-bottom: 1%;
-    width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 40px;
     padding-bottom: 4px;
     border-radius: 8px;
 }
 
 #Ability3 {
-    margin-top: 60%;
+    margin-top: 50%;
     margin-left: 42%;
     margin-bottom: 1%;
-    width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 40px;
     padding-bottom: 4px;
     border-radius: 8px;
 }
 
 #Ability4 {
-    margin-top: 60%;
+    margin-top: 50%;
     margin-left: 61%;
     margin-bottom: 1%;
-    width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 40px;
     padding-bottom: 4px;
     border-radius: 8px;
 }
 
 #Ability5 {
-    margin-top: 60%;
-    margin-left: 81%;
+    margin-top: 50%;
+    margin-left: 80%;
     margin-bottom: 1%;
-    width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 40px;
     padding-bottom: 4px;
     border-radius: 8px;
 }
@@ -105,13 +113,13 @@
 }
 
 #HeroImage {
-    width: 44px;
-    height: 44px;
+    width: 40px;
+    height: 40px;
     border-bottom-right-radius: 16px;
 }
 #PlayerName {
     color: rgb(167, 231, 240);
     font-size: 20px;
-    margin-top: 10px;
-    margin-left: 56px;
+    margin-top: 8px;
+    margin-left: 46px;
 }

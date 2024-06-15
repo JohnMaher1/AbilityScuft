@@ -38,6 +38,16 @@ export class AbilitySelection {
         this.createPlayerTurnOrder();
         this.registerAbilityClick();
         this.removeAllAbilitiesFromPlayers();
+        this.registerListeners();
+    }
+
+    registerListeners() {
+        CustomGameEventManager.RegisterListener(
+            "on_ability_time_allowed_expired",
+            () => {
+                this.mockPick();
+            }
+        );
     }
     removeAllAbilitiesFromPlayers() {
         for (let i = 0; i < DOTA_MAX_TEAM_PLAYERS; i++) {
@@ -208,7 +218,6 @@ export class AbilitySelection {
     }
 
     mockPick() {
-        //print(this.allPlayersHaveSelectedAbilities);
         if (
             this.currentMockTurn > this.maxMockTurns ||
             this.allPlayersHaveSelectedAbilities === true

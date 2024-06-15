@@ -3,7 +3,8 @@
     height: 0%;
     margin-top: 5%;
     margin-right: 2.7%;
-    horizontal-align: right;
+    margin-left: 12.5%;
+    horizontal-align: left;
     flow-children: down;
     vertical-align: top;
 }
@@ -45,11 +46,12 @@
 #AbilitySwapHideButton {
     width: 128px;
     height: 32px;
-    margin-top: 8px;
+    margin-top: 12px;
     margin-right: 8px;
+    margin-left: 10%;
     border-radius: 16px;
     background-color: rgba(0, 0, 0, 0.4);
-    horizontal-align: right;
+    horizontal-align: left;
     vertical-align: top;
     color: white;
 }

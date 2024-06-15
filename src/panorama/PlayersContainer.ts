@@ -2,6 +2,8 @@ interface HPChangedEvent {
     playerID: PlayerID;
     hpPercentage: number;
 }
+const startingTurnTimeAmount = 30;
+const turnTimeAmount = 20;
 
 class PlayersContainer {
     panel: Panel;
@@ -9,6 +11,8 @@ class PlayersContainer {
     playerTurn: PlayerID = 0;
     playerTurnOrder: PlayerID[] = [];
     playerTurnReversed: boolean = false;
+    currentTurnTime: number = startingTurnTimeAmount;
+    onThinkListenerID: GameEventListenerID | undefined = undefined;
     constructor(panel: Panel) {
         $.Msg("PlayersContainer constructor");
         this.panel = panel;
@@ -19,11 +23,11 @@ class PlayersContainer {
         abilityImage.SetImage(
             "file://{images}/custom_game/ability_background.jpg"
         );
-
-        let container = this.panel.FindChild("HeroPortraitsRight")!;
-        container?.RemoveAndDeleteChildren();
-        container = this.panel.FindChild("HeroPortraitsLeft")!;
-        container?.RemoveAndDeleteChildren();
+        const tempContainer = this.panel.FindChild("HeroPortraitsRight")!;
+        const tempContainer2 = this.panel.FindChild("HeroPortraitsLeft")!;
+        tempContainer?.RemoveAndDeleteChildren();
+        tempContainer2?.RemoveAndDeleteChildren();
+        abilityImage?.RemoveAndDeleteChildren();
 
         // Get all players and make a playerPortrait for each
         const players = Game.GetAllPlayerIDs();
@@ -65,18 +69,57 @@ class PlayersContainer {
                 event.abilityPosition,
                 event.abilityName
             );
+            this.currentTurnTime = turnTimeAmount;
         });
 
         GameEvents.Subscribe("on_ability_pick_phase_completed", () => {
-            const tempContainer = this.panel.FindChild("HeroPortraitsRight")!;
-            tempContainer?.RemoveAndDeleteChildren();
-            const tempContainer2 = this.panel.FindChild("HeroPortraitsLeft")!;
-            tempContainer2?.RemoveAndDeleteChildren();
-            const tempContainer3 = this.panel.FindChild(
-                "AbilityBackgroundImage"
-            )! as ImagePanel;
-            tempContainer3?.GetParent()?.RemoveAndDeleteChildren();
+            this.clearPlayersContainer();
         });
+
+        this.onThinkListenerID = GameEvents.Subscribe("on_think", () => {
+            const timer = this.panel.FindChild("TurnLabel") as LabelPanel;
+            this.handleTimer(timer);
+        });
+
+        GameEvents.Subscribe(
+            "on_player_reconnect",
+            (event: PlayerReconnectedEvent) => {
+                const playerID = event.PlayerID;
+                $.Msg("Player reconnected!!!!!!!!!!!!!!!");
+                if (Players.GetLocalPlayer() === playerID) {
+                    this.clearPlayersContainer();
+                }
+            }
+        );
+    }
+
+    handleTimer(timer: LabelPanel) {
+        this.currentTurnTime--;
+        timer.text = `Remaining Time To Pick: ${this.currentTurnTime.toString()}`;
+        if (this.currentTurnTime === 0) {
+            // Force pick for the player and move to next item
+            GameEvents.SendCustomGameEventToServer(
+                "on_ability_time_allowed_expired",
+                {} as never
+            );
+            this.currentTurnTime = turnTimeAmount;
+        }
+    }
+
+    clearPlayersContainer() {
+        if (this.onThinkListenerID !== undefined) {
+            GameEvents.Unsubscribe(this.onThinkListenerID);
+        }
+        const tempContainer = this.panel.FindChild("HeroPortraitsRight")!;
+        tempContainer?.RemoveAndDeleteChildren();
+        const tempContainer2 = this.panel.FindChild("HeroPortraitsLeft")!;
+        tempContainer2?.RemoveAndDeleteChildren();
+        const tempContainer3 = this.panel.FindChild(
+            "AbilityBackgroundImage"
+        )! as ImagePanel;
+        tempContainer3?.GetParent()?.RemoveAndDeleteChildren();
+        const timer = this.panel.FindChild("TurnLabel");
+        timer?.RemoveAndDeleteChildren();
     }
 
     setImage(playerID: PlayerID, abilityPosition: number, abilityName: string) {
