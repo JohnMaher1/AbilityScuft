@@ -14,6 +14,7 @@ let abilityPickPhaseEnded: boolean = false;
 const goldMultiplier = 3;
 const experienceMultiplier = 3;
 const loadPrefabs = IsInToolsMode() ? false : true;
+let balancerCanGetAdded = true;
 
 let abilitySelection: AbilitySelection;
 const settingsState = new SettingsState();
@@ -373,10 +374,10 @@ export class GameMode {
         // Add 4 bots to lobby in tools
         if (IsInToolsMode() && state == GameState.CUSTOM_GAME_SETUP) {
             // Force pick a hero for dev
-            for (let i = 0; i < 5; i++) {
+            for (let i = 0; i < 3; i++) {
                 Tutorial.AddBot("npc_dota_hero_lina", "", "", false);
             }
-            for (let i = 1; i < 5; i++) {
+            for (let i = 1; i < 3; i++) {
                 Tutorial.AddBot("npc_dota_hero_lina", "", "", true);
             }
         }
@@ -451,29 +452,73 @@ export class GameMode {
 
     public OnThink(entity: CBaseEntity): void {
         CustomGameEventManager.Send_ServerToAllClients("on_think", {} as never);
-        this.HandleGoldGain();
+        this.HandleBalancerItem();
         if (settingsState.forceRandomAbilities && !abilityPickPhaseEnded) {
             abilitySelection?.mockPick();
         }
     }
 
-    private HandleGoldGain(): void {
+    private HandleBalancerItem(): void {
         // Check game state is in progress
         if (GameRules.State_Get() !== GameState.GAME_IN_PROGRESS) {
             return;
         }
-        const playerIDs = PlayerResource.GetPlayerCount();
-        for (let i = 0; i < playerIDs; i++) {
-            const player = PlayerResource.GetPlayer(i as PlayerID);
-            const hero = player?.GetAssignedHero();
-            // if (hero) {
-            //     PlayerResource.ModifyGold(
-            //         i as PlayerID,
-            //         5,
-            //         true,
-            //         ModifyGoldReason.UNSPECIFIED
-            //     );
-            // }
+        // Check if one team is ahead in gold by 5000
+        let goodGuysNetWorth = 0;
+        let badGuysNetWorth = 0;
+        const amount = 5000;
+
+        if (balancerCanGetAdded) {
+            const playerCount = PlayerResource.GetPlayerCount();
+            let hasAddedBalancer = false;
+            for (let i = 0; i < playerCount; i++) {
+                const player = PlayerResource.GetPlayer(i as PlayerID);
+                if (!player) {
+                    continue;
+                }
+                const playerGold = PlayerResource.GetTotalEarnedGold(
+                    i as PlayerID
+                );
+                if (player.GetTeam() === DotaTeam.GOODGUYS) {
+                    goodGuysNetWorth += playerGold;
+                } else {
+                    badGuysNetWorth += playerGold;
+                }
+            }
+            if (goodGuysNetWorth - badGuysNetWorth > amount) {
+                for (let i = 0; i < playerCount; i++) {
+                    const player = PlayerResource.GetPlayer(i as PlayerID);
+                    if (!player) {
+                        continue;
+                    }
+                    // Check hero is on the losing (badguys team)
+                    if (player.GetTeam() === DotaTeam.BADGUYS) {
+                        const hero = player.GetAssignedHero();
+                        hero.AddItemByName("item_the_balancer");
+                    }
+                }
+                hasAddedBalancer = true;
+                balancerCanGetAdded = false;
+            }
+            if (badGuysNetWorth - goodGuysNetWorth > amount) {
+                for (let i = 0; i < playerCount; i++) {
+                    const player = PlayerResource.GetPlayer(i as PlayerID);
+                    if (!player) {
+                        continue;
+                    }
+                    if (player.GetTeam() === DotaTeam.GOODGUYS) {
+                        const hero = player.GetAssignedHero();
+                        hero.AddItemByName("item_the_balancer");
+                    }
+                }
+                hasAddedBalancer = true;
+                balancerCanGetAdded = false;
+            }
+            if (hasAddedBalancer) {
+                Timers.CreateTimer(180, () => {
+                    balancerCanGetAdded = true;
+                });
+            }
         }
     }
 

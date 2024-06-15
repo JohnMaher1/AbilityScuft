@@ -51,6 +51,26 @@ export function GenerateLocalizationData(): LocalizationData {
         name: "You feel clarity after the nut, gaining 120 bonus intelligence for 15 seconds",
     });
 
+    StandardTooltips.push({
+        classname: "DOTA_Tooltip_modifier_the_balancer",
+        name: "The Balancer",
+    });
+
+    StandardTooltips.push({
+        classname: "DOTA_Tooltip_modifier_the_balancer_description",
+        name: "Stop winning so hard loser, get balanced you absolute nerd. You are hexed and broken for 20 seconds.",
+    });
+
+    StandardTooltips.push({
+        classname: "DOTA_Tooltip_Ability_item_the_balancer",
+        name: "The Balancer",
+    });
+
+    StandardTooltips.push({
+        classname: "DOTA_Tooltip_Ability_item_the_balancer_description",
+        name: "<h1>Active: Balance</h1> Looks like you're losing, thats rough buddy, here's some help. This item hexes and breaks the target for 20 seconds. One time use.",
+    });
+
     // Return data to compiler
     return localization_info;
 }
