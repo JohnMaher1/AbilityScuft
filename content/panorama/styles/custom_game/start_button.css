@@ -1,32 +1,22 @@
-#StartButtonPanel {
-    height: 100%;
-    width: 100%;
-    flow-children: down;
+.StartButtonText {
+    font-size: 16px;
+    text-align: center;
+    vertical-align: middle;
+    horizontal-align: center;
 }
 
 #StartButton {
-    margin-top: 890px;
-    margin-left: 300px;
-    width: 200px;
-    height: 50px;
-    border-radius: 10px;
+    height: 100%;
+    width: 100%;
+    border-radius: 20px;
     opacity: 0.5;
-    background-color: #393e46;
-    text-align: left;
-    font-size: 20px;
+    background-color: rgba(8, 8, 8, 0.8);
     color: white;
-    padding-left: 20px;
-    padding-top: 15px;
+    horizontal-align: center;
+    vertical-align: middle;
+    text-align: center;
 }
 
 #StartButton:hover {
     opacity: 1;
 }
-/* margin-top: 20px;
-    width: 100%;
-    background-color: #393e46;
-    border-radius: 30px;
-    font-size: 20px;
-    color: white;
-    text-align: left;
-    padding: 15px; */

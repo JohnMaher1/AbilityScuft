@@ -14,8 +14,10 @@
   <snippets>
     <snippet name="PreGameOption" hittest="false">
       <Panel class="PreGameOption" hittest="false">
-        <Label id="OptionLabel" class="OptionLabel" text="" hittest="false" />
-        <ToggleButton id="OptionToggle" class="OptionToggle" />
+        <Panel id="OptionLabelContainer">
+          <Label id="OptionLabel" class="OptionLabel" text="" hittest="false" />
+          <ToggleButton id="OptionToggle" class="OptionToggle" />
+        </Panel>
       </Panel>
     </snippet>
   </snippets>
@@ -25,9 +27,6 @@
     <Panel id="OptionPanel">
       <Label id="OptionsTopLabel" text="Settings" />
       <Panel id="OptionsList" />
-    </Panel>
-
-    <Panel id="StartButtonPanel">
       <Button id="StartButton">
         <Label class="StartButtonText" text="Force Start Game" />
       </Button>

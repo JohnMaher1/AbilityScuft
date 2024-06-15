@@ -34,10 +34,12 @@ class SelectScreenOption {
         });
 
         // Find components
-        this.label = panel.FindChild("OptionLabel") as LabelPanel;
-
+        const labelContainer = panel.FindChild("OptionLabelContainer")!;
+        this.label = labelContainer.FindChild("OptionLabel") as LabelPanel;
         if (optionType === OptionType.TOGGLE) {
-            this.toggle = panel.FindChild("OptionToggle") as ToggleButton;
+            this.toggle = labelContainer.FindChild(
+                "OptionToggle"
+            ) as ToggleButton;
 
             this.toggle.SetPanelEvent("onactivate", () => {
                 if (!isPlayerAllowedToToggle()) {

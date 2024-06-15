@@ -24,8 +24,7 @@ class TeamSelect {
         );
         this.CreateNewToggleOption("Does nothing :)", "n/a");
 
-        const startButtonPanel = this.panel.FindChild("StartButtonPanel")!;
-        const startButton = startButtonPanel.FindChild("StartButton")!;
+        const startButton = container.FindChild("StartButton")!;
         startButton.SetPanelEvent("onactivate", () => {
             if (!this.isPlayerAllowedToToggle()) {
                 return;

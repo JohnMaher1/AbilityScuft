@@ -23,6 +23,7 @@ const onThinkTime = IsInToolsMode() ? 0.1 : 1;
 let abilityPickPhaseEnded: boolean = false;
 const goldMultiplier = 3;
 const experienceMultiplier = 3;
+const loadPrefabs = IsInToolsMode() ? false : true;
 
 let abilitySelection: AbilitySelection;
 const settingsState = new SettingsState();
@@ -71,6 +72,9 @@ export class GameMode {
             "soundevents/game_sounds_heroes/game_sounds_meepo.vsndevts",
             context
         );
+        if (!loadPrefabs) {
+            return;
+        }
         const heroList = LoadKeyValues("scripts/npc/hero_list.txt");
         const heroNames = Object.keys(heroList);
         const particleList = LoadKeyValues(
@@ -133,24 +137,24 @@ export class GameMode {
         if (event.abilityname === "item_tpscroll") {
             const caster = PlayerResource.GetSelectedHeroEntity(event.PlayerID);
             const itemIndex = caster?.FindItemInInventory("item_tpscroll");
+
             if (
                 caster?.FindItemInInventory("item_travel_boots_2") !== undefined
             ) {
                 this.createItemCooldownTimer(itemIndex!, 10);
-                itemIndex?.StartCooldown(10);
             }
             if (
                 caster?.FindItemInInventory("item_travel_boots") !== undefined
             ) {
                 this.createItemCooldownTimer(itemIndex!, 15);
-                itemIndex?.StartCooldown(15);
             }
         }
     }
 
     private createItemCooldownTimer(itemIndex: CDOTA_Item, cooldown: number) {
-        Timers.CreateTimer(cooldown, () => {
+        Timers.CreateTimer(0.1, () => {
             itemIndex.EndCooldown();
+            itemIndex.StartCooldown(cooldown);
         });
     }
 
