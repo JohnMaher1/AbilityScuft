@@ -22,7 +22,7 @@ class TeamSelect {
             "Force Random Abilities",
             "forceRandomAbilities"
         );
-        this.CreateNewToggleOption("Does nothing :)", "n/a");
+        // this.CreateNewToggleOption("Does nothing :)", "n/a");
 
         const startButton = container.FindChild("StartButton")!;
         startButton.SetPanelEvent("onactivate", () => {

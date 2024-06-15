@@ -1,17 +1,15 @@
 #HeroPortraitsLeft {
-    width: 14%;
+    width: 240px;
     height: 650px;
-    margin-top: 15%;
+    margin-top: 18%;
     flow-children: down;
     horizontal-align: left;
 }
 
 #HeroPortraitsRight {
-    width: 14%;
+    width: 240px;
     height: 650px;
-    margin-top: 15%;
-    /* margin-right: 0px;
-    padding-right: 0px; */
+    margin-top: 18%;
     flow-children: down;
     horizontal-align: right;
 }
@@ -21,57 +19,67 @@
     height: 100%;
 }
 
-#Ability1 {
-    margin-top: 60%;
-    margin-left: 2%;
-    width: 16%;
-    height: 36%;
-    border-radius: 20%;
-}
-
 #AbilityBackgroundImage {
     height: 100%;
     width: 100%;
     z-index: -100;
 }
 
+#Ability1 {
+    margin-top: 60%;
+    margin-bottom: 1%;
+    margin-left: 4%;
+    width: 36px;
+    height: 36px;
+    padding-bottom: 4px;
+    border-radius: 8px;
+}
+
 #Ability2 {
     margin-top: 60%;
-    margin-left: 21%;
-    width: 16%;
-    height: 36%;
-    border-radius: 20%;
+    margin-left: 23%;
+    margin-bottom: 1%;
+    width: 36px;
+    height: 36px;
+    padding-bottom: 4px;
+    border-radius: 8px;
 }
 
 #Ability3 {
     margin-top: 60%;
-    margin-left: 40%;
-    width: 16%;
-    height: 36%;
-    border-radius: 20%;
+    margin-left: 42%;
+    margin-bottom: 1%;
+    width: 36px;
+    height: 36px;
+    padding-bottom: 4px;
+    border-radius: 8px;
 }
 
 #Ability4 {
     margin-top: 60%;
-    margin-left: 59%;
-    width: 16%;
-    height: 36%;
-    border-radius: 20%;
+    margin-left: 61%;
+    margin-bottom: 1%;
+    width: 36px;
+    height: 36px;
+    padding-bottom: 4px;
+    border-radius: 8px;
 }
 
 #Ability5 {
     margin-top: 60%;
-    margin-left: 78%;
-    width: 16%;
-    height: 36%;
-    border-radius: 20%;
+    margin-left: 81%;
+    margin-bottom: 1%;
+    width: 36px;
+    height: 36px;
+    padding-bottom: 4px;
+    border-radius: 8px;
 }
 
 .PlayerPortrait {
     background-color: rgba(0, 2, 6, 0.4);
-    height: 16%;
+    height: 90px;
     width: 100%;
-    margin-bottom: 3%;
+    margin-bottom: 16px;
 }
 
 #HeroPortraitsRight > .PlayerPortrait {
@@ -97,13 +105,13 @@
 }
 
 #HeroImage {
-    width: 23%;
-    height: 50%;
-    border-bottom-right-radius: 15%;
+    width: 44px;
+    height: 44px;
+    border-bottom-right-radius: 16px;
 }
 #PlayerName {
     color: rgb(167, 231, 240);
     font-size: 20px;
-    margin-top: 15%;
-    margin-left: 26%;
+    margin-top: 10px;
+    margin-left: 56px;
 }

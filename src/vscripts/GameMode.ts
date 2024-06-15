@@ -359,10 +359,10 @@ export class GameMode {
         // Add 4 bots to lobby in tools
         if (IsInToolsMode() && state == GameState.CUSTOM_GAME_SETUP) {
             // Force pick a hero for dev
-            for (let i = 0; i < 4; i++) {
+            for (let i = 0; i < 5; i++) {
                 Tutorial.AddBot("npc_dota_hero_lina", "", "", false);
             }
-            for (let i = 1; i < 4; i++) {
+            for (let i = 1; i < 5; i++) {
                 Tutorial.AddBot("npc_dota_hero_lina", "", "", true);
             }
         }
