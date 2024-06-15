@@ -16,7 +16,9 @@
   </snippets>
 
   <Panel hittest="false" style="width: 100%; height: 100%;">
-    <ToggleButton id="AbilitySwapHideButton" text="Show Swap Abilities" />
+    <ToggleButton id="AbilitySwapHideButton">
+      <Label id="AbilitySwapText" text="Show Swap Abilities" />
+    </ToggleButton>
     <Panel id="AbilityReorderContainer" hittest="false" />
   </Panel>
 </root>

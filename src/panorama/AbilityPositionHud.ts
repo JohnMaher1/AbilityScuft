@@ -14,11 +14,14 @@ class AbilityPositionHud {
             "AbilitySwapHideButton"
         ) as ToggleButton;
         swapAbilitiesButton.SetPanelEvent("onactivate", () => {
-            if (swapAbilitiesButton.text === "Show Swap Abilities") {
-                swapAbilitiesButton.text = "Hide Swap Abilities";
+            const swapAbilitiesText = swapAbilitiesButton.FindChild(
+                "AbilitySwapText"
+            )! as LabelPanel;
+            if (swapAbilitiesText.text === "Show Swap Abilities") {
+                swapAbilitiesText.text = "Hide Swap Abilities";
                 container.style.height = "70%";
             } else {
-                swapAbilitiesButton.text = "Show Swap Abilities";
+                swapAbilitiesText.text = "Show Swap Abilities";
                 container.style.height = "0%";
             }
         });
