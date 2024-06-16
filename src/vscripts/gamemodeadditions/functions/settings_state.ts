@@ -18,10 +18,6 @@ export class SettingsState {
         if (data.settingName === "forceRandomAbilities") {
             SettingsState.getInstance().forceRandomAbilities =
                 data.isActive === 1;
-            print(
-                "Force random abilities state: ",
-                SettingsState.getInstance().forceRandomAbilities
-            );
         }
     }
 }

@@ -17,5 +17,5 @@
 // - Check if start of game, otherwise when reconnecting, it breaks and defaults on ability selection page
 //- Fix blues balls make it less OP and more expensive
 - Add name above abilities so its clear
-- If losing team is down x gold, give them an OP item or maybe gold.
+//- If losing team is down x gold, give them an OP item or maybe gold.
 //- Timer on ability selection force

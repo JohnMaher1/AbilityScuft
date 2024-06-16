@@ -87,7 +87,7 @@ export function handleBalancerItem(): void {
             GameRulesState.getInstance().balancerCanGetAdded = false;
         }
         if (hasAddedBalancer) {
-            Timers.CreateTimer(180, () => {
+            Timers.CreateTimer(300, () => {
                 GameRulesState.getInstance().balancerCanGetAdded = true;
             });
         }
