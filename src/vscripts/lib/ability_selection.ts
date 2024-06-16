@@ -207,6 +207,10 @@ export class AbilitySelection {
         }
 
         if (this.allPlayersHaveSelectedAbilities) {
+            CustomGameEventManager.Send_ServerToAllClients(
+                "on_all_players_selected_abilties",
+                {} as never
+            );
             Timers.CreateTimer(IsInToolsMode() ? 1 : 10, () => {
                 CustomGameEventManager.Send_ServerToAllClients(
                     "on_ability_pick_phase_completed",

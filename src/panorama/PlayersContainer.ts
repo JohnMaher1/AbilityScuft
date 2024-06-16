@@ -12,6 +12,7 @@ class PlayersContainer {
     playerTurnOrder: PlayerID[] = [];
     playerTurnReversed: boolean = false;
     currentTurnTime: number = startingTurnTimeAmount;
+    timePickText = "Remaining Time To Pick: ";
     onThinkListenerID: GameEventListenerID | undefined = undefined;
     constructor(panel: Panel) {
         $.Msg("PlayersContainer constructor");
@@ -34,7 +35,6 @@ class PlayersContainer {
         players.forEach((playerID) => {
             const heroName = Players.GetPlayerSelectedHero(playerID);
             const playerName = Players.GetPlayerName(playerID);
-            $.Msg("Hero name is", heroName);
             const team = Players.GetTeam(playerID);
             const containerToAppendTo =
                 team === DOTATeam_t.DOTA_TEAM_BADGUYS
@@ -76,6 +76,11 @@ class PlayersContainer {
             this.clearPlayersContainer();
         });
 
+        GameEvents.Subscribe("on_all_players_selected_abilties", () => {
+            this.currentTurnTime = 10;
+            this.timePickText = "Time Until Game Starts: ";
+        });
+
         this.onThinkListenerID = GameEvents.Subscribe("on_think", () => {
             const timer = this.panel.FindChild("TurnLabel") as LabelPanel;
             this.handleTimer(timer);
@@ -85,7 +90,6 @@ class PlayersContainer {
             "on_player_reconnect",
             (event: PlayerReconnectedEvent) => {
                 const playerID = event.PlayerID;
-                $.Msg("Player reconnected!!!!!!!!!!!!!!!");
                 if (Players.GetLocalPlayer() === playerID) {
                     this.clearPlayersContainer();
                 }
@@ -95,14 +99,14 @@ class PlayersContainer {
 
     handleTimer(timer: LabelPanel) {
         this.currentTurnTime--;
-        timer.text = `Remaining Time To Pick: ${this.currentTurnTime.toString()}`;
+        timer.text = `${this.timePickText}${this.currentTurnTime.toString()}`;
         if (this.currentTurnTime === 0) {
+            this.currentTurnTime = turnTimeAmount;
             // Force pick for the player and move to next item
             GameEvents.SendCustomGameEventToServer(
                 "on_ability_time_allowed_expired",
                 {} as never
             );
-            this.currentTurnTime = turnTimeAmount;
         }
     }
 
