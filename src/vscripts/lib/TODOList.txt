@@ -19,3 +19,18 @@
 - Add name above abilities so its clear
 //- If losing team is down x gold, give them an OP item or maybe gold.
 //- Timer on ability selection force
+- Items todo
+- Skill tomb to relearn an ability
+- Global hex item (including teammates)
+- Hughmungus Chungus: Increase model scale for x seconds and give 50 strength
+- Dead mans switch: if the target hero is below 20%, instantly kill them AND yourself. Single use with replenishment. Make it avaibale after 15mins
+- Stat books available after 15mins. 
+- The Smeeeech: Send a message to everyone that says I'm a visage main. Get on my level bro
+- Post game stats might be nice
+- Create a hero banning phase (don't ignore)
+- Organise abilities into ultimates/passives
+- Fix ability carry over when dont pick
+
+
+
+

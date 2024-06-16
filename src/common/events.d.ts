@@ -28,7 +28,7 @@ interface CustomGameEventDeclarations {
     on_keybind_submit: KeybindSubmitEvent;
     on_ability_swap: AbilitySwapEvent;
     on_player_reconnect: PlayerReconnectedEvent;
-    on_ability_time_allowed_expired: never;
+    on_ability_time_allowed_expired: PlayerID;
     on_all_players_selected_abilties: never;
 }
 

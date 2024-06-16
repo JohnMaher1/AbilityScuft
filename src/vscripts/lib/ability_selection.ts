@@ -44,8 +44,8 @@ export class AbilitySelection {
     registerListeners() {
         CustomGameEventManager.RegisterListener(
             "on_ability_time_allowed_expired",
-            () => {
-                this.mockPick();
+            (_, data) => {
+                this.mockPick(data.PlayerID);
             }
         );
     }
@@ -221,7 +221,11 @@ export class AbilitySelection {
         }
     }
 
-    mockPick() {
+    mockPick(playerID: PlayerID = -1) {
+        if (this.playerTurn !== playerID && playerID !== -1) {
+            return;
+        }
+
         if (
             this.currentMockTurn > this.maxMockTurns ||
             this.allPlayersHaveSelectedAbilities === true

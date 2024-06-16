@@ -51,14 +51,14 @@ class PlayersContainer {
 
         GameEvents.Subscribe("on_turn_change", (event) => {
             const players = Game.GetAllPlayerIDs();
-            const playerTurnID = event.playerTurnID;
+            this.playerTurn = event.playerTurnID;
             players.forEach((playerID) => {
                 const playerPanel = this.playerPanels[playerID];
                 playerPanel.panel.RemoveClass(
-                    playerID === playerTurnID ? "" : "IsPickTurn"
+                    playerID === this.playerTurn ? "" : "IsPickTurn"
                 );
                 playerPanel.panel.AddClass(
-                    playerID === playerTurnID ? "IsPickTurn" : ""
+                    playerID === this.playerTurn ? "IsPickTurn" : ""
                 );
             });
         });
@@ -103,9 +103,10 @@ class PlayersContainer {
         if (this.currentTurnTime === 0) {
             this.currentTurnTime = turnTimeAmount;
             // Force pick for the player and move to next item
+            $.Msg("passing playerTurn", this.playerTurn);
             GameEvents.SendCustomGameEventToServer(
                 "on_ability_time_allowed_expired",
-                {} as never
+                this.playerTurn
             );
         }
     }
