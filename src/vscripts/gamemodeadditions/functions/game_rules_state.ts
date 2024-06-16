@@ -7,6 +7,7 @@ export class GameRulesState {
     abilitySelection: AbilitySelection | undefined = undefined;
     abilityPickPhaseEnded: boolean = false;
     balancerCanGetAdded: boolean = true;
+    heroList: string[] = [];
 
     static getInstance() {
         if (this.instance === undefined) {

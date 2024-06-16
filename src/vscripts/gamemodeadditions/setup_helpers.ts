@@ -1,6 +1,31 @@
-export function PrecacheResources(this: void, context: CScriptPrecacheContext) {
-    const loadPrefabs = IsInToolsMode() ? false : true;
+import { GameRulesState } from "./functions/game_rules_state";
 
+function GetHeroList() {
+    const heroesList = LoadKeyValues("scripts/npc/npc_heroes.txt");
+    const heroes = Object.keys(heroesList).map((key) => {
+        return key;
+    });
+    // Return a random set of 50 heroes
+    const randomHeroes: string[] = [];
+    while (randomHeroes.length < 50) {
+        const randomIndex = Math.floor(Math.random() * heroes.length);
+        const randomHero = heroes[randomIndex];
+        if (
+            !randomHeroes.includes(randomHero) &&
+            randomHero !== "npc_dota_hero_base" &&
+            randomHero !== "Version"
+        ) {
+            randomHeroes.push(randomHero);
+        }
+    }
+    GameRulesState.getInstance().heroList = randomHeroes;
+    return randomHeroes;
+}
+
+export function PrecacheResources(this: void, context: CScriptPrecacheContext) {
+    //const loadPrefabs = IsInToolsMode() ? false : true;
+    const loadPrefabs = true;
+    const heroesList = GetHeroList();
     PrecacheResource(
         "particle",
         "particles/units/heroes/hero_meepo/meepo_earthbind_projectile_fx.vpcf",
@@ -14,8 +39,6 @@ export function PrecacheResources(this: void, context: CScriptPrecacheContext) {
     if (!loadPrefabs) {
         return;
     }
-    const heroList = LoadKeyValues("scripts/npc/hero_list.txt");
-    const heroNames = Object.keys(heroList);
     const particleList = LoadKeyValues("scripts/particles/hero_particles.txt");
     const particleNames = Object.keys(particleList);
     // Particle Effects
@@ -28,7 +51,7 @@ export function PrecacheResources(this: void, context: CScriptPrecacheContext) {
         );
     }
     // Hero Sounds
-    for (const key of heroNames) {
+    for (const key of heroesList) {
         const heroName = key.replace("npc_dota_hero_", "");
         const heroSoundName = getHeroToSoundNameMapping(heroName);
         PrecacheResource(

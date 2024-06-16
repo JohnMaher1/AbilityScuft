@@ -17,7 +17,9 @@ export function addModifierToHeroToPreventMovement() {
 }
 
 export function reloadAndStartGame(): void {
-    const debugParameters = hero_kv_readAllHeroFiles();
+    const debugParameters = hero_kv_readAllHeroFiles(
+        GameRulesState.getInstance().heroList
+    );
     print(
         "Starting the game with force abilities set to: ",
         SettingsState.getInstance().forceRandomAbilities

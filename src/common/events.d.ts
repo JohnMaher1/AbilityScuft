@@ -72,6 +72,7 @@ interface PlayerTurnChangedEvent {
 }
 
 interface AbilityInformation {
+    heroName: string;
     abilityName: string;
     abilityNumber: number;
 }

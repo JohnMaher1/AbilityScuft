@@ -18,19 +18,20 @@ export const hero_kv_getHeroKVFile = (heroName: string) => {
     return file;
 };
 
-export const hero_kv_readAllHeroFiles = (): DebugParameters => {
-    const heroList = LoadKeyValues("scripts/npc/hero_list.txt");
+export const hero_kv_readAllHeroFiles = (
+    heroList: string[]
+): DebugParameters => {
     const abilities: AbilityInformation[] = [];
 
     const abilityTotalCount = 18 * 7;
-    const heroEntries = Object.entries(heroList);
-    const heroListLength = heroEntries.length;
+    const heroListLength = heroList.length;
+    const abilitiesAdded: string[] = [];
 
     for (let i = 0; i < heroListLength; i++) {
         const random = Math.floor(Math.random() * heroListLength);
-        const [key, value] = heroEntries[random];
-
+        const key = heroList[random];
         const file = LoadKeyValues("scripts/npc/heroes/" + key + ".txt");
+        print("Reading hero file: " + key + ".txt");
         Object.entries(file).forEach(([abilityName, abilityValues]) => {
             if (
                 typeof abilityValues !== "number" &&
@@ -79,31 +80,44 @@ export const hero_kv_readAllHeroFiles = (): DebugParameters => {
                     canAddAbility = false;
                 }
 
-                if (canAddAbility) {
+                if (canAddAbility && !abilitiesAdded.includes(abilityName)) {
                     abilities.push({
                         abilityName: abilityName,
                         abilityNumber: 1,
+                        heroName: key,
                     });
+                    abilitiesAdded.push(abilityName);
                 }
             }
         });
     }
 
     // Shuffle items in the abilities array
-    let shuffledAbilities: string[] = shuffle(
-        abilities.flatMap((x) => x.abilityName)
-    );
+    let shuffledAbilities: AbilityInformation[] = shuffle(abilities);
+
     // Make a copy of the array that includes the first 90 elements
     shuffledAbilities.splice(abilityTotalCount);
+    shuffledAbilities.sort((a, b) => {
+        if (a.heroName < b.heroName) {
+            return -1;
+        }
+        if (a.heroName > b.heroName) {
+            return 1;
+        }
+        return 0;
+    });
 
+    const abilityNames = shuffledAbilities.flatMap(
+        (ability) => ability.abilityName
+    );
     CustomGameEventManager.Send_ServerToAllClients(
         "on_abilities_load",
-        shuffledAbilities
+        abilityNames
     );
-    return { abilityNames: shuffledAbilities };
+    return { abilityNames: abilityNames };
 };
 
-const shuffle = (array: string[]): string[] => {
+const shuffle = (array: AbilityInformation[]): AbilityInformation[] => {
     let currentIndex = array.length;
 
     // While there remain elements to shuffle...
