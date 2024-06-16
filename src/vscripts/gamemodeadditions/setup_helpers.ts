@@ -44,6 +44,21 @@ export function PrecacheResources(this: void, context: CScriptPrecacheContext) {
     // Particle Effects
     for (const key of particleNames) {
         const keyCopy = key.substring(0, key.length - 2);
+
+        // Check if keyCopy is a substring of any element in heroesList
+        let found = false;
+        const keyCopyHeroName = keyCopy.split("/")[0];
+        const nameToSearch = "npc_dota_" + keyCopyHeroName;
+        for (const hero of heroesList) {
+            if (hero.includes(nameToSearch)) {
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            continue;
+        }
         PrecacheResource(
             "particle",
             `particles/units/heroes/${keyCopy}`,

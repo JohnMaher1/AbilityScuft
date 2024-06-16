@@ -40,9 +40,14 @@ export class item_the_balancer extends BaseItem {
             "modifier_silver_edge_debuff",
             { duration: 20 }
         );
+        const targetMoveSpeed = target.GetBaseMoveSpeed();
+        target.SetBaseMoveSpeed(0);
         Timers.CreateTimer(0.1, () => {
             // Remove the item
             this.Destroy();
+        });
+        Timers.CreateTimer(20, () => {
+            target.SetBaseMoveSpeed(targetMoveSpeed);
         });
     }
 }
