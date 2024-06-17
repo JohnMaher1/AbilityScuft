@@ -16,7 +16,7 @@ class TeamSelect {
             "TeamSelectBackgroundImage"
         )! as ImagePanel;
         abilityImage.SetImage(
-            "file://{images}/custom_game/ability_background.jpg"
+            "raw://resource/flash3/images/setup_screen_background.png"
         );
         this.CreateNewToggleOption(
             "Force Random Abilities",

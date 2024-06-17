@@ -13,7 +13,6 @@ class PlayersContainer {
     playerTurnReversed: boolean = false;
     currentTurnTime: number = startingTurnTimeAmount;
     timePickText = "Remaining Time To Pick: ";
-    onThinkListenerID: GameEventListenerID | undefined = undefined;
     constructor(panel: Panel) {
         $.Msg("PlayersContainer constructor");
         this.panel = panel;
@@ -22,7 +21,7 @@ class PlayersContainer {
             "AbilityBackgroundImage"
         )! as ImagePanel;
         abilityImage.SetImage(
-            "file://{images}/custom_game/ability_background.jpg"
+            "raw://resource/flash3/images/ability_selection_background.png"
         );
         const tempContainer = this.panel.FindChild("HeroPortraitsRight")!;
         const tempContainer2 = this.panel.FindChild("HeroPortraitsLeft")!;
@@ -81,11 +80,6 @@ class PlayersContainer {
             this.timePickText = "Time Until Game Starts: ";
         });
 
-        this.onThinkListenerID = GameEvents.Subscribe("on_think", () => {
-            const timer = this.panel.FindChild("TurnLabel") as LabelPanel;
-            this.handleTimer(timer);
-        });
-
         GameEvents.Subscribe(
             "on_player_reconnect",
             (event: PlayerReconnectedEvent) => {
@@ -95,26 +89,15 @@ class PlayersContainer {
                 }
             }
         );
-    }
 
-    handleTimer(timer: LabelPanel) {
-        this.currentTurnTime--;
-        timer.text = `${this.timePickText}${this.currentTurnTime.toString()}`;
-        if (this.currentTurnTime === 0) {
-            this.currentTurnTime = turnTimeAmount;
-            // Force pick for the player and move to next item
-            $.Msg("passing playerTurn", this.playerTurn);
-            GameEvents.SendCustomGameEventToServer(
-                "on_ability_time_allowed_expired",
-                this.playerTurn
-            );
-        }
+        GameEvents.Subscribe("on_ability_selection_timer_change", (event) => {
+            this.currentTurnTime = event.currentTimeRemaining;
+            const timer = this.panel.FindChild("TurnLabel") as LabelPanel;
+            timer.text = `${this.timePickText}${event.currentTimeRemaining}`;
+        });
     }
 
     clearPlayersContainer() {
-        if (this.onThinkListenerID !== undefined) {
-            GameEvents.Unsubscribe(this.onThinkListenerID);
-        }
         const tempContainer = this.panel.FindChild("HeroPortraitsRight")!;
         tempContainer?.RemoveAndDeleteChildren();
         const tempContainer2 = this.panel.FindChild("HeroPortraitsLeft")!;

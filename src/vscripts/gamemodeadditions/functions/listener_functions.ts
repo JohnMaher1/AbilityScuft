@@ -70,8 +70,8 @@ export function startGame(): void {
 }
 
 export function onThink(entity: CBaseEntity): void {
-    CustomGameEventManager.Send_ServerToAllClients("on_think", {} as never);
     handleBalancerItem();
+    GameRulesState.getInstance().abilitySelection?.onThink();
     if (
         SettingsState.getInstance().forceRandomAbilities &&
         !GameRulesState.getInstance().abilityPickPhaseEnded

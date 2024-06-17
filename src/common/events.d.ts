@@ -30,9 +30,14 @@ interface CustomGameEventDeclarations {
     on_player_reconnect: PlayerReconnectedEvent;
     on_ability_time_allowed_expired: PlayerID;
     on_all_players_selected_abilties: never;
+    on_ability_selection_timer_change: SelectionTimerChangedEvent;
 }
 
 type SettingsName = "forceRandomAbilities" | "n/a";
+
+interface SelectionTimerChangedEvent {
+    currentTimeRemaining: number;
+}
 
 interface AbilitySwapEvent {
     playerID: PlayerID;

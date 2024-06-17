@@ -21,6 +21,9 @@ export class AbilitySelection {
     allPlayersHaveSelectedAbilities: boolean = false;
     onAbilitySelectionComplete: () => void;
     abilitiesPicked: string[] = [];
+    onThinkRef: CustomGameEventListenerID | undefined;
+    turnTimeAmount = 20;
+    currentTurnTime: number = 30; // 30 for starting player, 20 for all other players
     constructor(
         abilityNames: string[],
         onAbilitySelectionComplete: () => void,
@@ -39,6 +42,27 @@ export class AbilitySelection {
         this.registerAbilityClick();
         this.removeAllAbilitiesFromPlayers();
         this.registerListeners();
+    }
+
+    handleTimer() {
+        if (this.allPlayersHaveSelectedAbilities) {
+            this.currentTurnTime = 10;
+            CustomGameEventManager.UnregisterListener(this.onThinkRef!);
+            return;
+        }
+        this.currentTurnTime--;
+        CustomGameEventManager.Send_ServerToAllClients(
+            "on_ability_selection_timer_change",
+            { currentTimeRemaining: this.currentTurnTime }
+        );
+        if (this.currentTurnTime === 0) {
+            this.currentTurnTime = this.turnTimeAmount;
+            this.mockPick();
+        }
+    }
+
+    onThink() {
+        this.handleTimer();
     }
 
     registerListeners() {

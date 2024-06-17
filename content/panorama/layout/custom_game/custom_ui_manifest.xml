@@ -1,5 +1,5 @@
 <root>
-    <Panel>
+    <Panel id="CustomPrecache">
         <CustomUIElement type="Hud"
             layoutfile="file://{resources}/layout/custom_game/players_container.xml" />
         <CustomUIElement type="Hud"

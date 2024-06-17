@@ -1,15 +1,22 @@
 #AbilityIcons {
     width: 100%;
-    margin-left: 16.3%;
+    margin-left: 15%;
     margin-right: 15%;
-    height: 100%;
-    margin-top: 16%;
+    margin-top: 12%;
+    margin-bottom: 16%;
+    height: 2000px;
+
     flow-children: right-wrap;
+    vertical-align: top;
+    horizontal-align: center;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 16px;
 }
 .AbilityIcon {
-    height: 7%;
-    width: 7%;
+    height: 11%;
+    width: 7.13%;
     padding: 8px;
+    opacity: 1 !important;
     border-radius: 32px;
     z-index: 999999 !important;
 }
@@ -29,13 +36,14 @@
 }
 
 .AbilityIcon:hover {
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.8);
     border-radius: 16px;
 }
 #AbilityImage {
     width: 52px;
     height: 52px;
     border-radius: 8px;
+    opacity: 1 !important;
     horizontal-align: center;
     vertical-align: middle;
     text-align: center;
