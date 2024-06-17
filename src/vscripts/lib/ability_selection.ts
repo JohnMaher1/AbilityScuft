@@ -194,7 +194,11 @@ export class AbilitySelection {
                     this.setPlayerTurn();
                     break;
             }
-
+            this.currentTurnTime = 20;
+            CustomGameEventManager.Send_ServerToAllClients(
+                "on_ability_selection_timer_change",
+                { currentTimeRemaining: this.currentTurnTime }
+            );
             // Dispatch an event to the UI to display the player turn order
             CustomGameEventManager.Send_ServerToAllClients("on_turn_change", {
                 playerTurnID: this.playerTurn,
