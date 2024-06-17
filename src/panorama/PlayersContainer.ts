@@ -78,6 +78,8 @@ class PlayersContainer {
         GameEvents.Subscribe("on_all_players_selected_abilties", () => {
             this.currentTurnTime = 10;
             this.timePickText = "Time Until Game Starts: ";
+            const timer = this.panel.FindChild("TurnLabel") as LabelPanel;
+            timer.text = `${this.timePickText}${this.currentTurnTime}`;
         });
 
         GameEvents.Subscribe(
