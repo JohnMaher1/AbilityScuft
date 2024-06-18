@@ -70,13 +70,17 @@ export function startGame(): void {
 }
 
 export function onThink(entity: CBaseEntity): void {
+    const gameRulesState = GameRulesState.getInstance();
+    const settingsState = SettingsState.getInstance();
     handleBalancerItem();
-    GameRulesState.getInstance().abilitySelection?.onThink();
+    if (gameRulesState.canRunAbilitySelectionOnThink === true) {
+        gameRulesState.abilitySelection?.onThink();
+    }
     if (
-        SettingsState.getInstance().forceRandomAbilities &&
-        !GameRulesState.getInstance().abilityPickPhaseEnded
+        settingsState.forceRandomAbilities &&
+        !gameRulesState.abilityPickPhaseEnded
     ) {
-        GameRulesState.getInstance().abilitySelection?.mockPick();
+        gameRulesState.abilitySelection?.mockPick();
     }
 }
 

@@ -1,5 +1,5 @@
+import { GameRulesState } from "../gamemodeadditions/functions/game_rules_state";
 import { hero_ability_kv_HandleScepterShardUpgrade } from "./ability_kv_helper";
-import { hero_kv_getHeroKVFile } from "./hero_kv_file_helper";
 import { reloadable } from "./tstl-utils";
 
 interface PlayerAbilityCounts {
@@ -21,9 +21,9 @@ export class AbilitySelection {
     allPlayersHaveSelectedAbilities: boolean = false;
     onAbilitySelectionComplete: () => void;
     abilitiesPicked: string[] = [];
-    onThinkRef: CustomGameEventListenerID | undefined;
     turnTimeAmount = 20;
     currentTurnTime: number = 30; // 30 for starting player, 20 for all other players
+    hasCreatedEndTurnTimer: boolean = false;
     constructor(
         abilityNames: string[],
         onAbilitySelectionComplete: () => void,
@@ -45,10 +45,16 @@ export class AbilitySelection {
     }
 
     handleTimer() {
-        if (this.allPlayersHaveSelectedAbilities) {
+        if (
+            this.allPlayersHaveSelectedAbilities &&
+            this.hasCreatedEndTurnTimer === false
+        ) {
             this.currentTurnTime = 10;
-            CustomGameEventManager.UnregisterListener(this.onThinkRef!);
-            return;
+            this.hasCreatedEndTurnTimer = true;
+            Timers.CreateTimer(IsInToolsMode() ? 1 : 10, () => {
+                GameRulesState.getInstance().canRunAbilitySelectionOnThink =
+                    false;
+            });
         }
         this.currentTurnTime--;
         CustomGameEventManager.Send_ServerToAllClients(

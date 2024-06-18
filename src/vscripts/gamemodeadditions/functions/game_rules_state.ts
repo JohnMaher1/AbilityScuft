@@ -8,6 +8,7 @@ export class GameRulesState {
     abilityPickPhaseEnded: boolean = false;
     balancerCanGetAdded: boolean = true;
     heroList: string[] = [];
+    canRunAbilitySelectionOnThink: boolean = true;
 
     static getInstance() {
         if (this.instance === undefined) {
@@ -76,10 +77,8 @@ export class GameRulesState {
         }
         Timers.CreateTimer(timeTillForceStart, () => {
             GameRules.ForceGameStart();
-            Timers.CreateTimer(20, () => {
-                GameRules.SetCreepSpawningEnabled(true);
-                GameRules.SpawnAndReleaseCreeps();
-            });
+            GameRules.SetCreepSpawningEnabled(true);
+            GameRules.SpawnAndReleaseCreeps();
         });
         // Send a message to all players indicating time till game start without using CustomGameEventManager
         const message = `Game starting in ${timeTillForceStart} seconds! Please ignore the Pre Game Clock!`;
