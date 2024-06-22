@@ -5,6 +5,7 @@ import { reloadable } from "./tstl-utils";
 interface PlayerAbilityCounts {
     playerID: PlayerID;
     abilityCount: number;
+    hasPickedInnate: boolean;
 }
 @reloadable
 export class AbilitySelection {
@@ -14,11 +15,12 @@ export class AbilitySelection {
     playerTurnReversed: boolean = false;
     canPickAgain: boolean = false;
     abilities: AbilityInformation[] = [];
-    maxMockTurns = 10 * this.playerMaxAbilities;
+    maxMockTurns = 10 * this.playerMaxAbilities + 1;
     currentMockTurn = 0;
     playerAbilityCounts: PlayerAbilityCounts[] = [];
     forceRandomAbilities: boolean = false;
     allPlayersHaveSelectedAbilities: boolean = false;
+    allPlayersHaveSelectedAnInnate: boolean = false;
     onAbilitySelectionComplete: () => void;
     abilitiesPicked: string[] = [];
     turnTimeAmount = 20;
@@ -44,9 +46,18 @@ export class AbilitySelection {
         this.registerListeners();
     }
 
+    isInnate(ability: AbilityInformation) {
+        return (
+            ability.abilityType !== AbilityTypes.BASIC &&
+            ability.abilityType !== AbilityTypes.ULTIMATE &&
+            ability.abilityType !== AbilityTypes.HIDDEN
+        );
+    }
+
     handleTimer() {
         if (
             this.allPlayersHaveSelectedAbilities &&
+            this.allPlayersHaveSelectedAnInnate &&
             this.hasCreatedEndTurnTimer === false
         ) {
             this.currentTurnTime = 10;
@@ -120,24 +131,28 @@ export class AbilitySelection {
         );
     };
 
-    handlePlayerAbilityCount(playerID: PlayerID) {
+    handlePlayerAbilityCount(playerID: PlayerID, ability: AbilityInformation) {
         const playerAbilityCount = this.playerAbilityCounts.find(
             (playerAbilityCount) => playerAbilityCount.playerID === playerID
         );
         if (playerAbilityCount) {
+            if (this.isInnate(ability)) {
+                playerAbilityCount.hasPickedInnate = true;
+            }
             playerAbilityCount.abilityCount++;
         } else {
             this.playerAbilityCounts.push({
                 playerID: playerID,
                 abilityCount: 1,
+                hasPickedInnate: false,
             });
         }
     }
 
     onAddAbilityToPlayer(playerID: PlayerID, abilityName: string) {
+        this.abilitiesPicked.push(abilityName);
         // Check if ability has a scepter upgrade
         hero_ability_kv_HandleScepterShardUpgrade(playerID, abilityName);
-        this.abilitiesPicked.push(abilityName);
     }
 
     handlePlayerAbilityClicked(
@@ -148,23 +163,37 @@ export class AbilitySelection {
             const playerAbilityCount = this.playerAbilityCounts.find(
                 (x) => x.playerID === playerID
             );
+            if (!this.allPlayersHaveSelectedAbilities) {
+                if (this.isInnate(abilityInformation)) {
+                    return;
+                }
+            }
+            if (
+                this.allPlayersHaveSelectedAbilities &&
+                !this.allPlayersHaveSelectedAnInnate
+            ) {
+                if (!this.isInnate(abilityInformation)) {
+                    return;
+                }
+            }
             if (!playerAbilityCount) {
                 this.onAddAbilityToPlayer(
                     playerID,
                     abilityInformation.abilityName
                 );
+                this.handlePlayerAbilityCount(playerID, abilityInformation);
             }
             if (
                 playerAbilityCount &&
-                playerAbilityCount.abilityCount < this.playerMaxAbilities
+                playerAbilityCount.abilityCount < this.playerMaxAbilities + 1 // 1 for innate
             ) {
                 this.onAddAbilityToPlayer(
                     playerID,
                     abilityInformation.abilityName
                 );
+                this.handlePlayerAbilityCount(playerID, abilityInformation);
             }
 
-            this.handlePlayerAbilityCount(playerID);
             // Get position of ability
             let abilityPosition = playerAbilityCount?.abilityCount ?? 1;
 
@@ -184,6 +213,7 @@ export class AbilitySelection {
                         this.playerTurnOrder[this.playerTurnOrder.length - 1]:
                     if (this.canPickAgain === false) {
                         this.canPickAgain = true;
+                        this.handleSelectedAbilities();
                     } else {
                         this.playerTurnOrder = this.playerTurnOrder.reverse();
                         this.playerTurnReversed = !this.playerTurnReversed;
@@ -197,6 +227,7 @@ export class AbilitySelection {
                         this.playerTurnOrder[this.playerTurnOrder.length - 1]:
                     if (this.canPickAgain === false) {
                         this.canPickAgain = true;
+                        this.handleSelectedAbilities();
                     } else {
                         this.playerTurnOrder = this.playerTurnOrder.reverse();
                         this.playerTurnReversed = !this.playerTurnReversed;
@@ -224,18 +255,7 @@ export class AbilitySelection {
         }
     }
 
-    setPlayerTurn() {
-        if (this.allPlayersHaveSelectedAbilities) {
-            return;
-        }
-        this.playerTurn =
-            this.playerTurnOrder[
-                (this.playerTurnOrder.indexOf(this.playerTurn) + 1) %
-                    this.playerTurnOrder.length
-            ];
-
-        // Check if all players have selected max abilites
-
+    handleSelectedAbilities() {
         const playerAbilityCountLength = this.playerAbilityCounts.length;
         if (playerAbilityCountLength === PlayerResource.GetPlayerCount()) {
             if (
@@ -247,21 +267,33 @@ export class AbilitySelection {
             ) {
                 this.allPlayersHaveSelectedAbilities = true;
             }
+            if (
+                this.playerAbilityCounts.every(
+                    (playerAbilityCount) => playerAbilityCount.hasPickedInnate
+                )
+            ) {
+                this.allPlayersHaveSelectedAnInnate = true;
+            }
         }
+        this.handleSelectionEvents();
+    }
 
-        if (this.allPlayersHaveSelectedAbilities) {
-            CustomGameEventManager.Send_ServerToAllClients(
-                "on_all_players_selected_abilties",
-                {} as never
-            );
-            Timers.CreateTimer(IsInToolsMode() ? 1 : 10, () => {
-                CustomGameEventManager.Send_ServerToAllClients(
-                    "on_ability_pick_phase_completed",
-                    {} as never
-                );
-                this.onAbilitySelectionComplete();
-            });
+    setPlayerTurn() {
+        if (
+            this.allPlayersHaveSelectedAbilities &&
+            this.allPlayersHaveSelectedAnInnate
+        ) {
+            return;
         }
+        this.playerTurn =
+            this.playerTurnOrder[
+                (this.playerTurnOrder.indexOf(this.playerTurn) + 1) %
+                    this.playerTurnOrder.length
+            ];
+
+        // Check if all players have selected max abilites
+
+        this.handleSelectedAbilities();
     }
 
     mockPick(playerID: PlayerID = -1) {
@@ -270,18 +302,44 @@ export class AbilitySelection {
         }
 
         if (
-            this.currentMockTurn > this.maxMockTurns ||
-            this.allPlayersHaveSelectedAbilities === true
+            this.allPlayersHaveSelectedAbilities === true &&
+            this.allPlayersHaveSelectedAnInnate === true
         ) {
             return;
         }
-        let randomAbility =
-            this.abilities[Math.floor(Math.random() * this.abilities.length)];
-        while (this.abilitiesPicked.includes(randomAbility.abilityName)) {
+        let randomAbility: AbilityInformation;
+        if (!this.allPlayersHaveSelectedAbilities) {
+            const nonInnateAbilities = this.abilities.filter(
+                (x) => this.isInnate(x) === false
+            );
             randomAbility =
-                this.abilities[
-                    Math.floor(Math.random() * this.abilities.length)
+                nonInnateAbilities[
+                    Math.floor(Math.random() * nonInnateAbilities.length)
                 ];
+            while (
+                this.abilitiesPicked.includes(randomAbility.abilityName) ||
+                this.isInnate(randomAbility)
+            ) {
+                randomAbility =
+                    this.abilities[
+                        Math.floor(Math.random() * this.abilities.length)
+                    ];
+            }
+        } else {
+            // Find a random innate ability
+            const innateAbilities = this.abilities.filter((ability) =>
+                this.isInnate(ability)
+            );
+            randomAbility =
+                innateAbilities[
+                    Math.floor(Math.random() * innateAbilities.length)
+                ];
+            while (this.abilitiesPicked.includes(randomAbility.abilityName)) {
+                randomAbility =
+                    innateAbilities[
+                        Math.floor(Math.random() * innateAbilities.length)
+                    ];
+            }
         }
 
         this.handlePlayerAbilityClicked(this.playerTurn, randomAbility);
@@ -371,5 +429,28 @@ export class AbilitySelection {
         });
 
         return returnVal;
+    }
+
+    handleSelectionEvents() {
+        if (this.allPlayersHaveSelectedAbilities) {
+            CustomGameEventManager.Send_ServerToAllClients(
+                "on_all_players_selected_abilties",
+                {} as never
+            );
+        }
+        if (this.allPlayersHaveSelectedAnInnate) {
+            CustomGameEventManager.Send_ServerToAllClients(
+                "on_all_players_selected_innate",
+                {} as never
+            );
+
+            Timers.CreateTimer(IsInToolsMode() ? 5 : 10, () => {
+                CustomGameEventManager.Send_ServerToAllClients(
+                    "on_ability_pick_phase_completed",
+                    {} as never
+                );
+                this.onAbilitySelectionComplete();
+            });
+        }
     }
 }

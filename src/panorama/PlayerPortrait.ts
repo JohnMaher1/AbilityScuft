@@ -14,6 +14,7 @@ class PlayerPortrait {
     ability3: AbilityImagePanel;
     ability4: AbilityImagePanel;
     ability5: AbilityImagePanel;
+    innateAbilityPanel: AbilityImagePanel;
 
     constructor(parent: Panel, heroName: string, playerName: string) {
         // Create new panel
@@ -47,6 +48,10 @@ class PlayerPortrait {
             abilityName: "",
             imagePanel: null,
         };
+        this.innateAbilityPanel = {
+            abilityName: "",
+            imagePanel: null,
+        };
         this.ability1.imagePanel = panel.FindChildTraverse(
             "Ability1"
         ) as ImagePanel;
@@ -61,6 +66,9 @@ class PlayerPortrait {
         ) as ImagePanel;
         this.ability5.imagePanel = panel.FindChildTraverse(
             "Ability5"
+        ) as ImagePanel;
+        this.innateAbilityPanel.imagePanel = panel.FindChildTraverse(
+            "InnateAbility"
         ) as ImagePanel;
 
         // Set player name label
@@ -93,6 +101,18 @@ class PlayerPortrait {
             case 5:
                 this.ability5.imagePanel.SetImage(this.getImagePath(ability));
                 this.ability5.abilityName = ability.abilityName;
+                break;
+            case 6:
+                this.innateAbilityPanel.imagePanel.SetImage(
+                    this.getImagePath(ability)
+                );
+                this.innateAbilityPanel.abilityName = ability.abilityName;
+                break;
+            default:
+                this.innateAbilityPanel.imagePanel.SetImage(
+                    this.getImagePath(ability)
+                );
+                this.innateAbilityPanel.abilityName = ability.abilityName;
                 break;
         }
     }

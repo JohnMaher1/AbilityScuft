@@ -74,6 +74,8 @@ class AbilityIcon {
             if (event.ability.abilityName === ability.abilityName) {
                 this.canBePicked = false;
                 this.panel.AddClass("AbilityIconDisabled");
+                this.abilityImage.AddClass("AbilityIconDisabled");
+                this.abilityTooltip.AddClass("AbilityIconDisabled");
             }
         });
     }

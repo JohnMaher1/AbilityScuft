@@ -12,7 +12,7 @@ class PlayersContainer {
     playerTurnOrder: PlayerID[] = [];
     playerTurnReversed: boolean = false;
     currentTurnTime: number = startingTurnTimeAmount;
-    timePickText = "Remaining Time To Pick: ";
+    timePickText = "Remaining Time To Pick (Non-Innate): ";
     constructor(panel: Panel) {
         $.Msg("PlayersContainer constructor");
         this.panel = panel;
@@ -72,6 +72,12 @@ class PlayersContainer {
         });
 
         GameEvents.Subscribe("on_all_players_selected_abilties", () => {
+            this.timePickText = "Remaining Time To Pick Innate: ";
+            const timer = this.panel.FindChild("TurnLabel") as LabelPanel;
+            timer.text = `${this.timePickText}${this.currentTurnTime}`;
+        });
+
+        GameEvents.Subscribe("on_all_players_selected_innate", () => {
             this.currentTurnTime = 10;
             this.timePickText = "Time Until Game Starts: ";
             const timer = this.panel.FindChild("TurnLabel") as LabelPanel;
@@ -143,8 +149,10 @@ class PlayersContainer {
                 return playerPortait.ability4.imagePanel;
             case 5:
                 return playerPortait.ability5.imagePanel;
+            case 6:
+                return playerPortait.innateAbilityPanel.imagePanel;
             default:
-                return null;
+                return playerPortait.innateAbilityPanel.imagePanel;
         }
     }
 }

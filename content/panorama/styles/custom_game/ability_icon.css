@@ -137,7 +137,6 @@
     height: 35%;
     width: 4.998%;
     padding: 8px;
-    opacity: 1 !important;
     border-radius: 32px;
     z-index: 999999 !important;
 }
@@ -146,7 +145,6 @@
     height: 70%;
     width: 4.998%;
     padding: 8px;
-    opacity: 1 !important;
     border-radius: 32px;
     z-index: 999999 !important;
 }
@@ -155,7 +153,6 @@
     height: 33%;
     width: 4.998%;
     padding: 8px;
-    opacity: 1 !important;
     border-radius: 32px;
     z-index: 999999 !important;
 }
@@ -164,7 +161,6 @@
     height: 27%;
     width: 4.998%;
     padding: 8px;
-    opacity: 1 !important;
     border-radius: 32px;
     z-index: 999999 !important;
 }
@@ -173,13 +169,12 @@
     height: 21%;
     width: 4.998%;
     padding: 8px;
-    opacity: 1 !important;
     border-radius: 32px;
     z-index: 999999 !important;
 }
 
 .AbilityIconDisabled {
-    opacity: 0.4;
+    opacity: 0.15;
 }
 
 #AbilityTooltip {

@@ -1,7 +1,6 @@
 <root>
   <styles>
     <include src="file://{resources}/styles/custom_game/player_container.css" />
-    <include src="file://{resources}/layout/custom_game/precache.css" />
   </styles>
 
   <scripts>
@@ -11,7 +10,7 @@
 
   <snippets>
     <snippet name="PlayerPortrait" hittest="false">
-      <Panel id="CustomPrecache" class="PlayerPortrait" hittest="false">
+      <Panel class="PlayerPortrait" hittest="false">
         <Image id="HeroImage" hittest="false" />
         <Label id="PlayerName" hittest="false" />
         <Image id="Ability1" />
@@ -19,6 +18,7 @@
         <Image id="Ability3" />
         <Image id="Ability4" />
         <Image id="Ability5" />
+        <Image id="InnateAbility" />
       </Panel>
     </snippet>
   </snippets>
