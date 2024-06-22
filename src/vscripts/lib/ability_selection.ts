@@ -13,7 +13,7 @@ export class AbilitySelection {
     playerTurnOrder: PlayerID[] = [];
     playerTurnReversed: boolean = false;
     canPickAgain: boolean = false;
-    abilityNames: string[] = [];
+    abilities: AbilityInformation[] = [];
     maxMockTurns = 10 * this.playerMaxAbilities;
     currentMockTurn = 0;
     playerAbilityCounts: PlayerAbilityCounts[] = [];
@@ -25,11 +25,11 @@ export class AbilitySelection {
     currentTurnTime: number = 30; // 30 for starting player, 20 for all other players
     hasCreatedEndTurnTimer: boolean = false;
     constructor(
-        abilityNames: string[],
+        abilities: AbilityInformation[],
         onAbilitySelectionComplete: () => void,
         forceRandomAbilities: boolean
     ) {
-        this.abilityNames = abilityNames;
+        this.abilities = abilities;
         this.onAbilitySelectionComplete = onAbilitySelectionComplete;
         this.forceRandomAbilities = forceRandomAbilities;
     }
@@ -115,7 +115,7 @@ export class AbilitySelection {
         CustomGameEventManager.RegisterListener(
             "on_ability_clicked",
             (_, data) => {
-                this.handlePlayerAbilityClicked(data.player, data.abilityName);
+                this.handlePlayerAbilityClicked(data.player, data.ability);
             }
         );
     };
@@ -140,19 +140,28 @@ export class AbilitySelection {
         this.abilitiesPicked.push(abilityName);
     }
 
-    handlePlayerAbilityClicked(playerID: PlayerID, abilityName: string) {
+    handlePlayerAbilityClicked(
+        playerID: PlayerID,
+        abilityInformation: AbilityInformation
+    ) {
         if (playerID === this.playerTurn) {
             const playerAbilityCount = this.playerAbilityCounts.find(
                 (x) => x.playerID === playerID
             );
             if (!playerAbilityCount) {
-                this.onAddAbilityToPlayer(playerID, abilityName);
+                this.onAddAbilityToPlayer(
+                    playerID,
+                    abilityInformation.abilityName
+                );
             }
             if (
                 playerAbilityCount &&
                 playerAbilityCount.abilityCount < this.playerMaxAbilities
             ) {
-                this.onAddAbilityToPlayer(playerID, abilityName);
+                this.onAddAbilityToPlayer(
+                    playerID,
+                    abilityInformation.abilityName
+                );
             }
 
             this.handlePlayerAbilityCount(playerID);
@@ -163,7 +172,7 @@ export class AbilitySelection {
                 "on_player_ability_select",
                 {
                     playerID: playerID,
-                    abilityName: abilityName,
+                    ability: abilityInformation,
                     abilityPosition: abilityPosition,
                 }
             );
@@ -267,13 +276,11 @@ export class AbilitySelection {
             return;
         }
         let randomAbility =
-            this.abilityNames[
-                Math.floor(Math.random() * this.abilityNames.length)
-            ];
-        while (this.abilitiesPicked.includes(randomAbility)) {
+            this.abilities[Math.floor(Math.random() * this.abilities.length)];
+        while (this.abilitiesPicked.includes(randomAbility.abilityName)) {
             randomAbility =
-                this.abilityNames[
-                    Math.floor(Math.random() * this.abilityNames.length)
+                this.abilities[
+                    Math.floor(Math.random() * this.abilities.length)
                 ];
         }
 

@@ -63,11 +63,7 @@ class PlayersContainer {
         });
 
         GameEvents.Subscribe("on_player_ability_select", (event) => {
-            this.setImage(
-                event.playerID,
-                event.abilityPosition,
-                event.abilityName
-            );
+            this.setImage(event.playerID, event.abilityPosition, event.ability);
             this.currentTurnTime = turnTimeAmount;
         });
 
@@ -112,18 +108,22 @@ class PlayersContainer {
         timer?.RemoveAndDeleteChildren();
     }
 
-    setImage(playerID: PlayerID, abilityPosition: number, abilityName: string) {
+    setImage(
+        playerID: PlayerID,
+        abilityPosition: number,
+        ability: AbilityInformation
+    ) {
         const playerPanel = this.playerPanels[playerID];
-        playerPanel.setAbilityImage(abilityPosition, abilityName);
+        playerPanel.setAbilityImage(abilityPosition, ability);
         const abilityPanel = this.getAbilityPanel(playerPanel, abilityPosition);
-        abilityPanel.SetPanelEvent("onmouseover", () => {
+        abilityPanel?.SetPanelEvent("onmouseover", () => {
             $.DispatchEvent(
                 "DOTAShowAbilityTooltip",
                 abilityPanel,
-                abilityName
+                ability.abilityName
             );
         });
-        abilityPanel.SetPanelEvent("onmouseout", () => {
+        abilityPanel?.SetPanelEvent("onmouseout", () => {
             $.DispatchEvent("DOTAHideAbilityTooltip");
         });
     }

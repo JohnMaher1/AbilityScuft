@@ -1,20 +1,177 @@
-#AbilityIcons {
+.AbilityIconsContainer {
     width: 100%;
-    margin-left: 15%;
-    margin-right: 15%;
-    margin-top: 12%;
-    margin-bottom: 16%;
-    height: 2000px;
-
-    flow-children: right-wrap;
-    vertical-align: top;
-    horizontal-align: center;
+    height: 25%;
+    padding: 16px;
     background-color: rgba(0, 0, 0, 0.4);
+}
+
+.AbilityIconsContainer.Small {
+    width: 100%;
+    height: 14%;
+    padding: 8px 16px;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.AbilityIconsContainer.Medium {
+    width: 100%;
+    height: 23%;
+    padding: 8px 16px;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.AbilityIconsContainer.Large {
+    width: 100%;
+    height: 30%;
+    padding: 8px 16px;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.AbilityIconsContainer.ExtraLarge {
+    width: 100%;
+    height: 37%;
+    padding: 8px 16px;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.AbilityIcons {
+    height: 100%;
+    width: 100%;
+    padding-top: 30%;
+    background-color: rgba(0, 0, 0, 0.3);
+    flow-children: right-wrap;
+    horizontal-align: center;
     border-radius: 16px;
 }
+
+.AbilityIcons.Small {
+    height: 100%;
+    width: 100%;
+    padding-top: 40%;
+    background-color: rgba(0, 0, 0, 0.3);
+    flow-children: right-wrap;
+    horizontal-align: center;
+    border-radius: 16px;
+}
+
+.AbilityIcons.Medium {
+    height: 100%;
+    width: 100%;
+    padding-top: 25%;
+    background-color: rgba(0, 0, 0, 0.3);
+    flow-children: right-wrap;
+    horizontal-align: center;
+    border-radius: 16px;
+}
+
+.AbilityIcons.Large {
+    height: 100%;
+    width: 100%;
+    padding-top: 20%;
+    background-color: rgba(0, 0, 0, 0.3);
+    flow-children: right-wrap;
+    horizontal-align: center;
+    border-radius: 16px;
+}
+
+.AbilityIcons.ExtraLarge {
+    height: 100%;
+    width: 100%;
+    padding-top: 14%;
+    background-color: rgba(0, 0, 0, 0.3);
+    flow-children: right-wrap;
+    horizontal-align: center;
+    border-radius: 16px;
+}
+
+.AbilityIconsLabel {
+    height: 20%;
+    width: 100%;
+    font-size: 18px;
+    text-align: left;
+    color: white;
+    padding-top: 30%;
+    padding-left: 1.5%;
+}
+
+.AbilityIconsLabel.Small {
+    height: 25%;
+    width: 100%;
+    font-size: 20px;
+    text-align: left;
+    color: white;
+    padding-top: 30%;
+    padding-left: 1.5%;
+}
+
+.AbilityIconsLabel.Medium {
+    height: 25%;
+    width: 100%;
+    font-size: 20px;
+    text-align: left;
+    color: white;
+    padding-top: 30%;
+    padding-left: 1.5%;
+}
+
+.AbilityIconsLabel.Large {
+    height: 25%;
+    width: 100%;
+    font-size: 20px;
+    text-align: left;
+    color: white;
+    padding-top: 25%;
+    padding-left: 1.5%;
+}
+
+.AbilityIconsLabel.ExtraLarge {
+    height: 25%;
+    width: 100%;
+    font-size: 20px;
+    text-align: left;
+    color: white;
+    padding-top: 25%;
+    padding-left: 1.5%;
+}
+
 .AbilityIcon {
-    height: 11%;
-    width: 7.13%;
+    height: 35%;
+    width: 4.998%;
+    padding: 8px;
+    opacity: 1 !important;
+    border-radius: 32px;
+    z-index: 999999 !important;
+}
+
+.AbilityIcon.Small {
+    height: 70%;
+    width: 4.998%;
+    padding: 8px;
+    opacity: 1 !important;
+    border-radius: 32px;
+    z-index: 999999 !important;
+}
+
+.AbilityIcon.Medium {
+    height: 33%;
+    width: 4.998%;
+    padding: 8px;
+    opacity: 1 !important;
+    border-radius: 32px;
+    z-index: 999999 !important;
+}
+
+.AbilityIcon.Large {
+    height: 27%;
+    width: 4.998%;
+    padding: 8px;
+    opacity: 1 !important;
+    border-radius: 32px;
+    z-index: 999999 !important;
+}
+
+.AbilityIcon.ExtraLarge {
+    height: 21%;
+    width: 4.998%;
     padding: 8px;
     opacity: 1 !important;
     border-radius: 32px;
@@ -39,6 +196,7 @@
     background-color: rgba(0, 0, 0, 0.8);
     border-radius: 16px;
 }
+
 #AbilityImage {
     width: 52px;
     height: 52px;
@@ -48,4 +206,16 @@
     vertical-align: middle;
     text-align: center;
     background-color: black;
+}
+
+#AbilityIconsRootContainer {
+    width: 100%;
+    height: 100%;
+    margin-left: 15%;
+    margin-right: 15%;
+    margin-top: 12%;
+    margin-bottom: 16%;
+    flow-children: down;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 16px;
 }

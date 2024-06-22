@@ -28,7 +28,7 @@
 - The Smeeeech: Send a message to everyone that says I'm a visage main. Get on my level bro
 - Post game stats might be nice
 - Create a hero banning phase (don't ignore)
-- Organise abilities into ultimates/passives
+// - Organise abilities into ultimates/passives (NEXT ITEM)
 - Fix ability carry over when dont pick
 
 

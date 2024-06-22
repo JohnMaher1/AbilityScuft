@@ -10,7 +10,7 @@ export function SetupGameRules(gameMode: GameMode) {
 
     // Setup ability draft gamemode type
     Convars.SetBool("sv_cheats", true);
-    SendToServerConsole("dota_ability_draft_force_gamemode_flag 0");
+    SendToServerConsole("dota_ability_draft_force_gamemode_flag 1");
 
     GameRules.SetCustomGameAllowBattleMusic(false);
     GameRules.SetCustomGameAllowHeroPickMusic(false);

@@ -22,7 +22,6 @@ const hero_ability_kv_GetHeroFromScepterAbility = (
         const heroKvFile = hero_ability_kv_GetHeroKV(hero);
         Object.keys(heroKvFile).forEach((key) => {
             if (key === abilityNameProp) {
-                print("key: ", key);
                 value = hero;
                 return;
             }

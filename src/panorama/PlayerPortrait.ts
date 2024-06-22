@@ -72,41 +72,44 @@ class PlayerPortrait {
         );
     }
 
-    setAbilityImage(abilityPosition: number, abilityName: string) {
+    setAbilityImage(abilityPosition: number, ability: AbilityInformation) {
         switch (abilityPosition) {
             case 1:
-                this.ability1.imagePanel.SetImage(
-                    this.getImagePath(abilityName)
-                );
-                this.ability1.abilityName = abilityName;
+                this.ability1.imagePanel.SetImage(this.getImagePath(ability));
+                this.ability1.abilityName = ability.abilityName;
                 break;
             case 2:
-                this.ability2.imagePanel.SetImage(
-                    this.getImagePath(abilityName)
-                );
-                this.ability2.abilityName = abilityName;
+                this.ability2.imagePanel.SetImage(this.getImagePath(ability));
+                this.ability2.abilityName = ability.abilityName;
                 break;
             case 3:
-                this.ability3.imagePanel.SetImage(
-                    this.getImagePath(abilityName)
-                );
-                this.ability3.abilityName = abilityName;
+                this.ability3.imagePanel.SetImage(this.getImagePath(ability));
+                this.ability3.abilityName = ability.abilityName;
                 break;
             case 4:
-                this.ability4.imagePanel.SetImage(
-                    this.getImagePath(abilityName)
-                );
-                this.ability4.abilityName = abilityName;
+                this.ability4.imagePanel.SetImage(this.getImagePath(ability));
+                this.ability4.abilityName = ability.abilityName;
                 break;
             case 5:
-                this.ability5.imagePanel.SetImage(
-                    this.getImagePath(abilityName)
-                );
-                this.ability5.abilityName = abilityName;
+                this.ability5.imagePanel.SetImage(this.getImagePath(ability));
+                this.ability5.abilityName = ability.abilityName;
                 break;
         }
     }
-    getImagePath(abilityName: string) {
-        return "s2r://panorama/images/spellicons/" + abilityName + "_png.vtex";
+    getImagePath(ability: AbilityInformation) {
+        if (
+            ability.abilityType !== ABILITY_TYPES.ABILITY_TYPE_BASIC &&
+            ability.abilityType !== ABILITY_TYPES.ABILITY_TYPE_HIDDEN &&
+            ability.abilityType !== ABILITY_TYPES.ABILITY_TYPE_ULTIMATE
+        ) {
+            return (
+                "s2r://panorama/images/heroes/" + ability.heroName + "_png.vtex"
+            );
+        }
+        return (
+            "s2r://panorama/images/spellicons/" +
+            ability.abilityName +
+            "_png.vtex"
+        );
     }
 }

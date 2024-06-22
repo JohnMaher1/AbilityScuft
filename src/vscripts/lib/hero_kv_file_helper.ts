@@ -1,97 +1,214 @@
-import {
-    HasHiddenAbility,
-    HasInateAbility,
-    HasInateTag,
-    IsAttributeTypeAbility,
-    IsGrantedByShardOrScepter,
-    IsNotLearnableAbility,
-    abilityNamesToIgnore,
-    isSpecialAbility,
-} from "./util";
-
 export interface DebugParameters {
-    abilityNames: string[];
+    abilities: AbilityInformation[];
 }
+
+const abilitiesTypes: AbilityTypes[] = [
+    AbilityTypes.ULTIMATE,
+    AbilityTypes.HIDDEN, // Passive
+    AbilityTypes.BASIC,
+];
 
 export const hero_kv_getHeroKVFile = (heroName: string) => {
     const file = LoadKeyValues("scripts/npc/heroes/" + heroName + ".txt");
     return file;
 };
 
+const nonDotaHeros: string[] = [
+    "npc_dota_hero_base",
+    "Version",
+    "npc_dota_hero_target_dummy",
+];
+
+const IsDotaHero = (heroName: string): boolean => {
+    return !nonDotaHeros.includes(heroName);
+};
+
+const IsAbiltiyDraftAbilities = (value: string): boolean => {
+    return value === "AbilityDraftAbilities";
+};
+
+export const IsUltimate = (abilityName: string): boolean => {
+    const abilityKV = GetAbilityKeyValuesByName(abilityName);
+    let isUltimate = false;
+    Object.entries(abilityKV).forEach(([key, value]) => {
+        if (key === "AbilityType") {
+            const valueString = value as string;
+            if (valueString.includes("DOTA_ABILITY_TYPE_ULTIMATE")) {
+                isUltimate = true;
+            }
+            return;
+        }
+    });
+    return isUltimate;
+};
+
+export const IsPassive = (abilityName: string): boolean => {
+    const abilityKV = GetAbilityKeyValuesByName(abilityName);
+    let isPassive = false;
+    Object.entries(abilityKV).forEach(([key, value]) => {
+        if (key === "AbilityBehavior") {
+            const valueString = value as string;
+            if (valueString.includes("DOTA_ABILITY_BEHAVIOR_PASSIVE")) {
+                isPassive = true;
+            }
+            return;
+        }
+    });
+    return isPassive;
+};
+
+export const isBasic = (abilityName: string): boolean => {
+    const abilityKV = GetAbilityKeyValuesByName(abilityName);
+    let isBasic = false;
+    Object.entries(abilityKV).forEach(([key, value]) => {
+        if (key === "AbilityType") {
+            const valueString = value as string;
+            if (valueString.includes("DOTA_ABILITY_TYPE_BASIC")) {
+                isBasic = true;
+            }
+            return;
+        }
+    });
+    return isBasic;
+};
+
+export const getAbilityDraftKV = (
+    heroList: string[] | undefined
+): { [key: string]: object } => {
+    const npcHerosFileKV = LoadKeyValues("scripts/npc/npc_heroes.txt");
+    const heroEntries: { [hero: string]: object } = {};
+    Object.entries(npcHerosFileKV).forEach(([heroName, heroValues]) => {
+        const containsHero: boolean = heroList?.includes(heroName)
+            ? true
+            : false;
+
+        if (!IsDotaHero(heroName) || containsHero) {
+            return;
+        }
+        heroEntries[heroName] = heroValues;
+    });
+
+    const abilityEntries: { [key: string]: object } = {};
+    Object.entries(heroEntries).forEach(([heroName, heroValues]) => {
+        Object.entries(heroValues).forEach(
+            ([heroAttribute, heroAttributeValue]) => {
+                if (IsAbiltiyDraftAbilities(heroAttribute)) {
+                    abilityEntries[heroName] = heroAttributeValue;
+                }
+            }
+        );
+    });
+    return abilityEntries;
+};
+
+export const getAbilityDraftAbilities = (
+    heroList?: string[]
+): AbilityInformation[] => {
+    const result: AbilityInformation[] = [];
+    const abilityEntries = getAbilityDraftKV(heroList);
+    Object.entries(abilityEntries).forEach(
+        ([dotaHeroAbilityDraftName, abilityDraftAbilities]) => {
+            Object.values(abilityDraftAbilities).forEach(
+                (abilityName, index) => {
+                    processAbilityNames(
+                        abilityName as string,
+                        index,
+                        dotaHeroAbilityDraftName,
+                        result
+                    );
+                }
+            );
+        }
+    );
+    return result;
+};
+
+function processAbilityName(
+    abilityName: string,
+    index: number,
+    heroName: string,
+    result: AbilityInformation[]
+) {
+    if (
+        abilitiesTypes.includes(AbilityTypes.ULTIMATE) &&
+        IsUltimate(abilityName)
+    ) {
+        result.push({
+            abilityName,
+            abilityNumber: index,
+            heroName,
+            abilityType: AbilityTypes.ULTIMATE,
+        });
+        return;
+    }
+
+    if (
+        abilitiesTypes.includes(AbilityTypes.HIDDEN) &&
+        IsPassive(abilityName)
+    ) {
+        result.push({
+            abilityName,
+            abilityNumber: index,
+            heroName,
+            abilityType: AbilityTypes.HIDDEN,
+        });
+        return;
+    }
+
+    if (abilitiesTypes.includes(AbilityTypes.BASIC) && isBasic(abilityName)) {
+        result.push({
+            abilityName,
+            abilityNumber: index,
+            heroName,
+            abilityType: AbilityTypes.BASIC,
+        });
+        return;
+    }
+}
+
+function processAbilityNames(
+    abilityNameString: string,
+    index: number,
+    heroName: string,
+    result: any[]
+) {
+    if (abilityNameString.includes(",")) {
+        const abilityNames = abilityNameString.split(",");
+        abilityNames.forEach((name) =>
+            processAbilityName(name.trim(), index, heroName, result)
+        );
+    } else {
+        processAbilityName(abilityNameString, index, heroName, result);
+    }
+}
+
 export const hero_kv_readAllHeroFiles = (
     heroList: string[]
 ): DebugParameters => {
+    // Row length is 20
+
+    // 1 row ults, 2 row passives, 4 row basics, 2 row innates, 1 row neutrals (TODO)
+
+    const abilityDraftAbilities = getAbilityDraftAbilities(heroList);
+    const rowLength = 20;
+    const abilityTotalCount = rowLength * 8;
+    //const abilityTotalCount = 150;
     const abilities: AbilityInformation[] = [];
 
-    const abilityTotalCount = 18 * 7;
-    const heroListLength = heroList.length;
-    const abilitiesAdded: string[] = [];
-
-    for (let i = 0; i < heroListLength; i++) {
-        const random = Math.floor(Math.random() * heroListLength);
-        const key = heroList[random];
-        const file = LoadKeyValues("scripts/npc/heroes/" + key + ".txt");
-        print("Reading hero file: " + key + ".txt");
-        Object.entries(file).forEach(([abilityName, abilityValues]) => {
-            if (
-                typeof abilityValues !== "number" &&
-                !isSpecialAbility(abilityName)
-            ) {
-                let canAddAbility: boolean = true;
-
-                abilityNamesToIgnore.forEach((abilityNameToIgnore) => {
-                    if (abilityName.includes(abilityNameToIgnore)) {
-                        canAddAbility = false;
-                    }
-                });
-
-                if (abilityName.includes("attribute_bonus")) {
-                    canAddAbility = false;
-                }
-
-                Object.entries(abilityValues as any).forEach(
-                    ([abilityKey, abilityValue]) => {
-                        let abilityValueString = abilityValue as string;
-                        if (
-                            abilityKey === "AbilityBehavior" &&
-                            (HasHiddenAbility(abilityValueString) ||
-                                HasInateAbility(abilityValueString) ||
-                                IsNotLearnableAbility(abilityValueString) ||
-                                IsAttributeTypeAbility(abilityValueString))
-                        ) {
-                            canAddAbility = false;
-                        }
-
-                        if (IsGrantedByShardOrScepter(abilityKey as string)) {
-                            canAddAbility = false;
-                        }
-
-                        if (abilityKey === "MaxLevel") {
-                            if (abilityValueString === "1") {
-                                canAddAbility = false;
-                            }
-                        }
-                    }
-                );
-
-                // Check for innates
-                const keys = Object.keys(abilityValues);
-                if (HasInateTag(keys)) {
-                    canAddAbility = false;
-                }
-
-                if (canAddAbility && !abilitiesAdded.includes(abilityName)) {
-                    abilities.push({
-                        abilityName: abilityName,
-                        abilityNumber: 1,
-                        heroName: key,
-                    });
-                    abilitiesAdded.push(abilityName);
-                }
-            }
-        });
-    }
-
+    const ultimates = abilityDraftAbilities
+        .filter((x) => x.abilityType === AbilityTypes.ULTIMATE)
+        .slice(0, rowLength - 1);
+    abilities.push(...ultimates);
+    const passives = abilityDraftAbilities
+        .filter((x) => x.abilityType === AbilityTypes.HIDDEN)
+        .slice(0, rowLength * 2 - 1);
+    abilities.push(...passives);
+    const basics = abilityDraftAbilities
+        .filter((x) => x.abilityType === AbilityTypes.BASIC)
+        .slice(0, rowLength * 4 - 1);
+    abilities.push(...basics);
+    const innates = GetInnateAbilities().slice(0, rowLength * 2 - 1);
+    abilities.push(...innates);
     // Shuffle items in the abilities array
     let shuffledAbilities: AbilityInformation[] = shuffle(abilities);
 
@@ -112,9 +229,10 @@ export const hero_kv_readAllHeroFiles = (
     );
     CustomGameEventManager.Send_ServerToAllClients(
         "on_abilities_load",
-        abilityNames
+        shuffledAbilities
     );
-    return { abilityNames: abilityNames };
+
+    return { abilities: shuffledAbilities };
 };
 
 const shuffle = (array: AbilityInformation[]): AbilityInformation[] => {
@@ -137,4 +255,43 @@ const shuffle = (array: AbilityInformation[]): AbilityInformation[] => {
     const uniqueArray = Array.from(new Set(array));
 
     return uniqueArray;
+};
+
+export const GetInnateAbilities = (): AbilityInformation[] => {
+    const innateAbilities: AbilityInformation[] = [];
+    const heroList = LoadKeyValues("scripts/npc/hero_list.txt");
+    let value: string | undefined = undefined;
+    Object.keys(heroList).forEach((hero) => {
+        const heroKvFile = LoadKeyValues("scripts/npc/heroes/" + hero + ".txt");
+        Object.entries(heroKvFile).forEach(([key, value]) => {
+            if (key === "Version") return;
+            Object.entries(value as any).forEach(
+                ([abilityKey, abilityValue]) => {
+                    if (abilityKey === "Innate") {
+                        innateAbilities.push({
+                            abilityName: key,
+                            abilityNumber: 0,
+                            abilityType: AbilityTypes.INNATE,
+                            heroName: hero,
+                        });
+                    }
+                }
+            );
+        });
+    });
+    const innatesHerosCustom = LoadKeyValues(
+        "scripts/npc/npc_innate_heroes_custom.txt"
+    );
+    Object.entries(innatesHerosCustom).forEach(([hero, ability]) => {
+        if (innateAbilities.some((x) => x.heroName === hero)) {
+            return;
+        }
+        innateAbilities.push({
+            abilityName: ability as string,
+            abilityNumber: 0,
+            abilityType: AbilityTypes.INNATE,
+            heroName: hero,
+        });
+    });
+    return innateAbilities;
 };

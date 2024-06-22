@@ -25,7 +25,7 @@ export function reloadAndStartGame(): void {
         SettingsState.getInstance().forceRandomAbilities
     );
     GameRulesState.getInstance().abilitySelection = new AbilitySelection(
-        debugParameters.abilityNames,
+        debugParameters.abilities,
         GameRulesState.getInstance().onAbilityPickPhaseCompleted,
         SettingsState.getInstance().forceRandomAbilities
     );

@@ -5,19 +5,26 @@
   <scripts>
     <include src="file://{resources}/scripts/custom_game/AbilityIcon.js" />
     <include src="file://{resources}/scripts/custom_game/SelectScreen.js" />
+    <include src="file://{resources}/scripts/custom_game/AbilityIconsContainer.js" />
   </scripts>
 
   <snippets>
     <snippet name="AbilityIcon">
-      <Panel class="AbilityIcon" hittest="false">
+      <Panel id="AbilityIcon" class="AbilityIcon" hittest="false">
         <Image id="AbilityImage" hittest="false" />
         <Label id="AbilityTooltip" />
+      </Panel>
+    </snippet>
+    <snippet name="AbilityIconsContainer">
+      <Panel class="AbilityIconsContainer" hittest="false">
+        <Label id="AbilityIconsLabel" class="AbilityIconsLabel" text="Ultimates" />
+        <Panel id="AbilityIcons" class="AbilityIcons" />
       </Panel>
     </snippet>
   </snippets>
 
   <Panel hittest="false" style="width: 100%; height: 100%;">
-    <Panel id="AbilityIcons" />
+    <Panel id="AbilityIconsRootContainer" />
   </Panel>
 
 </root>
