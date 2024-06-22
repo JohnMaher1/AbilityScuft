@@ -1,0 +1,4 @@
+"AddonInfo"
+{
+	"EnablePickRules"				"1"
+}

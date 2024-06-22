@@ -37,7 +37,7 @@ export class GameMode {
         SetupGameRules(this);
     }
 
-    // Called on script_reload
+    // Called on script_reload. For testing purposes.
     public Reload() {
         print("Script reloaded!");
     }

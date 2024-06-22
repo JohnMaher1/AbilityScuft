@@ -10,7 +10,7 @@ export function SetupGameRules(gameMode: GameMode) {
 
     // Setup ability draft gamemode type
     Convars.SetBool("sv_cheats", true);
-    SendToServerConsole("dota_ability_draft_force_gamemode_flag 1");
+    SendToServerConsole("dota_ability_draft_force_gamemode_flag 0");
 
     GameRules.SetCustomGameAllowBattleMusic(false);
     GameRules.SetCustomGameAllowHeroPickMusic(false);
@@ -53,6 +53,7 @@ export function SetupGameRules(gameMode: GameMode) {
     gameModeEntity.SetUseTurboCouriers(true);
     gameModeEntity.SetRespawnTimeScale(0.2);
     gameModeEntity.SetAllowNeutralItemDrops(true);
+    gameModeEntity.SetDraftingBanningTimeOverride(15);
 }
 
 function modifyExperienceFilter(event: ModifyExperienceFilterEvent): boolean {

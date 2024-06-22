@@ -71,7 +71,6 @@ export const hero_ability_kv_HasScepterUpgrade = (abilityName: string) => {
     let hasScepterUpgrade: boolean = false;
     let isGrantedByScepter: boolean = false;
     Object.entries(heroKvFile).forEach(([key, value]) => {
-        //print("key: ", key, "value: ", value);
         if (key === HasScepterUpgrade && value === "1") {
             hasScepterUpgrade = true;
         }
@@ -99,63 +98,4 @@ export const hero_ability_kv_HandleScepterShardUpgrade = (
     }
 
     hero.AddAbility(abilityName);
-
-    /*
-    const hasAbilityWithScepterUpgrade =
-        hero_ability_kv_HasScepterUpgrade(abilityName);
-    const isAbilityWithScepterUpgrade =
-        hero_ability_kv_IsScepterUpgrade(abilityName);
-
-    if (hasAbilityWithScepterUpgrade) {
-        // Get hero name from ability name
-        const hero = PlayerResource.GetPlayer(player)!.GetAssignedHero();
-        const heroName = hero_ability_kv_GetHeroFromScepterAbility(
-            "juggernaut_omni_slash"
-        );
-        if (heroName) {
-            const heroKVFile = hero_ability_kv_GetHeroKV(heroName);
-            print(
-                "heroKVFile: ",
-                heroKVFile,
-                "Hero name: ",
-                hero.GetUnitName(),
-                "Hero ability name: ",
-                heroName
-            );
-            let scepterAbility: string | undefined = undefined;
-            if (heroKVFile !== undefined) {
-                print("heroKVFile: ", heroKVFile);
-                scepterAbility = hero_ability_kv_GetScepterAbility(heroKVFile);
-                if (scepterAbility) {
-                    print(
-                        "Adding scepter ability to hero: ",
-                        hero.GetUnitName(),
-                        abilityName,
-                        scepterAbility
-                    );
-                    hero.AddAbility(scepterAbility);
-                    // Loop through hero abilities and print the names
-                    for (let i = 0; i < hero.GetAbilityCount(); i++) {
-                        const ability = hero.GetAbilityByIndex(i);
-                        if (ability) {
-                            print(
-                                "Ability for the: ",
-                                ability.GetAbilityName()
-                            );
-                        }
-                    }
-                }
-            }
-        }
-        
-    }
-    */
 };
-
-/*
-
-Look into this tomorrow
-
-"HasScepterUpgrade"			"1"
-		"AbilityDraftUltScepterAbility"		"juggernaut_swift_slash"
-    */

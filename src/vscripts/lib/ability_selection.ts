@@ -444,7 +444,7 @@ export class AbilitySelection {
                 {} as never
             );
 
-            Timers.CreateTimer(IsInToolsMode() ? 5 : 10, () => {
+            Timers.CreateTimer(IsInToolsMode() ? 1 : 10, () => {
                 CustomGameEventManager.Send_ServerToAllClients(
                     "on_ability_pick_phase_completed",
                     {} as never

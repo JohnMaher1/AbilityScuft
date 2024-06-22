@@ -20,16 +20,17 @@
 //- If losing team is down x gold, give them an OP item or maybe gold.
 //- Timer on ability selection force
 - Items todo
-- Skill tomb to relearn an ability
-- Global hex item (including teammates)
-- Hughmungus Chungus: Increase model scale for x seconds and give 50 strength
-- Dead mans switch: if the target hero is below 20%, instantly kill them AND yourself. Single use with replenishment. Make it avaibale after 15mins
-- Stat books available after 15mins. 
-- The Smeeeech: Send a message to everyone that says I'm a visage main. Get on my level bro
-- Post game stats might be nice
-- Create a hero banning phase (don't ignore)
+-1 Skill tomb to relearn an ability
+-2 Global hex item (including teammates)
+-3 Hughmungus Chungus: Increase model scale for x seconds and give 50 strength
+-4 Dead mans switch: if the target hero is below 20%, instantly kill them AND yourself. Single use with replenishment. Make it avaibale after 15mins
+-5 Stat books available after 15mins. 
+-6 The Smeeeech: Send a message to everyone that says I'm a visage main. Get on my level bro
+-7 Post game stats might be nice
+// -8 Create a hero banning phase (don't ignore)
 // - Organise abilities into ultimates/passives (NEXT ITEM)
-- Fix ability carry over when dont pick
+// - Fix ability carry over when dont pick
+// Make swap abilities menu items smaller
 
 
 

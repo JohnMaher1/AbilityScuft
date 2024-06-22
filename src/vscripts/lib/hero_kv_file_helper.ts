@@ -8,6 +8,11 @@ const abilitiesTypes: AbilityTypes[] = [
     AbilityTypes.BASIC,
 ];
 
+interface FacetAbility {
+    facetName: string;
+    facetAbilities: string[];
+}
+
 export const hero_kv_getHeroKVFile = (heroName: string) => {
     const file = LoadKeyValues("scripts/npc/heroes/" + heroName + ".txt");
     return file;
@@ -72,9 +77,9 @@ export const isBasic = (abilityName: string): boolean => {
     return isBasic;
 };
 
-export const getAbilityDraftKV = (
+export const getDotaHeroes = (
     heroList: string[] | undefined
-): { [key: string]: object } => {
+): { [hero: string]: object } => {
     const npcHerosFileKV = LoadKeyValues("scripts/npc/npc_heroes.txt");
     const heroEntries: { [hero: string]: object } = {};
     Object.entries(npcHerosFileKV).forEach(([heroName, heroValues]) => {
@@ -87,6 +92,13 @@ export const getAbilityDraftKV = (
         }
         heroEntries[heroName] = heroValues;
     });
+    return heroEntries;
+};
+
+export const getAbilityDraftKV = (
+    heroList: string[] | undefined
+): { [key: string]: object } => {
+    const heroEntries = getDotaHeroes(heroList);
 
     const abilityEntries: { [key: string]: object } = {};
     Object.entries(heroEntries).forEach(([heroName, heroValues]) => {
@@ -99,6 +111,73 @@ export const getAbilityDraftKV = (
         );
     });
     return abilityEntries;
+};
+
+const handleFacetAdd = (
+    facetAbilities: FacetAbility[],
+    facetName: string,
+    facetAbility?: string
+) => {
+    const facet = facetAbilities.find((x) => x.facetName === facetName);
+    if (facet === undefined) {
+        if (facetAbility) {
+            facetAbilities.push({ facetName, facetAbilities: [facetAbility] });
+        } else {
+            facetAbilities.push({ facetName, facetAbilities: [] });
+        }
+    }
+    if (facet !== undefined) {
+        if (facetAbility !== undefined) {
+            facet.facetAbilities?.push(facetAbility);
+        }
+    }
+};
+
+export const getFacetInformation = (
+    heroList: string[] | undefined
+): FacetAbility[] => {
+    const facets = getFacets(undefined);
+    const facetAbilities: FacetAbility[] = [];
+    Object.entries(facets).forEach(([facetName, facetValues]) => {
+        handleFacetAdd(facetAbilities, facetName);
+        Object.entries(facetValues).forEach(([facetKey, facetValue]) => {
+            if (facetKey === "Abilities") {
+                Object.values(facetValue as any).forEach((abilityNumber) => {
+                    Object.entries(abilityNumber as object).forEach(
+                        ([abilityName, abilityValue]) => {
+                            handleFacetAdd(
+                                facetAbilities,
+                                facetName,
+                                abilityValue as string
+                            );
+                        }
+                    );
+                });
+            }
+        });
+    });
+    return facetAbilities;
+};
+
+export const getFacets = (
+    heroList: string[] | undefined
+): { [facet: string]: object } => {
+    const facets: { [facet: string]: object } = {};
+    const heroEntries = getDotaHeroes(heroList);
+    Object.entries(heroEntries).forEach(([heroName, heroValues]) => {
+        Object.entries(heroValues).forEach(
+            ([heroAttribute, heroAttributeValue]) => {
+                if (heroAttribute === "Facets") {
+                    Object.entries(heroAttributeValue).forEach(
+                        ([facetName, facetValue]) => {
+                            facets[facetName as string] = facetValue as object;
+                        }
+                    );
+                }
+            }
+        );
+    });
+    return facets;
 };
 
 export const getAbilityDraftAbilities = (
