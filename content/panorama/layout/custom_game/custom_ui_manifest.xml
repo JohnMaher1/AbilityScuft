@@ -8,6 +8,8 @@
             layoutfile="file://{resources}/layout/custom_game/ability_position_hud.xml" />
         <CustomUIElement type="GameSetup"
             layoutfile="file://{resources}/layout/custom_game/team_select.xml" />
+        <CustomUIElement type="Hud"
+            layoutfile="file://{resources}/layout/custom_game/ability_reroll.xml" />
         <!-- <Panel>
 
         </Panel> -->

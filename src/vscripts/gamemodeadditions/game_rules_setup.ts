@@ -53,7 +53,7 @@ export function SetupGameRules(gameMode: GameMode) {
     gameModeEntity.SetUseTurboCouriers(true);
     gameModeEntity.SetRespawnTimeScale(0.2);
     gameModeEntity.SetAllowNeutralItemDrops(true);
-    gameModeEntity.SetDraftingBanningTimeOverride(15);
+    gameModeEntity.SetDraftingBanningTimeOverride(IsInToolsMode() ? 1 : 15);
 }
 
 function modifyExperienceFilter(event: ModifyExperienceFilterEvent): boolean {

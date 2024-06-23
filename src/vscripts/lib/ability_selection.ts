@@ -63,7 +63,7 @@ export class AbilitySelection {
             this.currentTurnTime = 10;
             this.hasCreatedEndTurnTimer = true;
             Timers.CreateTimer(IsInToolsMode() ? 1 : 10, () => {
-                GameRulesState.getInstance().canRunAbilitySelectionOnThink =
+                GameRulesState.getInstance()._canRunAbilitySelectionOnThink =
                     false;
             });
         }
@@ -443,6 +443,11 @@ export class AbilitySelection {
                 "on_all_players_selected_innate",
                 {} as never
             );
+
+            GameRulesState.getInstance()._unselectedAbilities =
+                this.abilities.filter(
+                    (x) => !this.abilitiesPicked.includes(x.abilityName)
+                );
 
             Timers.CreateTimer(IsInToolsMode() ? 1 : 10, () => {
                 CustomGameEventManager.Send_ServerToAllClients(

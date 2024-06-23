@@ -18,18 +18,18 @@ export function addModifierToHeroToPreventMovement() {
 
 export function reloadAndStartGame(): void {
     const debugParameters = hero_kv_readAllHeroFiles(
-        GameRulesState.getInstance().heroList
+        GameRulesState.getInstance()._heroList
     );
     print(
         "Starting the game with force abilities set to: ",
         SettingsState.getInstance().forceRandomAbilities
     );
-    GameRulesState.getInstance().abilitySelection = new AbilitySelection(
+    GameRulesState.getInstance()._abilitySelection = new AbilitySelection(
         debugParameters.abilities,
         GameRulesState.getInstance().onAbilityPickPhaseCompleted,
         SettingsState.getInstance().forceRandomAbilities
     );
-    GameRulesState.getInstance().abilitySelection!.init();
+    GameRulesState.getInstance()._abilitySelection!.init();
 }
 
 export function handleBalancerItem(): void {
@@ -42,7 +42,7 @@ export function handleBalancerItem(): void {
     let badGuysNetWorth = 0;
     const amount = 5000;
 
-    if (GameRulesState.getInstance().balancerCanGetAdded) {
+    if (GameRulesState.getInstance()._balancerCanGetAdded) {
         const playerCount = PlayerResource.GetPlayerCount();
         let hasAddedBalancer = false;
         for (let i = 0; i < playerCount; i++) {
@@ -70,7 +70,7 @@ export function handleBalancerItem(): void {
                 }
             }
             hasAddedBalancer = true;
-            GameRulesState.getInstance().balancerCanGetAdded = false;
+            GameRulesState.getInstance()._balancerCanGetAdded = false;
         }
         if (badGuysNetWorth - goodGuysNetWorth > amount) {
             for (let i = 0; i < playerCount; i++) {
@@ -84,11 +84,11 @@ export function handleBalancerItem(): void {
                 }
             }
             hasAddedBalancer = true;
-            GameRulesState.getInstance().balancerCanGetAdded = false;
+            GameRulesState.getInstance()._balancerCanGetAdded = false;
         }
         if (hasAddedBalancer) {
             Timers.CreateTimer(300, () => {
-                GameRulesState.getInstance().balancerCanGetAdded = true;
+                GameRulesState.getInstance()._balancerCanGetAdded = true;
             });
         }
     }

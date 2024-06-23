@@ -24,18 +24,25 @@ interface CustomGameEventDeclarations {
     on_ability_pick_phase_completed: never;
     on_start_button_clicked: never;
     on_setting_change: SettingsChangeEvent;
-    on_create_ability_swap_ui: TestEvent[];
+    on_create_ability_swap_ui: AbilitySwapCreateEvent[];
     on_keybind_submit: KeybindSubmitEvent;
     on_ability_swap: AbilitySwapEvent;
+    on_ability_replace: AbilitySwapEvent;
     on_player_reconnect: PlayerReconnectedEvent;
     on_ability_time_allowed_expired: PlayerID;
     on_all_players_selected_abilties: never;
     on_all_players_selected_innate: never;
     on_ability_selection_timer_change: SelectionTimerChangedEvent;
+    on_ability_reroll: AbilityRerollEvent;
 }
 
 type SettingsName = "forceRandomAbilities" | "n/a";
 
+interface AbilityRerollEvent {
+    abilities: AbilityInformation[];
+    existingAbilities: string[];
+    playerID: PlayerID;
+}
 interface SelectionTimerChangedEvent {
     currentTimeRemaining: number;
 }
@@ -62,7 +69,7 @@ interface KeybindSubmitEvent {
     abilityName: string;
 }
 
-interface TestEvent {
+interface AbilitySwapCreateEvent {
     abilities: string[];
     playerID: PlayerID;
 }

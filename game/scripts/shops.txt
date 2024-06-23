@@ -79,6 +79,7 @@
 		"item"		"item_ring_of_health"
 		"item"		"item_void_stone"
     "item"    "item_blues_balls"
+		"item"		"item_ability_reroll_scroll"
 	}	
 	
 	// Level 1 - Green Recipes

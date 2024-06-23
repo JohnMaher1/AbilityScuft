@@ -18,7 +18,7 @@ function GetHeroList() {
             randomHeroes.push(randomHero);
         }
     }
-    GameRulesState.getInstance().heroList = randomHeroes;
+    GameRulesState.getInstance()._heroList = randomHeroes;
     return randomHeroes;
 }
 

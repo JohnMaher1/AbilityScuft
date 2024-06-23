@@ -73,18 +73,30 @@ export function onThink(entity: CBaseEntity): void {
     const gameRulesState = GameRulesState.getInstance();
     const settingsState = SettingsState.getInstance();
     handleBalancerItem();
-    if (gameRulesState.canRunAbilitySelectionOnThink === true) {
-        gameRulesState.abilitySelection?.onThink();
+    if (gameRulesState._canRunAbilitySelectionOnThink === true) {
+        gameRulesState._abilitySelection?.onThink();
     }
     if (
         settingsState.forceRandomAbilities &&
-        !gameRulesState.abilityPickPhaseEnded
+        !gameRulesState._abilityPickPhaseEnded
     ) {
-        gameRulesState.abilitySelection?.mockPick();
+        gameRulesState._abilitySelection?.mockPick();
     }
 }
 
 export function handleAbilitySwapEvent(event: AbilitySwapEvent): void {
     const hero = PlayerResource.GetSelectedHeroEntity(event.playerID);
     hero?.SwapAbilities(event.abilityName1, event.abilityName2, true, true);
+}
+
+export function handleAbilityReplaceEvent(event: AbilitySwapEvent): void {
+    const hero = PlayerResource.GetSelectedHeroEntity(event.playerID);
+    const abilityToRemove = event.abilityName1;
+    const abilityToAdd = event.abilityName2;
+    hero?.RemoveAbility(abilityToRemove);
+    hero?.AddAbility(abilityToAdd);
+    GameRulesState.getInstance().createPlayerAbilitySwapMenu(
+        event.playerID,
+        true
+    );
 }

@@ -107,13 +107,15 @@ class AbilityPositionHud {
                     playerID: PlayerID;
                 };
             }) => {
+                this.abilityPositionChildren = [];
+                const container = this.panel.FindChild(
+                    "AbilityReorderContainer"
+                )! as Panel;
+                container.RemoveAndDeleteChildren();
                 const swapAbilitiesButton = this.panel.FindChild(
                     "AbilitySwapHideButton"
                 ) as ToggleButton;
                 swapAbilitiesButton.style.height = "32px";
-                const container = this.panel.FindChild(
-                    "AbilityReorderContainer"
-                )! as Panel;
                 const localPlayerID = Players.GetLocalPlayer();
                 Object.entries(event).forEach(([key, value]) => {
                     const playerID = value.playerID;

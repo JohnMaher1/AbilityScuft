@@ -14,5 +14,7 @@
         "DOTA_Tooltip_modifier_the_balancer_description"    "Stop winning so hard loser, get balanced you absolute nerd. You are hexed and broken for 20 seconds."
         "DOTA_Tooltip_Ability_item_the_balancer"    "The Balancer"
         "DOTA_Tooltip_Ability_item_the_balancer_description"    "<h1>Active: Balance</h1> Looks like you're losing, thats rough buddy, here's some help. This item hexes and breaks the target for 20 seconds. One time use."
+        "DOTA_Tooltip_Ability_item_ability_reroll_scroll"    "Ability Reroll Scroll"
+        "DOTA_Tooltip_Ability_item_ability_reroll_scroll_description"    "<h1>Consume: Reroll Ability</h1>Consume to swap one of your current abilities with a random ability from the pool."
     }
 }

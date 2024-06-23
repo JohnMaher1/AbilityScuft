@@ -1,5 +1,6 @@
 import { modifier_panic } from "../modifiers/modifier_panic";
 import {
+    handleAbilityReplaceEvent,
     handleAbilitySwapEvent,
     handleDotaPlayerUsedAbility,
     handlePlayerReconnect,
@@ -23,7 +24,6 @@ export const ListenToGameEvents = () => {
         },
         undefined
     );
-    // Could see the players and background, no ability images are shwon
     ListenToGameEvent(
         "dota_player_reconnected",
         (event) => {
@@ -68,5 +68,9 @@ export const ListenToCustomEvents = () => {
 
     CustomGameEventManager.RegisterListener("on_ability_swap", (_, data) => {
         handleAbilitySwapEvent(data);
+    });
+
+    CustomGameEventManager.RegisterListener("on_ability_replace", (_, data) => {
+        handleAbilityReplaceEvent(data);
     });
 };

@@ -1,0 +1,29 @@
+<root>
+  <styles>
+    <include src="file://{resources}/styles/custom_game/ability_reroll_hud.css" />
+  </styles>
+  <scripts>
+    <include src="file://{resources}/scripts/custom_game/AbilityRerollChild.js" />
+    <include src="file://{resources}/scripts/custom_game/AbilityRerollHud.js" />
+  </scripts>
+
+  <snippets>
+    <snippet name="AbilityRerollChild">
+      <Panel class="AbilityRerollChild">
+        <Image id="AbilityImage" />
+        <Label id="AbilityTooltip" />
+      </Panel>
+    </snippet>
+  </snippets>
+
+  <Panel hittest="false" style="width: 100%; height: 100%;">
+    <Panel id="AbilityRerollContainer">
+      <Label id="AbilityToSwap" text="Choose Ability To Swap" />
+      <Panel class="DividierLine" />
+      <Panel id="CurrentPlayerAbilities" />
+      <Label id="AbilityToSwapTo" text="Choose Ability To Swap To" />
+      <Panel class="DividierLine" />
+      <Panel id="NewAbilities" />
+    </Panel>
+  </Panel>
+</root>

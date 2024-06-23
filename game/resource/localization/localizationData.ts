@@ -71,6 +71,17 @@ export function GenerateLocalizationData(): LocalizationData {
         name: "<h1>Active: Balance</h1> Looks like you're losing, thats rough buddy, here's some help. This item hexes and breaks the target for 20 seconds. One time use.",
     });
 
+    StandardTooltips.push({
+        classname: "DOTA_Tooltip_Ability_item_ability_reroll_scroll",
+        name: "Ability Reroll Scroll",
+    });
+
+    StandardTooltips.push({
+        classname:
+            "DOTA_Tooltip_Ability_item_ability_reroll_scroll_description",
+        name: "<h1>Consume: Reroll Ability</h1>Consume to swap one of your current abilities with a random ability from the pool.",
+    });
+
     // Return data to compiler
     return localization_info;
 }
