@@ -27,6 +27,7 @@
 -5 Stat books available after 15mins. 
 -6 The Smeeeech: Send a message to everyone that says I'm a visage main. Get on my level bro
 -7 Post game stats might be nice
+-8 Maybe - rerolled abilities can show in pool for other players (probs fine)
 // -8 Create a hero banning phase (don't ignore)
 // - Organise abilities into ultimates/passives (NEXT ITEM)
 // - Fix ability carry over when dont pick
