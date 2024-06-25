@@ -93,6 +93,9 @@ export function handleAbilityReplaceEvent(event: AbilitySwapEvent): void {
     const hero = PlayerResource.GetSelectedHeroEntity(event.playerID);
     const abilityToRemove = event.abilityName1;
     const abilityToAdd = event.abilityName2;
+    const ability1 = hero!.FindAbilityByName(abilityToRemove);
+    const points = ability1!.GetLevel();
+    hero?.SetAbilityPoints(hero.GetAbilityPoints() + points!);
     hero?.RemoveAbility(abilityToRemove);
     hero?.AddAbility(abilityToAdd);
     GameRulesState.getInstance().createPlayerAbilitySwapMenu(
