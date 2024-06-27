@@ -4,12 +4,25 @@
  */
 
 interface Color {
-    r: number,
-    g: number,
-    b: number
+    r: number;
+    g: number;
+    b: number;
 }
 
 interface UnitData {
-    name: string,
-    level: number
+    name: string;
+    level: number;
+}
+
+interface SetupBooleanValue {
+    value: boolean;
+}
+
+interface SetupOptions {
+    forceRandomAbilities: SetupBooleanValue;
+    allowPassives: SetupBooleanValue;
+}
+
+interface CustomNetTableDeclarations {
+    setup_options: SetupOptions;
 }

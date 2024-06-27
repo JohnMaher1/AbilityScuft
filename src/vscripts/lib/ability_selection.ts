@@ -443,12 +443,10 @@ export class AbilitySelection {
                 "on_all_players_selected_innate",
                 {} as never
             );
-
             GameRulesState.getInstance()._unselectedAbilities =
                 this.abilities.filter(
                     (x) => !this.abilitiesPicked.includes(x.abilityName)
                 );
-
             Timers.CreateTimer(IsInToolsMode() ? 1 : 10, () => {
                 CustomGameEventManager.Send_ServerToAllClients(
                     "on_ability_pick_phase_completed",

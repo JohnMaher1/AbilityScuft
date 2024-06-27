@@ -11,7 +11,11 @@ class SelectScreenOption {
     label: LabelPanel;
     optionName: SettingsChangeEvent["settingName"];
 
-    constructor(parent: Panel, optionType: OptionType) {
+    constructor(
+        parent: Panel,
+        optionType: OptionType,
+        checked: boolean = false
+    ) {
         // Create new panel
         const panel = $.CreatePanel("Panel", parent, "");
         this.panel = panel;
@@ -40,6 +44,13 @@ class SelectScreenOption {
             this.toggle = labelContainer.FindChild(
                 "OptionToggle"
             ) as ToggleButton;
+            if (checked === true) {
+                this.toggle.style.backgroundColor = "green";
+                this.toggle.checked = true;
+            } else {
+                this.toggle.style.backgroundColor = "red";
+                this.toggle.checked = false;
+            }
 
             this.toggle.SetPanelEvent("onactivate", () => {
                 if (!isPlayerAllowedToToggle()) {
@@ -47,13 +58,13 @@ class SelectScreenOption {
                 }
                 GameEvents.SendCustomGameEventToServer("on_setting_change", {
                     settingName: this.optionName,
-                    isActive: this.toggle.checked === true,
+                    isActive: this.toggle.checked,
                 });
                 GameEvents.SendCustomGameEventToAllClients(
                     "on_setting_change",
                     {
                         settingName: this.optionName,
-                        isActive: this.toggle.checked === true,
+                        isActive: this.toggle.checked,
                     }
                 );
             });

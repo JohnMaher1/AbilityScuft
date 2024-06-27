@@ -3,7 +3,10 @@ import {
     ListenToGameEvents,
 } from "./gamemodeadditions/game_events";
 import { SetupGameRules } from "./gamemodeadditions/game_rules_setup";
-import { PrecacheResources } from "./gamemodeadditions/setup_helpers";
+import {
+    CreateCustomNetTables,
+    PrecacheResources,
+} from "./gamemodeadditions/setup_helpers";
 import { reloadable } from "./lib/tstl-utils";
 
 declare global {
@@ -35,6 +38,7 @@ export class GameMode {
         ListenToGameEvents();
         ListenToCustomEvents();
         SetupGameRules(this);
+        CreateCustomNetTables();
     }
 
     // Called on script_reload. For testing purposes.

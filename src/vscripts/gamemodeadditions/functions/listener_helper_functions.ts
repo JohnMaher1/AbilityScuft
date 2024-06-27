@@ -1,5 +1,5 @@
 import { AbilitySelection } from "../../lib/ability_selection";
-import { hero_kv_readAllHeroFiles } from "../../lib/hero_kv_file_helper";
+import { createAbilities } from "../../lib/hero_kv_file_helper";
 import { GameRulesState } from "./game_rules_state";
 import { SettingsState } from "./settings_state";
 
@@ -17,8 +17,9 @@ export function addModifierToHeroToPreventMovement() {
 }
 
 export function reloadAndStartGame(): void {
-    const debugParameters = hero_kv_readAllHeroFiles(
-        GameRulesState.getInstance()._heroList
+    const debugParameters = createAbilities(
+        GameRulesState.getInstance()._heroList,
+        SettingsState.getInstance().allowPassives
     );
     print(
         "Starting the game with force abilities set to: ",
@@ -29,6 +30,9 @@ export function reloadAndStartGame(): void {
         GameRulesState.getInstance().onAbilityPickPhaseCompleted,
         SettingsState.getInstance().forceRandomAbilities
     );
+    CustomNetTables.SetTableValue("setup_options", "allowPassives", {
+        value: SettingsState.getInstance().allowPassives,
+    });
     GameRulesState.getInstance()._abilitySelection!.init();
 }
 

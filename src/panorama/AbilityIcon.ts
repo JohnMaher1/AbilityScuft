@@ -1,4 +1,9 @@
-type ClassSize = "Small" | "Medium" | "Large" | "ExtraLarge";
+type ClassSize =
+    | "Small"
+    | "Medium"
+    | "Large"
+    | "ExtraLarge"
+    | "ExtraLargePlus2";
 
 class AbilityIcon {
     panel: Panel;

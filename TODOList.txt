@@ -20,7 +20,7 @@
 //- If losing team is down x gold, give them an OP item or maybe gold.
 //- Timer on ability selection force
 - Items todo
--1 Skill tomb to relearn an ability
+//-1 Skill tomb to relearn an ability
 -2 Global hex item (including teammates)
 -3 Hughmungus Chungus: Increase model scale for x seconds and give 50 strength
 -4 Dead mans switch: if the target hero is below 20%, instantly kill them AND yourself. Single use with replenishment. Make it avaibale after 15mins

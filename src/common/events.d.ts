@@ -36,7 +36,7 @@ interface CustomGameEventDeclarations {
     on_ability_reroll: AbilityRerollEvent;
 }
 
-type SettingsName = "forceRandomAbilities" | "n/a";
+type SettingsName = "forceRandomAbilities" | "n/a" | "allowPassives";
 
 interface AbilityRerollEvent {
     abilities: AbilityInformation[];

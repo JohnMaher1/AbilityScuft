@@ -1,3 +1,5 @@
+import { SettingsState } from "../gamemodeadditions/functions/settings_state";
+
 export interface DebugParameters {
     abilities: AbilityInformation[];
 }
@@ -208,10 +210,12 @@ function processAbilityName(
     heroName: string,
     result: AbilityInformation[]
 ) {
+    const allowPassives = SettingsState.getInstance().allowPassives;
     if (
         abilitiesTypes.includes(AbilityTypes.ULTIMATE) &&
         IsUltimate(abilityName)
     ) {
+        if (!allowPassives && IsPassive(abilityName)) return;
         result.push({
             abilityName,
             abilityNumber: index,
@@ -261,8 +265,9 @@ function processAbilityNames(
     }
 }
 
-export const hero_kv_readAllHeroFiles = (
-    heroList: string[]
+export const createAbilities = (
+    heroList: string[],
+    allowPassives: boolean
 ): DebugParameters => {
     // Row length is 20
 
@@ -278,13 +283,16 @@ export const hero_kv_readAllHeroFiles = (
         .filter((x) => x.abilityType === AbilityTypes.ULTIMATE)
         .slice(0, rowLength - 1);
     abilities.push(...ultimates);
-    const passives = abilityDraftAbilities
-        .filter((x) => x.abilityType === AbilityTypes.HIDDEN)
-        .slice(0, rowLength * 2 - 1);
-    abilities.push(...passives);
+    if (allowPassives === true) {
+        const passives = abilityDraftAbilities
+            .filter((x) => x.abilityType === AbilityTypes.HIDDEN)
+            .slice(0, rowLength * 2 - 1);
+        abilities.push(...passives);
+    }
+    const basicsLength = allowPassives ? rowLength * 4 - 1 : rowLength * 6 - 1;
     const basics = abilityDraftAbilities
         .filter((x) => x.abilityType === AbilityTypes.BASIC)
-        .slice(0, rowLength * 4 - 1);
+        .slice(0, basicsLength);
     abilities.push(...basics);
     const innates = GetInnateAbilities().slice(0, rowLength * 2 - 1);
     abilities.push(...innates);

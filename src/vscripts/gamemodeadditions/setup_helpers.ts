@@ -1,3 +1,4 @@
+import LocalNetTables from "../LocalNetTables";
 import { GameRulesState } from "./functions/game_rules_state";
 
 function GetHeroList() {
@@ -20,6 +21,16 @@ function GetHeroList() {
     }
     GameRulesState.getInstance()._heroList = randomHeroes;
     return randomHeroes;
+}
+
+export function CreateCustomNetTables() {
+    new LocalNetTables("setup_options");
+    CustomNetTables.SetTableValue("setup_options", "allowPassives", {
+        value: true,
+    });
+    CustomNetTables.SetTableValue("setup_options", "forceRandomAbilities", {
+        value: false,
+    });
 }
 
 export function PrecacheResources(this: void, context: CScriptPrecacheContext) {

@@ -4,6 +4,7 @@
   </styles>
 
   <scripts>
+    <include src="file://{resources}/scripts/custom_game/common.js" />
     <include src="file://{resources}/scripts/custom_game/PlayerPortrait.js" />
     <include src="file://{resources}/scripts/custom_game/PlayersContainer.js" />
   </scripts>
