@@ -111,7 +111,7 @@ class SelectScreen {
 
         SubscribeNetTableKey("setup_options", "allowPassives", (value) => {
             this.allowPassives = value.value === 1 ? true : false;
-            $.Schedule(1, () => {
+            $.Schedule(3, () => {
                 OnAbilitesLoad(this.abilityInfo, this.allowPassives);
             });
         });
