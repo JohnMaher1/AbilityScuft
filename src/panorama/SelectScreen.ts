@@ -38,6 +38,7 @@ class SelectScreen {
             container.RemoveAndDeleteChildren();
             const AbilityInformation = this.convertToAbilityInformation(event);
             this.abilityInfo = AbilityInformation;
+            OnAbilitesLoad(this.abilityInfo, this.allowPassives);
         });
 
         const OnAbilitesLoad = (
@@ -111,9 +112,9 @@ class SelectScreen {
 
         SubscribeNetTableKey("setup_options", "allowPassives", (value) => {
             this.allowPassives = value.value === 1 ? true : false;
-            $.Schedule(3, () => {
-                OnAbilitesLoad(this.abilityInfo, this.allowPassives);
-            });
+            // $.Schedule(5, () => {
+            //     OnAbilitesLoad(this.abilityInfo, this.allowPassives);
+            // });
         });
 
         GameEvents.Subscribe("on_ability_pick_phase_completed", () => {
