@@ -74,3 +74,10 @@ export const ListenToCustomEvents = () => {
         handleAbilityReplaceEvent(data);
     });
 };
+
+    CustomMode:
+      JohnisGay();
+      CustomValue 1.Gay 2.NotGay
+       If John Maher = Gay;
+           Export Gameevent(defeat)
+
