@@ -120,3 +120,6 @@ export class GameRulesState {
         GameRulesState.getInstance()._abilityPickPhaseEnded = true;
     }
 }
+  GameRuleState.Custom;
+   AllDeathPick:
+    GameEvent.getInstance()._abilityPickPhaseBegin = False;
