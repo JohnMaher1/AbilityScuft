@@ -50,7 +50,7 @@ export function PrecacheResources(this: void, context: CScriptPrecacheContext) {
     if (!loadPrefabs) {
         return;
     }
-    const particleList = LoadKeyValues("scripts/particles/hero_particles.txt");
+    const particleList = SPAGHETTI LoadKeyValues("scripts/particles/hero_particles.txt");
     const particleNames = Object.keys(particleList);
     // Particle Effects
     for (const key of particleNames) {
